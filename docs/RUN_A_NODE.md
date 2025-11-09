@@ -1,27 +1,27 @@
-# 🌍 Run a FRW Bootstrap Node
+# [WORLD] Run a FRW Bootstrap Node
 
 **Help build the decentralized web - run a node in your region!**
 
 ---
 
-## 🎯 Why Run a Node?
+## [TARGET] Why Run a Node?
 
 ### Benefits for Everyone:
-- ✅ **Improve FRW speed** in your region
-- ✅ **Support decentralization** - no single point of control
-- ✅ **Censorship resistance** - many nodes = can't be shut down
-- ✅ **Community building** - be part of something bigger
+- [OK] **Improve FRW speed** in your region
+- [OK] **Support decentralization** - no single point of control
+- [OK] **Censorship resistance** - many nodes = can't be shut down
+- [OK] **Community building** - be part of something bigger
 
 ### Benefits for You:
-- 🏆 **"Bootstrap Provider" badge** on FRW website
-- 📜 **Listed on** frw.network/nodes
-- ⭐ **Community recognition**
-- 🎯 **Priority support** (if you need help)
-- 💰 **Future benefits:** Revenue share, governance voting (planned)
+- [WINNER] **"Bootstrap Provider" badge** on FRW website
+- [SCROLL] **Listed on** frw.network/nodes
+- [STAR] **Community recognition**
+- [TARGET] **Priority support** (if you need help)
+- [MONEY] **Future benefits:** Revenue share, governance voting (planned)
 
 ---
 
-## 📋 Requirements
+## [LIST] Requirements
 
 ### Minimum:
 - **Server:** Any Linux VPS, home server, or Raspberry Pi
@@ -32,15 +32,15 @@
 - **Cost:** Whatever you're already paying for your server
 
 ### Supported:
-- ✅ Ubuntu/Debian Linux
-- ✅ Any VPS provider (Hetzner, Linode, DigitalOcean, etc.)
-- ✅ Home server / NAS
-- ✅ Raspberry Pi 4+ (with 2GB+ RAM)
-- ✅ Docker (easiest)
+- [OK] Ubuntu/Debian Linux
+- [OK] Any VPS provider (Hetzner, Linode, DigitalOcean, etc.)
+- [OK] Home server / NAS
+- [OK] Raspberry Pi 4+ (with 2GB+ RAM)
+- [OK] Docker (easiest)
 
 ---
 
-## 🚀 Quick Start (3 Options)
+## [LAUNCH] Quick Start (3 Options)
 
 ### Option 1: Docker (EASIEST - 2 minutes)
 
@@ -62,7 +62,7 @@ docker run -d \
 curl http://localhost:3030/health
 ```
 
-**Done! Node is running!** ✅
+**Done! Node is running!** [OK]
 
 ---
 
@@ -85,7 +85,7 @@ pm2 status frw-bootstrap
 curl http://localhost:3030/health
 ```
 
-**Done! Node is running!** ✅
+**Done! Node is running!** [OK]
 
 ---
 
@@ -95,7 +95,7 @@ curl http://localhost:3030/health
 
 ---
 
-## 🌐 Register Your Node
+## [GLOBE] Register Your Node
 
 **After starting your node, register it with the community:**
 
@@ -126,7 +126,7 @@ curl -X POST https://api.frw.network/nodes/register \
 
 ---
 
-## 🔧 Configuration
+## [TOOL] Configuration
 
 ### Environment Variables:
 
@@ -148,7 +148,7 @@ docker run -d \
 
 ---
 
-## 📊 Monitoring
+## [CHART] Monitoring
 
 ### Check Node Health:
 ```bash
@@ -181,7 +181,7 @@ curl http://localhost:3030/api/stats
 
 ---
 
-## 🔒 Security
+## [SECURE] Security
 
 ### Firewall Configuration:
 ```bash
@@ -209,7 +209,7 @@ https://your-domain.com
 
 ---
 
-## 🆘 Troubleshooting
+## [SOS] Troubleshooting
 
 ### Node not accessible from outside:
 ```bash
@@ -244,7 +244,7 @@ free -h
 
 ---
 
-## 💰 Cost
+## [MONEY] Cost
 
 ### Typical Costs:
 
@@ -262,14 +262,14 @@ free -h
 - Monthly: $1-3 (electricity)
 
 **Worth it?**
-- ✅ Help thousands of users
-- ✅ Support decentralization
-- ✅ Community recognition
-- ✅ Future benefits (revenue share, etc.)
+- [OK] Help thousands of users
+- [OK] Support decentralization
+- [OK] Community recognition
+- [OK] Future benefits (revenue share, etc.)
 
 ---
 
-## 📈 Impact
+## [GROWTH] Impact
 
 ### Your Node Helps:
 
@@ -287,28 +287,28 @@ free -h
 
 ---
 
-## 🌍 Where to Run Nodes
+## [WORLD] Where to Run Nodes
 
 ### Most Needed Regions (as of launch):
 
 **High Priority:**
-- 🇺🇸 USA (no nodes yet)
-- 🇸🇬 Singapore / 🇯🇵 Japan (no nodes yet)
-- 🇧🇷 Brazil (no nodes yet)
-- 🇮🇳 India (no nodes yet)
+- [US] USA (no nodes yet)
+- [SG] Singapore / [JP] Japan (no nodes yet)
+- [BR] Brazil (no nodes yet)
+- [IN] India (no nodes yet)
 
 **Already Covered:**
-- 🇨🇭 Switzerland (2 nodes - founder's)
+- [CH] Switzerland (2 nodes - founder's)
 
 **Your region not listed?**  
 Run a node anyway! Every location helps someone.
 
 ---
 
-## 🤝 Community Support
+## [HANDSHAKE] Community Support
 
 ### Questions?
-- 💬 Discord: discord.gg/frw
+- [CHAT] Discord: discord.gg/frw
 - 📧 Email: support@frw.network
 - 📖 Docs: docs.frw.network
 - 🐛 Issues: github.com/frw/issues
@@ -321,7 +321,7 @@ Run a node anyway! Every location helps someone.
 
 ---
 
-## 🎯 Next Steps
+## [TARGET] Next Steps
 
 ### After Running Your Node:
 
@@ -333,24 +333,24 @@ Run a node anyway! Every location helps someone.
 
 ---
 
-## 💪 You're Building the Future
+## [STRONG] You're Building the Future
 
 **Every node you run:**
-- ✅ Makes FRW faster for local users
-- ✅ Makes censorship harder
-- ✅ Makes network more resilient
-- ✅ Proves decentralization works
+- [OK] Makes FRW faster for local users
+- [OK] Makes censorship harder
+- [OK] Makes network more resilient
+- [OK] Proves decentralization works
 
 **Together we're building a web that:**
 - Cannot be shut down
 - Cannot be censored
 - Cannot be controlled
 
-**Thank you for being part of this!** 🌍
+**Thank you for being part of this!** [WORLD]
 
 ---
 
-## 📋 Quick Reference
+## [LIST] Quick Reference
 
 ```bash
 # Check health
@@ -374,7 +374,7 @@ pm2 restart frw-bootstrap
 
 ---
 
-**Ready to run a node?** 🚀
+**Ready to run a node?** [LAUNCH]
 
 **Choose your method above and get started in 5 minutes!**
 

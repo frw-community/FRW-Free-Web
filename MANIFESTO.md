@@ -242,11 +242,11 @@ Then we made mistakes:
 
 ### What We Fix
 
-🔧 **Decentralized hosting** - No single server to shut down  
-🔧 **Cryptographic identity** - Keys you control, not accounts they grant  
-🔧 **Content verification** - Math proves authenticity, not corporations  
-🔧 **Resilient distribution** - Peer-to-peer, not client-server  
-🔧 **Privacy by design** - No surveillance in the foundation
+[TOOL] **Decentralized hosting** - No single server to shut down  
+[TOOL] **Cryptographic identity** - Keys you control, not accounts they grant  
+[TOOL] **Content verification** - Math proves authenticity, not corporations  
+[TOOL] **Resilient distribution** - Peer-to-peer, not client-server  
+[TOOL] **Privacy by design** - No surveillance in the foundation
 
 ### The Goal
 

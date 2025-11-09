@@ -1,4 +1,4 @@
-# 🚀 FRW Launch Progress
+# [LAUNCH] FRW Launch Progress
 
 **Decision:** Launch POSTPONED to Thursday to implement global name resolution
 
@@ -6,34 +6,34 @@
 
 ---
 
-## ✅ What Works Today (Saturday Evening)
+## [OK] What Works Today (Saturday Evening)
 
-- ✅ CLI: `frw register pouet` - Registers name with PoW
-- ✅ CLI: `frw publish` - Publishes to IPFS with signatures
-- ✅ Browser: Opens and displays FRW sites
-- ✅ IPFS: Daemon working, content distributed
-- ✅ Cryptographic signatures: Working perfectly
-- ✅ 397 tests passing
+- [OK] CLI: `frw register pouet` - Registers name with PoW
+- [OK] CLI: `frw publish` - Publishes to IPFS with signatures
+- [OK] Browser: Opens and displays FRW sites
+- [OK] IPFS: Daemon working, content distributed
+- [OK] Cryptographic signatures: Working perfectly
+- [OK] 397 tests passing
 
-## ❌ What Doesn't Work
+## [NO] What Doesn't Work
 
-- ❌ **Name Resolution is LOCAL ONLY**
+- [NO] **Name Resolution is LOCAL ONLY**
   - User A registers `pouet` → only User A can resolve `frw://pouet/`
   - User B cannot access `frw://pouet/` (name not found)
   - This breaks the "decentralized web" promise
 
 ---
 
-## 📋 Implementation Plan - Next 4 Days
+## [LIST] Implementation Plan - Next 4 Days
 
-### Phase 1: Core Infrastructure (Sunday) ✅ STARTED
+### Phase 1: Core Infrastructure (Sunday) [OK] STARTED
 
 **Status:** 🟡 In Progress
 
 **Files Created:**
-- ✅ `packages/ipfs/src/dht.ts` - DHT name registry (simplified for now)
-- ✅ `packages/ipfs/src/ipns-registry.ts` - IPNS registry manager
-- ✅ `docs/DISTRIBUTED_NAME_REGISTRY.md` - Technical spec
+- [OK] `packages/ipfs/src/dht.ts` - DHT name registry (simplified for now)
+- [OK] `packages/ipfs/src/ipns-registry.ts` - IPNS registry manager
+- [OK] `docs/DISTRIBUTED_NAME_REGISTRY.md` - Technical spec
 
 **Next Steps:**
 - [ ] Build the packages (`npm run build`)
@@ -117,7 +117,7 @@ frw publish ./site
 npm install -g @frw/cli
 # Open browser
 # Navigate to frw://globaltest/
-# Should work! 🎉
+# Should work! [SUCCESS]
 ```
 
 **Test 2: Different Physical Machine**
@@ -126,10 +126,10 @@ npm install -g @frw/cli
 - Measure resolution speed
 
 **Success Criteria:**
-- ✅ Name resolves on different machine
-- ✅ Resolution time < 30 seconds
-- ✅ Content loads correctly
-- ✅ Signatures verify
+- [OK] Name resolves on different machine
+- [OK] Resolution time < 30 seconds
+- [OK] Content loads correctly
+- [OK] Signatures verify
 
 ---
 
@@ -208,7 +208,7 @@ npm install -g @frw/cli
 
 ---
 
-## 🎯 Success Metrics - Launch Week
+## [TARGET] Success Metrics - Launch Week
 
 **Minimum (Good):**
 - 100 stars
@@ -229,7 +229,7 @@ npm install -g @frw/cli
 
 ---
 
-## 🔧 Technical Architecture
+## [TOOL] Technical Architecture
 
 ### Name Resolution Flow (After Implementation)
 
@@ -260,7 +260,7 @@ User enters: frw://pouet/
    ↓
 
 6. Display content
-   ✅ Site loads!
+   [OK] Site loads!
 ```
 
 ### Registry Structure
@@ -283,20 +283,20 @@ User enters: frw://pouet/
 
 ---
 
-## 📊 Current Status Summary
+## [CHART] Current Status Summary
 
 **Overall Progress:** 60% → Launch Ready
 
 | Component | Status | Progress |
 |-----------|--------|----------|
-| Core Protocol | ✅ Working | 100% |
-| CLI Tools | ✅ Working | 100% |
-| Browser | ✅ Working | 100% |
-| IPFS Integration | ✅ Working | 100% |
-| Cryptographic Signatures | ✅ Working | 100% |
+| Core Protocol | [OK] Working | 100% |
+| CLI Tools | [OK] Working | 100% |
+| Browser | [OK] Working | 100% |
+| IPFS Integration | [OK] Working | 100% |
+| Cryptographic Signatures | [OK] Working | 100% |
 | **Name Resolution** | 🟡 **In Progress** | **30%** |
 | Documentation | 🟡 Needs Update | 70% |
-| Tests | ✅ Passing | 100% |
+| Tests | [OK] Passing | 100% |
 | Launch Materials | 🟡 Needs Screenshots | 50% |
 
 **Critical Path:** Name Resolution → Testing → Documentation → Launch
@@ -321,7 +321,7 @@ User enters: frw://pouet/
 
 ---
 
-## 🎓 Lessons Learned
+## [GRADUATE] Lessons Learned
 
 1. **Test end-to-end early** - We found the name resolution issue late
 2. **Decentralization is hard** - IPFS DHT API is complex
@@ -340,16 +340,16 @@ User enters: frw://pouet/
 | **Mon Nov 11** | Browser integration, testing |
 | **Tue Nov 12** | Documentation, polish |
 | **Wed Nov 13** | Final prep, materials |
-| **Thu Nov 14** | 🚀 **LAUNCH!** |
+| **Thu Nov 14** | [LAUNCH] **LAUNCH!** |
 
 ---
 
-## 📞 Next Immediate Actions
+## [PHONE] Next Immediate Actions
 
 **RIGHT NOW (Saturday Evening):**
-1. ✅ Build packages: `npm run build`
-2. ✅ Fix any build errors
-3. ✅ Commit progress
+1. [OK] Build packages: `npm run build`
+2. [OK] Fix any build errors
+3. [OK] Commit progress
 4. Get some rest! 😴
 
 **TOMORROW (Sunday Morning):**
@@ -361,16 +361,16 @@ User enters: frw://pouet/
 
 ---
 
-## 💪 We Got This!
+## [STRONG] We Got This!
 
 **Why we'll succeed:**
-- ✅ Core technology works
-- ✅ Clear plan
-- ✅ 4 days to implement
-- ✅ Strong motivation
-- ✅ Right decision (postpone vs rush broken launch)
+- [OK] Core technology works
+- [OK] Clear plan
+- [OK] 4 days to implement
+- [OK] Strong motivation
+- [OK] Right decision (postpone vs rush broken launch)
 
-**The world needs a free web. Let's build it.** 🌐
+**The world needs a free web. Let's build it.** [GLOBE]
 
 ---
 

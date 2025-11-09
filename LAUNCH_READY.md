@@ -1,6 +1,6 @@
-# 🚀 FRW - Ready to Launch!
+# [LAUNCH] FRW - Ready to Launch!
 
-**Status:** ✅ GO FOR LAUNCH
+**Status:** [OK] GO FOR LAUNCH
 
 **Target Date:** Mardi prochain (4 jours)
 
@@ -21,42 +21,42 @@ All materials are ready in `/docs/promotions/`:
 
 ---
 
-## ⏰ Next Steps (TODAY - 2 hours)
+## [TIME] Next Steps (TODAY - 2 hours)
 
 Open `docs/promotions/GO_LAUNCH_CHECKLIST.md` and complete Phase 1:
 
-1. ✅ Make repository public
-2. ✅ Configure repo settings
-3. ✅ Enable Discussions + Issues
-4. ✅ Create labels
-5. ✅ Create 5 "good first issues"
-6. ✅ Add organization profile README
+1. [OK] Make repository public
+2. [OK] Configure repo settings
+3. [OK] Enable Discussions + Issues
+4. [OK] Create labels
+5. [OK] Create 5 "good first issues"
+6. [OK] Add organization profile README
 
 **Then:** Prepare screenshots Monday, launch Tuesday 15h!
 
 ---
 
-## 🎯 Week 1 Goals
+## [TARGET] Week 1 Goals
 
 **Minimum Success:**
-- ⭐ 100 GitHub stars
-- 📝 15 issues opened
+- [STAR] 100 GitHub stars
+- [NOTE] 15 issues opened
 - 🔀 3 PRs submitted
 
 **Target Success:**
-- ⭐ 250 GitHub stars
-- 📝 30 issues opened
+- [STAR] 250 GitHub stars
+- [NOTE] 30 issues opened
 - 🔀 8 PRs submitted
 - 📰 1 tech blog mention
 
 ---
 
-## 📅 Launch Schedule
+## [CALENDAR] Launch Schedule
 
 ```
 AUJOURD'HUI → Prep GitHub (2h)
 LUNDI       → Screenshots & posts (3h)
-MARDI 15h   → 🚀 LAUNCH Reddit (all day)
+MARDI 15h   → [LAUNCH] LAUNCH Reddit (all day)
 MERCREDI 8h → Hacker News (morning)
 JEUDI       → Social media blitz (4h)
 VENDREDI    → Consolidate & thank (2h)
@@ -64,7 +64,7 @@ VENDREDI    → Consolidate & thank (2h)
 
 ---
 
-## ✅ Pre-Launch Checklist
+## [OK] Pre-Launch Checklist
 
 - [ ] Read GO_LAUNCH_CHECKLIST.md
 - [ ] Repository public
@@ -75,8 +75,8 @@ VENDREDI    → Consolidate & thank (2h)
 
 ---
 
-## 🚀 Let's Go!
+## [LAUNCH] Let's Go!
 
 **Start here:** `docs/promotions/GO_LAUNCH_CHECKLIST.md`
 
-**The free web awaits. 🌐**
+**The free web awaits. [GLOBE]**

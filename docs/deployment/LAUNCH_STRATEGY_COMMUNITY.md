@@ -1,12 +1,12 @@
-# 🌍 FRW Launch Strategy - Community-First Decentralization
+# [WORLD] FRW Launch Strategy - Community-First Decentralization
 
 **Philosophy:** True decentralization = Community runs the infrastructure, NOT one person
 
 ---
 
-## 🎯 THE FRW WAY
+## [TARGET] THE FRW WAY
 
-### ❌ WRONG Approach (Centralized):
+### [NO] WRONG Approach (Centralized):
 ```
 One person pays for all nodes worldwide
 └─> You become "the infrastructure provider"
@@ -16,7 +16,7 @@ One person pays for all nodes worldwide
 └─> NOT truly decentralized
 ```
 
-### ✅ RIGHT Approach (Decentralized):
+### [OK] RIGHT Approach (Decentralized):
 ```
 YOU run nodes on your existing infrastructure (FREE)
 COMMUNITY runs nodes where they live (FREE for them)
@@ -29,19 +29,19 @@ COMMUNITY runs nodes where they live (FREE for them)
 
 ---
 
-## 🚀 LAUNCH PHASES
+## [LAUNCH] LAUNCH PHASES
 
 ### Phase 1: Launch with YOUR Infrastructure (Week 1)
 
 **Deploy on what you already have:**
 
 ```
-🇨🇭 Node 1: Your Linux VPS (Switzerland)
+[CH] Node 1: Your Linux VPS (Switzerland)
 ├─ Cost to you: $0 (already paying for VPS)
 ├─ Covers: Europe, Africa, Middle East
 └─ Status: Primary European node
 
-🇨🇭 Node 2: Your Windows VPS (Switzerland)
+[CH] Node 2: Your Windows VPS (Switzerland)
 ├─ Cost to you: $0 (already paying for VPS)
 ├─ Covers: Europe backup
 └─ Status: Redundancy for Europe
@@ -57,11 +57,11 @@ const BOOTSTRAP_NODES = [
 ```
 
 **Launch Status:**
-- ✅ Works WORLDWIDE (from any country)
-- ✅ Fast for Europe (< 50ms)
-- ⚠️ Slower for USA/Asia (150-250ms) - but WORKS!
-- ✅ $0/month cost to you
-- ✅ Can launch TODAY
+- [OK] Works WORLDWIDE (from any country)
+- [OK] Fast for Europe (< 50ms)
+- [WARNING] Slower for USA/Asia (150-250ms) - but WORKS!
+- [OK] $0/month cost to you
+- [OK] Can launch TODAY
 
 **Announce:**
 ```
@@ -84,7 +84,7 @@ docker run -d \
   -e NODE_ID="community-$(whoami)" \
   frw/bootstrap-node:latest
 
-# That's it! Node running! ✅
+# That's it! Node running! [OK]
 ```
 
 **2. Community Documentation:**
@@ -94,12 +94,12 @@ docker run -d \
 - Clear benefits explanation
 
 **3. Incentives for Node Operators:**
-- 🏆 "Bootstrap Provider" badge on website
-- 📜 Listed on frw.network/nodes
-- ⭐ Community recognition
-- 🎯 Priority support (future)
-- 💰 Revenue share from premium features (future)
-- 🗳️ Governance voting rights (future)
+- [WINNER] "Bootstrap Provider" badge on website
+- [SCROLL] Listed on frw.network/nodes
+- [STAR] Community recognition
+- [TARGET] Priority support (future)
+- [MONEY] Revenue share from premium features (future)
+- [VOTE] Governance voting rights (future)
 
 ---
 
@@ -109,16 +109,16 @@ docker run -d \
 
 ```
 Week 1: Launch with 2 Swiss nodes
-├─> European users: Fast! ✅
-└─> Others: Slower but works ⚠️
+├─> European users: Fast! [OK]
+└─> Others: Slower but works [WARNING]
 
 Week 2: User in USA notices slow speed
 ├─> Runs own node in USA
-└─> Now USA users: Fast! ✅
+└─> Now USA users: Fast! [OK]
 
 Week 3: Asian users grow
 ├─> Someone in Singapore runs node
-└─> Now Asian users: Fast! ✅
+└─> Now Asian users: Fast! [OK]
 
 Month 2: Users in Brazil, India, Australia
 ├─> Community members run nodes
@@ -128,12 +128,12 @@ Result:
 ├─> 10-20 community nodes worldwide
 ├─> Zero cost to you
 ├─> Network stronger than if you paid
-└─> TRUE decentralization achieved ✅
+└─> TRUE decentralization achieved [OK]
 ```
 
 ---
 
-## 📊 GROWTH PROJECTION
+## [CHART] GROWTH PROJECTION
 
 ### Realistic Timeline:
 
@@ -171,35 +171,35 @@ Users: 1000+
 
 ---
 
-## 🎯 WHY THIS IS BETTER
+## [TARGET] WHY THIS IS BETTER
 
 ### Sustainability:
-- ✅ No ongoing cost to you
-- ✅ Scales with actual usage
-- ✅ Community shares burden
-- ✅ Can run forever
+- [OK] No ongoing cost to you
+- [OK] Scales with actual usage
+- [OK] Community shares burden
+- [OK] Can run forever
 
 ### Resilience:
-- ✅ Many independent operators
-- ✅ Different jurisdictions
-- ✅ Various hosting providers
-- ✅ True censorship resistance
+- [OK] Many independent operators
+- [OK] Different jurisdictions
+- [OK] Various hosting providers
+- [OK] True censorship resistance
 
 ### Philosophy:
-- ✅ Aligned with FRW manifesto
-- ✅ Community ownership
-- ✅ Decentralized from day 1
-- ✅ Not dependent on any single entity
+- [OK] Aligned with FRW manifesto
+- [OK] Community ownership
+- [OK] Decentralized from day 1
+- [OK] Not dependent on any single entity
 
 ### Growth:
-- ✅ Network grows where users are
-- ✅ Natural geographic distribution
-- ✅ Validates product-market fit
-- ✅ Self-sustaining ecosystem
+- [OK] Network grows where users are
+- [OK] Natural geographic distribution
+- [OK] Validates product-market fit
+- [OK] Self-sustaining ecosystem
 
 ---
 
-## 🛠️ IMPLEMENTATION
+## [TOOLS] IMPLEMENTATION
 
 ### For YOU (Founder):
 
@@ -228,7 +228,7 @@ RDP to swiss-windows-vps
 
 FRW is live with 2 bootstrap nodes in Switzerland!
 
-- Works globally from any country ✅
+- Works globally from any country [OK]
 - Fast for European users (< 50ms)
 - Acceptable for others (< 250ms)
 
@@ -236,22 +236,22 @@ Want to help make FRW faster worldwide?
 Run a bootstrap node in your region!
 Takes 5 minutes: frw.network/run-node
 
-Together we build the decentralized web! 🌍
+Together we build the decentralized web! [WORLD]
 ```
 
 ---
 
-## 📋 COMMUNITY NODE GUIDE (Simplified)
+## [LIST] COMMUNITY NODE GUIDE (Simplified)
 
 **File: `docs/RUN_A_NODE.md`**
 
 ### Why Run a Node?
 
-- ✅ Help decentralize the web
-- ✅ Improve FRW speed in your region
-- ✅ Get community recognition
-- ✅ Support censorship resistance
-- ✅ Future benefits (governance, revenue share)
+- [OK] Help decentralize the web
+- [OK] Improve FRW speed in your region
+- [OK] Get community recognition
+- [OK] Support censorship resistance
+- [OK] Future benefits (governance, revenue share)
 
 ### Requirements:
 
@@ -286,11 +286,11 @@ curl -X POST https://api.frw.network/nodes/register \
   -d "contact=your@email.com"
 ```
 
-**That's it! You're helping decentralize the web!** 🎉
+**That's it! You're helping decentralize the web!** [SUCCESS]
 
 ---
 
-## 💰 COST COMPARISON
+## [MONEY] COST COMPARISON
 
 ### Centralized Approach (NOT FRW way):
 ```
@@ -316,7 +316,7 @@ Month 12: You pay $0, strong network
 
 ---
 
-## 🎯 SUCCESS METRICS
+## [TARGET] SUCCESS METRICS
 
 ### Week 1:
 - [ ] 2 nodes running (yours)
@@ -342,7 +342,7 @@ Month 12: You pay $0, strong network
 
 ---
 
-## 🚀 READY TO LAUNCH?
+## [LAUNCH] READY TO LAUNCH?
 
 ### Your Checklist:
 
@@ -359,36 +359,36 @@ Month 12: You pay $0, strong network
 - [ ] Prepare launch announcement
 
 **Friday:**
-- [ ] LAUNCH! 🚀
+- [ ] LAUNCH! [LAUNCH]
 - [ ] Post announcement
 - [ ] Invite community to run nodes
 - [ ] Watch network grow organically
 
 ---
 
-## 💪 THIS IS THE FRW WAY
+## [STRONG] THIS IS THE FRW WAY
 
 **NOT:**
-- ❌ One person pays for everything
-- ❌ Centralized infrastructure
-- ❌ Financial burden
-- ❌ Dependent on one operator
+- [NO] One person pays for everything
+- [NO] Centralized infrastructure
+- [NO] Financial burden
+- [NO] Dependent on one operator
 
 **BUT:**
-- ✅ Community-owned infrastructure
-- ✅ Everyone contributes what they can
-- ✅ Grows based on real usage
-- ✅ Sustainable forever
-- ✅ TRUE decentralization
+- [OK] Community-owned infrastructure
+- [OK] Everyone contributes what they can
+- [OK] Grows based on real usage
+- [OK] Sustainable forever
+- [OK] TRUE decentralization
 
 **You provide the software.**  
 **Community provides the infrastructure.**  
-**Together: Unstoppable decentralized web!** 🌍
+**Together: Unstoppable decentralized web!** [WORLD]
 
 ---
 
 **Cost to you: $0/month forever**  
 **Power: Infinite (community)**  
-**Philosophy: TRUE FRW** ✅
+**Philosophy: TRUE FRW** [OK]
 
-**Ready to deploy your 2 nodes and launch?** 🚀
+**Ready to deploy your 2 nodes and launch?** [LAUNCH]

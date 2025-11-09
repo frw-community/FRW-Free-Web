@@ -4,7 +4,7 @@ Everything you need to successfully launch FRW as an open source project.
 
 ---
 
-## 📚 Files in This Folder
+## [DOCS] Files in This Folder
 
 | File | Purpose | When to Use |
 |------|---------|-------------|
@@ -15,20 +15,20 @@ Everything you need to successfully launch FRW as an open source project.
 
 ---
 
-## 🚀 Quick Start
+## [LAUNCH] Quick Start
 
 ### Launching NOW? Follow this order:
 
-1. ✅ **Read:** `GO_LAUNCH_CHECKLIST.md` (5 min)
-2. ✅ **Do:** Phase 1 checklist (2 hours today)
-3. ✅ **Prepare:** Screenshots & posts (Monday, 3 hours)
-4. ✅ **Launch:** Tuesday 15h CET - Reddit post
-5. ✅ **Follow-up:** Wednesday-Friday (see checklist)
-6. ✅ **Track:** Use `SUCCESS_METRICS.md` daily
+1. [OK] **Read:** `GO_LAUNCH_CHECKLIST.md` (5 min)
+2. [OK] **Do:** Phase 1 checklist (2 hours today)
+3. [OK] **Prepare:** Screenshots & posts (Monday, 3 hours)
+4. [OK] **Launch:** Tuesday 15h CET - Reddit post
+5. [OK] **Follow-up:** Wednesday-Friday (see checklist)
+6. [OK] **Track:** Use `SUCCESS_METRICS.md` daily
 
 ---
 
-## 📅 Timeline at a Glance
+## [CALENDAR] Timeline at a Glance
 
 ```
 TODAY (2h)
@@ -37,7 +37,7 @@ TODAY (2h)
 LUNDI (3h)
 └─> Screenshots, write posts
 
-MARDI 15h (All day) 🚀
+MARDI 15h (All day) [LAUNCH]
 └─> LAUNCH on Reddit - Monitor intensively!
 
 MERCREDI 8h (Morning)
@@ -52,17 +52,17 @@ VENDREDI (2h)
 
 ---
 
-## 🎯 Week 1 Goals
+## [TARGET] Week 1 Goals
 
 | Level | Stars | Issues | PRs | Result |
 |-------|-------|--------|-----|--------|
-| **Minimum** | 100 | 15 | 3 | Good launch ✅ |
-| **Target** | 250 | 30 | 8 | Great launch 🎉 |
-| **Stretch** | 500+ | 50+ | 15+ | Viral! 🚀 |
+| **Minimum** | 100 | 15 | 3 | Good launch [OK] |
+| **Target** | 250 | 30 | 8 | Great launch [SUCCESS] |
+| **Stretch** | 500+ | 50+ | 15+ | Viral! [LAUNCH] |
 
 ---
 
-## 📋 Pre-Launch Checklist
+## [LIST] Pre-Launch Checklist
 
 Before Tuesday:
 
@@ -76,13 +76,13 @@ Before Tuesday:
 
 ---
 
-## 🔑 Critical Success Factors
+## [KEY] Critical Success Factors
 
 ### Must-Haves
-1. ✅ Visual proof (screenshots/demo)
-2. ✅ Clear value proposition
-3. ✅ Available launch day (8+ hours)
-4. ✅ Respond to every comment <10min
+1. [OK] Visual proof (screenshots/demo)
+2. [OK] Clear value proposition
+3. [OK] Available launch day (8+ hours)
+4. [OK] Respond to every comment <10min
 
 ### Nice-to-Haves
 - Demo video (powerful but optional)
@@ -92,7 +92,7 @@ Before Tuesday:
 
 ---
 
-## ❌ Common Mistakes
+## [NO] Common Mistakes
 
 **Don't:**
 - Spam multiple subreddits
@@ -110,7 +110,7 @@ Before Tuesday:
 
 ---
 
-## 📞 Need Help?
+## [PHONE] Need Help?
 
 **Questions:** Check SUCCESS_METRICS.md FAQ section
 
@@ -120,8 +120,8 @@ Before Tuesday:
 
 ---
 
-## 🚀 Ready?
+## [LAUNCH] Ready?
 
 All boxes checked? **GO FOR LAUNCH!**
 
-**The free web is counting on you. 🌐**
+**The free web is counting on you. [GLOBE]**

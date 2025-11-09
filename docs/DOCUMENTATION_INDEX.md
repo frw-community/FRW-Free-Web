@@ -56,6 +56,16 @@ Complete guide to all documentation in the FRW project.
 - Name registration process
 - DNS bridging for WWW compatibility
 
+### Deployment
+
+- **[deployment/README.md](deployment/README.md)** - Deployment documentation overview
+- **[deployment/LAUNCH_STRATEGY_COMMUNITY.md](deployment/LAUNCH_STRATEGY_COMMUNITY.md)** - Community-first deployment philosophy
+- **[deployment/DEPLOY_NOW.md](deployment/DEPLOY_NOW.md)** - Quick deployment checklist (40 min)
+- **[deployment/DEPLOY_NOW_VPS.md](deployment/DEPLOY_NOW_VPS.md)** - Detailed VPS deployment guide
+- **[deployment/DEPLOYMENT_STRATEGY.md](deployment/DEPLOYMENT_STRATEGY.md)** - Multi-node architecture and scaling
+- **[RUN_A_NODE.md](RUN_A_NODE.md)** - Community guide to running bootstrap nodes
+- **[../apps/bootstrap-node/DEPLOY_VPS.md](../apps/bootstrap-node/DEPLOY_VPS.md)** - Bootstrap node VPS deployment
+
 ---
 
 ## Development
@@ -110,6 +120,14 @@ Complete guide to all documentation in the FRW project.
 ### Naming System
 - [NAMING_SYSTEM.md](NAMING_SYSTEM.md) - Name resolution system
 
+### Deployment
+- [deployment/README.md](deployment/README.md) - Deployment overview
+- [deployment/LAUNCH_STRATEGY_COMMUNITY.md](deployment/LAUNCH_STRATEGY_COMMUNITY.md) - Community-first philosophy
+- [deployment/DEPLOY_NOW.md](deployment/DEPLOY_NOW.md) - Quick start (40 min)
+- [deployment/DEPLOY_NOW_VPS.md](deployment/DEPLOY_NOW_VPS.md) - VPS deployment details
+- [deployment/DEPLOYMENT_STRATEGY.md](deployment/DEPLOYMENT_STRATEGY.md) - Multi-node architecture
+- [RUN_A_NODE.md](RUN_A_NODE.md) - Community node guide
+
 ---
 
 ## Documentation Status
@@ -138,6 +156,14 @@ All documentation files are up-to-date as of **November 9, 2025**.
 - [DONE] roadmap/PRODUCTION_ROADMAP.md - Progress tracked
 - [DONE] MIGRATION_GUIDE.md - Monorepo instructions
 
+**Deployment Documentation:**
+- [DONE] deployment/README.md - Deployment overview
+- [DONE] deployment/LAUNCH_STRATEGY_COMMUNITY.md - Community-first philosophy
+- [DONE] deployment/DEPLOY_NOW.md - Quick deployment checklist
+- [DONE] deployment/DEPLOY_NOW_VPS.md - Detailed VPS guide
+- [DONE] deployment/DEPLOYMENT_STRATEGY.md - Multi-node architecture
+- [DONE] RUN_A_NODE.md - Community node guide
+
 ### [IN PROGRESS] Needs Future Updates
 
 - **Tab support** - When implemented, update USER_GUIDE.md
@@ -146,14 +172,13 @@ All documentation files are up-to-date as of **November 9, 2025**.
 - **Mobile client** - Create separate MOBILE_GUIDE.md
 - **Plugin system** - Create PLUGIN_DEVELOPMENT.md
 
-### 📝 Future Documentation
+### [NOTE] Future Documentation
 
 Planned documentation to create:
 
 - **FAQ.md** - Common questions and troubleshooting
 - **TUTORIAL.md** - Step-by-step examples
 - **VIDEO_GUIDES.md** - Links to video tutorials
-- **DEPLOYMENT.md** - Production deployment guide
 - **TESTING_GUIDE.md** - Comprehensive testing documentation
 - **API_REFERENCE.md** - Auto-generated from JSDoc
 
@@ -178,6 +203,8 @@ The following obsolete files were removed during documentation cleanup:
 
 - **Start using FRW** → [../QUICK_START.md](../QUICK_START.md)
 - **Install FRW** → [INSTALLATION_GUIDE.md](INSTALLATION_GUIDE.md)
+- **Deploy FRW nodes** → [deployment/README.md](deployment/README.md)
+- **Run a bootstrap node** → [RUN_A_NODE.md](RUN_A_NODE.md)
 - **Learn to browse** → [USER_GUIDE.md](USER_GUIDE.md)
 - **Contribute code** → [../CONTRIBUTING.md](../CONTRIBUTING.md)
 - **Understand architecture** → [ARCHITECTURE.md](ARCHITECTURE.md)

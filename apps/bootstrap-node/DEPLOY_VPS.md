@@ -1,17 +1,17 @@
-# 🖥️ FRW Bootstrap Node - VPS Deployment Guide
+# [DESKTOP] FRW Bootstrap Node - VPS Deployment Guide
 
 **Complete guide for deploying on your own servers**
 
 ---
 
-## 🎯 Why Self-Hosted VPS?
+## [TARGET] Why Self-Hosted VPS?
 
 **TRUE Decentralization:**
-- ✅ **$0/month** - use existing infrastructure
-- ✅ **100% control** - no platform can shut you down
-- ✅ **Censorship-resistant** - government-proof
-- ✅ **FRW philosophy** - self-sovereign infrastructure
-- ✅ **No dependencies** - immune to platform changes
+- [OK] **$0/month** - use existing infrastructure
+- [OK] **100% control** - no platform can shut you down
+- [OK] **Censorship-resistant** - government-proof
+- [OK] **FRW philosophy** - self-sovereign infrastructure
+- [OK] **No dependencies** - immune to platform changes
 
 **vs Cloud Platforms:**
 - Railway/Fly.io can ban accounts
@@ -19,11 +19,11 @@
 - Dependent on their uptime
 - Monthly recurring costs
 
-**Self-hosted = TRUE FRW spirit!** 💪
+**Self-hosted = TRUE FRW spirit!** [STRONG]
 
 ---
 
-## 📋 Prerequisites
+## [LIST] Prerequisites
 
 ### For Linux VPS:
 - Ubuntu 20.04+ (or Debian/CentOS)
@@ -43,7 +43,7 @@
 
 ---
 
-## 🐧 Linux VPS Deployment (15-20 min)
+## [LINUX] Linux VPS Deployment (15-20 min)
 
 ### Step 1: Connect
 ```bash
@@ -194,13 +194,13 @@ sudo certbot --nginx -d frw-bootstrap.your-domain.com
 curl https://frw-bootstrap.your-domain.com/health
 ```
 
-**✅ Linux Node Ready!**
+**[OK] Linux Node Ready!**
 
 **Your URL:** `http://YOUR-IP:3030` or `https://frw-bootstrap.your-domain.com`
 
 ---
 
-## 🪟 Windows VPS Deployment (20-25 min)
+## [WINDOWS] Windows VPS Deployment (20-25 min)
 
 ### Step 1: Connect
 - RDP to your Windows VPS
@@ -346,13 +346,13 @@ Install-WindowsFeature -name Web-Http-Redirect
 # Similar to Nginx reverse proxy setup
 ```
 
-**✅ Windows Node Ready!**
+**[OK] Windows Node Ready!**
 
 **Your URL:** `http://YOUR-IP:3030`
 
 ---
 
-## 🔄 Update FRW Client Code
+## [REFRESH] Update FRW Client Code
 
 **Edit:** `packages/ipfs/src/distributed-registry.ts`
 
@@ -380,7 +380,7 @@ npm run build
 
 ---
 
-## 🧪 Testing Multi-Node Setup
+## [TEST] Testing Multi-Node Setup
 
 ```bash
 # Test all nodes
@@ -399,7 +399,7 @@ curl http://windows-vps-ip:3030/api/resolve/testmultinode
 
 ---
 
-## 📊 Monitoring & Maintenance
+## [CHART] Monitoring & Maintenance
 
 ### Linux (PM2)
 ```bash
@@ -442,7 +442,7 @@ Get-Service | Where-Object {$_.DisplayName -like "*FRW*" -or $_.DisplayName -lik
 
 ---
 
-## 🔧 Troubleshooting
+## [TOOL] Troubleshooting
 
 ### IPFS Not Starting (Linux)
 ```bash
@@ -494,7 +494,7 @@ taskkill /PID <PID> /F
 
 ---
 
-## 💰 Cost Comparison
+## [MONEY] Cost Comparison
 
 | Setup | Monthly Cost | Control | Uptime | Setup Time |
 |-------|--------------|---------|--------|------------|
@@ -507,7 +507,7 @@ taskkill /PID <PID> /F
 
 ---
 
-## 🌍 Final Architecture
+## [WORLD] Final Architecture
 
 ```
 ┌──────────────────────────────────────┐
@@ -515,7 +515,7 @@ taskkill /PID <PID> /F
 │  Location: Europe/USA/Asia           │
 │  URL: http://your-linux-ip:3030      │
 │  Cost: $0 (already paid)             │
-│  Control: 100% ✅                    │
+│  Control: 100% [OK]                    │
 └──────────────────────────────────────┘
 
 ┌──────────────────────────────────────┐
@@ -523,27 +523,27 @@ taskkill /PID <PID> /F
 │  Location: Different continent       │
 │  URL: http://your-windows-ip:3030    │
 │  Cost: $0 (already paid)             │
-│  Control: 100% ✅                    │
+│  Control: 100% [OK]                    │
 └──────────────────────────────────────┘
 
 = 2 NODES, $0/MONTH, 100% DECENTRALIZED
-= TRUE FRW PHILOSOPHY ✅
+= TRUE FRW PHILOSOPHY [OK]
 ```
 
 ---
 
-## 🎯 Next Steps
+## [TARGET] Next Steps
 
 1. **Deploy on both VPS** (30-40 min total)
 2. **Update client code** with both URLs
 3. **Test globally** - have friend in another country test
 4. (Optional) **Add Railway/Fly as 3rd node** for extra redundancy
-5. **Launch!** 🚀
+5. **Launch!** [LAUNCH]
 
 ---
 
-**YOU NOW HAVE UNSTOPPABLE INFRASTRUCTURE!** 💪
+**YOU NOW HAVE UNSTOPPABLE INFRASTRUCTURE!** [STRONG]
 
 No platform can shut you down. No government can censor you. TRUE decentralization achieved!
 
-**This is the FRW way!** 🌍
+**This is the FRW way!** [WORLD]

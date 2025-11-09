@@ -1,4 +1,4 @@
-# 🌍 FRW Bootstrap Node
+# [WORLD] FRW Bootstrap Node
 
 **Global Index Node for Decentralized Name Resolution**
 
@@ -8,11 +8,11 @@ This bootstrap node maintains a global index of all FRW names, enabling instant 
 
 ## Features
 
-- ✅ **Real-time Updates** - Listens to IPFS pubsub for instant name registrations
-- ✅ **HTTP API** - Fast REST API for name queries (< 50ms)
-- ✅ **IPFS Backup** - Publishes index to IPFS every hour for redundancy
-- ✅ **Auto-sync** - Multiple bootstrap nodes sync automatically via pubsub
-- ✅ **Zero Downtime** - Stateless design, restart anytime
+- [OK] **Real-time Updates** - Listens to IPFS pubsub for instant name registrations
+- [OK] **HTTP API** - Fast REST API for name queries (< 50ms)
+- [OK] **IPFS Backup** - Publishes index to IPFS every hour for redundancy
+- [OK] **Auto-sync** - Multiple bootstrap nodes sync automatically via pubsub
+- [OK] **Zero Downtime** - Stateless design, restart anytime
 
 ## Quick Start
 
@@ -112,11 +112,11 @@ IPFS_URL=http://localhost:5001  # IPFS API endpoint
 
 ## Security
 
-- ✅ All records cryptographically signed
-- ✅ Signature verification on query
-- ✅ Read-only API (no write without pubsub)
-- ✅ No authentication required (public data)
-- ✅ CORS enabled for browser access
+- [OK] All records cryptographically signed
+- [OK] Signature verification on query
+- [OK] Read-only API (no write without pubsub)
+- [OK] No authentication required (public data)
+- [OK] CORS enabled for browser access
 
 ## Monitoring
 
@@ -152,4 +152,4 @@ MIT - Free to use, modify, and deploy
 
 ---
 
-**Help decentralize the web - run a bootstrap node!** 🌍
+**Help decentralize the web - run a bootstrap node!** [WORLD]

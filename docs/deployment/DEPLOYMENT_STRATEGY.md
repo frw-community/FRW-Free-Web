@@ -1,19 +1,19 @@
-# 🌍 FRW Multi-Node Deployment Strategy
+# [WORLD] FRW Multi-Node Deployment Strategy
 
 **Goal:** Deploy globally distributed bootstrap nodes for 99.9% uptime and < 100ms latency worldwide
 
 ---
 
-## 🎯 Phase 1: Primary Nodes - YOUR VPS (30 min - TONIGHT)
+## [TARGET] Phase 1: Primary Nodes - YOUR VPS (30 min - TONIGHT)
 
 ### RECOMMENDED: Use Your Own Servers
 
 **Why Your VPS is BEST:**
-- ✅ **$0/month** (already paid for)
-- ✅ **100% control** (no platform can ban you)
-- ✅ **TRUE decentralization** (FRW philosophy)
-- ✅ **Censorship-resistant** (government-proof)
-- ✅ **No ToS restrictions** (you own it)
+- [OK] **$0/month** (already paid for)
+- [OK] **100% control** (no platform can ban you)
+- [OK] **TRUE decentralization** (FRW philosophy)
+- [OK] **Censorship-resistant** (government-proof)
+- [OK] **No ToS restrictions** (you own it)
 
 ### Node 1: Your Linux VPS (15 min)
 ```bash
@@ -54,8 +54,8 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/YOUR-REPO/FRW/main/scr
 ```typescript
 // packages/ipfs/src/distributed-registry.ts
 const BOOTSTRAP_NODES = [
-  'http://your-linux-vps-ip:3030',      // Your Linux VPS ✅
-  'http://your-windows-vps-ip:3030',    // Your Windows VPS ✅
+  'http://your-linux-vps-ip:3030',      // Your Linux VPS [OK]
+  'http://your-windows-vps-ip:3030',    // Your Windows VPS [OK]
   // 'https://frw-backup.up.railway.app', // Optional 3rd node
   'http://localhost:3030',              // Dev fallback
 ];
@@ -71,11 +71,11 @@ const BOOTSTRAP_NODES = [
 **Cost:** **$0/month** (using existing VPS)  
 **Latency:** < 100ms (depends on VPS locations)  
 **Uptime:** 99.9% (with 2 nodes)  
-**Control:** **100% YOURS** ✅
+**Control:** **100% YOURS** [OK]
 
 ---
 
-## 🚀 Phase 2: Community Nodes (Week 1)
+## [LAUNCH] Phase 2: Community Nodes (Week 1)
 
 ### Make it EASY for community to run nodes
 
@@ -108,16 +108,16 @@ curl -fsSL https://get.frw.network | sh
 #### Incentives for Running Nodes
 ```
 Run a bootstrap node, get:
-- ✅ Your name in credits
-- ✅ "Bootstrap Provider" badge
-- ✅ Priority name registration (future)
-- ✅ Voting rights in governance (future)
-- ✅ Revenue share from premium features (future)
+- [OK] Your name in credits
+- [OK] "Bootstrap Provider" badge
+- [OK] Priority name registration (future)
+- [OK] Voting rights in governance (future)
+- [OK] Revenue share from premium features (future)
 ```
 
 ---
 
-## 📊 Node Discovery & Load Balancing
+## [CHART] Node Discovery & Load Balancing
 
 ### Smart Client Selection
 ```typescript
@@ -199,7 +199,7 @@ POST /api/register-node
 
 ---
 
-## 💾 Data Synchronization
+## [SAVE] Data Synchronization
 
 ### Real-time Sync via Pubsub
 ```typescript
@@ -247,7 +247,7 @@ async aggregateIndices() {
 
 ---
 
-## 📈 Scaling Strategy
+## [GROWTH] Scaling Strategy
 
 ### Traffic Levels vs Node Count
 
@@ -271,7 +271,7 @@ if (avgResponseTime > 200) {
 
 ---
 
-## 🌐 Global CDN Layer (Optional)
+## [GLOBE] Global CDN Layer (Optional)
 
 ### Add Cloudflare Workers (FREE)
 ```typescript
@@ -300,14 +300,14 @@ export default {
 ```
 
 **Result:**
-- ✅ FREE CDN across 200+ cities
-- ✅ < 50ms latency anywhere
-- ✅ Massive caching layer
-- ✅ DDoS protection
+- [OK] FREE CDN across 200+ cities
+- [OK] < 50ms latency anywhere
+- [OK] Massive caching layer
+- [OK] DDoS protection
 
 ---
 
-## 🧪 Testing Multi-Node Setup
+## [TEST] Testing Multi-Node Setup
 
 ### Test Script
 ```bash
@@ -345,7 +345,7 @@ ab -n 10000 -c 100 https://frw-us.up.railway.app/api/resolve/testname
 
 ---
 
-## 🎯 Deployment Checklist
+## [TARGET] Deployment Checklist
 
 ### Tonight (30 min):
 - [ ] Deploy Node 1 (Railway US)
@@ -370,7 +370,7 @@ ab -n 10000 -c 100 https://frw-us.up.railway.app/api/resolve/testname
 
 ---
 
-## 💰 Cost Optimization
+## [MONEY] Cost Optimization
 
 ### Free Tier Maximization
 ```
@@ -393,7 +393,7 @@ Total:      $0-5/month with free tiers!
 
 ---
 
-## 🔍 Monitoring & Alerts
+## [SEARCH] Monitoring & Alerts
 
 ### Uptime Monitoring (FREE)
 ```yaml
@@ -427,7 +427,7 @@ GET /api/stats
 
 ---
 
-## 🚀 FINAL ARCHITECTURE
+## [LAUNCH] FINAL ARCHITECTURE
 
 ```
               INTERNET
@@ -451,13 +451,13 @@ GET /api/stats
 ```
 
 **Result:**
-- ✅ 99.99% uptime
-- ✅ < 50ms latency worldwide
-- ✅ Truly decentralized
-- ✅ Scales to millions
-- ✅ $15-30/month cost
-- ✅ **READY TO COMPETE WITH WWW**
+- [OK] 99.99% uptime
+- [OK] < 50ms latency worldwide
+- [OK] Truly decentralized
+- [OK] Scales to millions
+- [OK] $15-30/month cost
+- [OK] **READY TO COMPETE WITH WWW**
 
 ---
 
-**LET'S DEPLOY TONIGHT!** 🔥
+**LET'S DEPLOY TONIGHT!** [HOT]

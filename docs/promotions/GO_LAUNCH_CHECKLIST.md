@@ -1,6 +1,6 @@
-# 🚀 FRW LAUNCH - ACTION IMMÉDIATE
+# [LAUNCH] FRW LAUNCH - ACTION IMMÉDIATE
 
-**STATUS:** ✅ GO FOR LAUNCH
+**STATUS:** [OK] GO FOR LAUNCH
 
 **Repository:** https://github.com/frw-community (exists, currently private)
 
@@ -8,9 +8,9 @@
 
 ---
 
-## ⏰ AUJOURD'HUI (2 heures) - Phase 1: GitHub Ready
+## [TIME] AUJOURD'HUI (2 heures) - Phase 1: GitHub Ready
 
-### ✅ Étape 1: Rendre le repo public (5 min)
+### [OK] Étape 1: Rendre le repo public (5 min)
 
 ```
 1. Aller sur https://github.com/frw-community
@@ -19,7 +19,7 @@
 4. Confirmer
 ```
 
-### ✅ Étape 2: Configuration repo (30 min)
+### [OK] Étape 2: Configuration repo (30 min)
 
 **About section:**
 ```
@@ -28,11 +28,11 @@ Topics: decentralized-web, ipfs, censorship-resistant, web3, decentralization, p
 ```
 
 **Enable features:**
-- ✅ Issues
-- ✅ Discussions ⚠️ (CRITIQUE!)
-- ✅ Projects
+- [OK] Issues
+- [OK] Discussions [WARNING] (CRITIQUE!)
+- [OK] Projects
 
-### ✅ Étape 3: Push le code (10 min)
+### [OK] Étape 3: Push le code (10 min)
 
 ```bash
 cd "C:\Projects\FRW - Free Web Modern"
@@ -45,7 +45,7 @@ git branch -M main
 git push -u origin main
 ```
 
-### ✅ Étape 4: Créer labels (10 min)
+### [OK] Étape 4: Créer labels (10 min)
 
 Via Settings → Labels, créer:
 - `good-first-issue` (vert) - Pour newcomers
@@ -54,11 +54,11 @@ Via Settings → Labels, créer:
 - `bug` (rouge) - Bugs
 - `enhancement` (violet) - Features
 
-### ✅ Étape 5: Créer 5 "good first issues" (45 min)
+### [OK] Étape 5: Créer 5 "good first issues" (45 min)
 
 **Issue 1: Translate README to French**
 ```markdown
-Title: 📝 Add French translation (README.fr.md)
+Title: [NOTE] Add French translation (README.fr.md)
 
 Description:
 Help make FRW accessible to French speakers!
@@ -108,7 +108,7 @@ Labels: good-first-issue, enhancement
 
 **Issue 4: Write getting started tutorial**
 ```markdown
-Title: 📚 Write "Getting Started" tutorial (docs/tutorials/)
+Title: [DOCS] Write "Getting Started" tutorial (docs/tutorials/)
 
 Description:
 New users need a step-by-step guide!
@@ -128,7 +128,7 @@ Labels: good-first-issue, documentation
 
 **Issue 5: Add tests for bond calculator**
 ```markdown
-Title: 🧪 Increase test coverage for bond-calculator
+Title: [TEST] Increase test coverage for bond-calculator
 
 Description:
 bond-calculator.test.ts needs more edge cases!
@@ -145,7 +145,7 @@ bond-calculator.test.ts needs more edge cases!
 Labels: good-first-issue, testing
 ```
 
-### ✅ Étape 6: Profile README organisation (20 min)
+### [OK] Étape 6: Profile README organisation (20 min)
 
 ```bash
 # Dans l'organisation frw-community:
@@ -157,9 +157,9 @@ Labels: good-first-issue, testing
 
 ---
 
-## 📅 LUNDI (3 heures) - Phase 2: Content Ready
+## [CALENDAR] LUNDI (3 heures) - Phase 2: Content Ready
 
-### ✅ Screenshots (2h)
+### [OK] Screenshots (2h)
 
 **Prendre et sauvegarder:**
 
@@ -179,7 +179,7 @@ Labels: good-first-issue, testing
    - Draw.io ou Excalidraw
    - Montrer: Browser → Protocol → IPFS
 
-### ✅ Écrire les posts (1h)
+### [OK] Écrire les posts (1h)
 
 **Créer fichier:** `docs/promotions/LAUNCH_POSTS.md`
 
@@ -193,7 +193,7 @@ Avec contenu pour:
 
 ---
 
-## 📅 MARDI - 🚀 LAUNCH DAY!
+## [CALENDAR] MARDI - [LAUNCH] LAUNCH DAY!
 
 ### Morning (9h-12h)
 
@@ -209,7 +209,7 @@ Avec contenu pour:
 - [ ] Screenshots/GIFs prêts
 - [ ] Links testés
 
-### Afternoon (15h00 = 9am EST) - 🎯 GO!
+### Afternoon (15h00 = 9am EST) - [TARGET] GO!
 
 **15h00 - POST REDDIT r/privacy**
 ```
@@ -238,7 +238,7 @@ ome premiers contributeurs
 
 ---
 
-## 📅 MERCREDI - Hacker News
+## [CALENDAR] MERCREDI - Hacker News
 
 ### 8h-10h (= 2-4am EST optimal pour HN)
 
@@ -267,7 +267,7 @@ Happy to answer technical questions!
 
 ---
 
-## 📅 JEUDI - Social & Media
+## [CALENDAR] JEUDI - Social & Media
 
 ### Product Hunt (9h)
 ```
@@ -300,32 +300,32 @@ Tags: opensource, javascript, typescript, webdev
 
 ---
 
-## 📊 Success Metrics - Week 1
+## [CHART] Success Metrics - Week 1
 
 **Minimum (Good launch):**
-- ⭐ 100 stars
-- 📝 15 issues opened
+- [STAR] 100 stars
+- [NOTE] 15 issues opened
 - 🔀 3 PRs submitted
-- 💬 Active discussions
+- [CHAT] Active discussions
 
 **Target (Great launch):**
-- ⭐ 250 stars
-- 📝 30 issues
+- [STAR] 250 stars
+- [NOTE] 30 issues
 - 🔀 8 PRs
-- 💬 50+ discussion posts
+- [CHAT] 50+ discussion posts
 - 📰 1 tech blog mention
 
 **Stretch (Viral):**
-- ⭐ 500+ stars
-- 📝 50+ issues
+- [STAR] 500+ stars
+- [NOTE] 50+ issues
 - 🔀 15+ PRs
-- 💬 100+ discussion posts
+- [CHAT] 100+ discussion posts
 - 📰 Front page HN or Reddit
 - 📰 Tech press coverage
 
 ---
 
-## 🎯 CHECKLIST AUJOURD'HUI (NEXT 2H)
+## [TARGET] CHECKLIST AUJOURD'HUI (NEXT 2H)
 
 Cochez au fur et à mesure:
 
@@ -338,15 +338,15 @@ Cochez au fur et à mesure:
 - [ ] Créer profile README organisation
 - [ ] Vérifier que README s'affiche bien
 
-**Après ça:** ✅ Phase 1 complete!
+**Après ça:** [OK] Phase 1 complete!
 
 **Demain:** Screenshots + posts
 
-**Mardi:** 🚀 LAUNCH!
+**Mardi:** [LAUNCH] LAUNCH!
 
 ---
 
-## 📞 Support
+## [PHONE] Support
 
 **Questions pendant le launch?**
 
@@ -357,20 +357,20 @@ Check:
 
 ---
 
-## 🎉 VOUS ALLEZ RÉUSSIR PARCE QUE:
+## [SUCCESS] VOUS ALLEZ RÉUSSIR PARCE QUE:
 
-✅ Produit qui marche (pas vaporware)
-✅ Documentation excellente (mieux que 95% des projets)
-✅ Vision claire (manifesto puissant)
-✅ Tests (397 passing = sérieux)
-✅ Timing (besoin de décentralisation jamais été plus fort)
-✅ Message (résonne avec l'époque)
+[OK] Produit qui marche (pas vaporware)
+[OK] Documentation excellente (mieux que 95% des projets)
+[OK] Vision claire (manifesto puissant)
+[OK] Tests (397 passing = sérieux)
+[OK] Timing (besoin de décentralisation jamais été plus fort)
+[OK] Message (résonne avec l'époque)
 
 **Vous avez tout. Il ne reste qu'à partager.**
 
 ---
 
-## 🚀 LET'S GO!
+## [LAUNCH] LET'S GO!
 
 **Commencez par cocher la première case.**
 
@@ -382,4 +382,4 @@ Puis la suivante.
 **Dans 4 jours: FRW est lancé.**
 **Dans 1 an: Le web est plus libre.**
 
-**GO! GO! GO!** 🔥
+**GO! GO! GO!** [HOT]

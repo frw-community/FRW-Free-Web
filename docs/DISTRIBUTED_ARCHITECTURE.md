@@ -1,4 +1,4 @@
-# 🚀 FRW Distributed Architecture - State of the Art
+# [LAUNCH] FRW Distributed Architecture - State of the Art
 
 **Mission:** Replace the centralized web with a truly distributed, censorship-resistant, globally scalable infrastructure.
 
@@ -6,16 +6,16 @@
 
 ---
 
-## 🎯 Design Goals
+## [TARGET] Design Goals
 
 ### Non-negotiables:
-1. ✅ **Zero central points of failure** - No single server can take down FRW
-2. ✅ **Global scale** - Must support millions of names and users
-3. ✅ **Sub-second resolution** - Competitive with DNS (<100ms cached, <5s cold)
-4. ✅ **Censorship resistance** - Impossible to block or censor names
-5. ✅ **Cryptographic security** - All records signed and verified
-6. ✅ **Byzantine fault tolerance** - Works even with malicious nodes
-7. ✅ **Self-healing** - Automatic recovery from failures
+1. [OK] **Zero central points of failure** - No single server can take down FRW
+2. [OK] **Global scale** - Must support millions of names and users
+3. [OK] **Sub-second resolution** - Competitive with DNS (<100ms cached, <5s cold)
+4. [OK] **Censorship resistance** - Impossible to block or censor names
+5. [OK] **Cryptographic security** - All records signed and verified
+6. [OK] **Byzantine fault tolerance** - Works even with malicious nodes
+7. [OK] **Self-healing** - Automatic recovery from failures
 
 ---
 
@@ -189,7 +189,7 @@ Can verify entire history
 
 ---
 
-## 📊 Performance Characteristics
+## [CHART] Performance Characteristics
 
 ### Name Resolution Latency
 
@@ -227,7 +227,7 @@ Can verify entire history
 
 ---
 
-## 🌍 Global Distribution
+## [WORLD] Global Distribution
 
 ### IPFS Network Statistics (as of 2025)
 
@@ -252,7 +252,7 @@ FRW uses IPFS as infrastructure:
 
 ---
 
-## 🔄 Update Propagation
+## [REFRESH] Update Propagation
 
 ### Registration Flow
 
@@ -336,7 +336,7 @@ User: frw publish ./updated-site
 
 ---
 
-## 🚀 Scalability
+## [LAUNCH] Scalability
 
 ### Theoretical Limits
 
@@ -377,9 +377,9 @@ User: frw publish ./updated-site
 
 ---
 
-## 🛠️ Implementation Status
+## [TOOLS] Implementation Status
 
-### ✅ Completed
+### [OK] Completed
 
 - [x] DHT integration layer
 - [x] Cryptographic signing/verification
@@ -396,7 +396,7 @@ User: frw publish ./updated-site
 - [ ] Statistics & monitoring
 - [ ] Performance tuning
 
-### 📅 Planned (v1.1)
+### [CALENDAR] Planned (v1.1)
 
 - [ ] Content routing optimization
 - [ ] DNSLink fallback
@@ -406,7 +406,7 @@ User: frw publish ./updated-site
 
 ---
 
-## 🎓 Technical Innovations
+## [GRADUATE] Technical Innovations
 
 ### 1. Hybrid DHT + Pubsub
 
@@ -441,7 +441,7 @@ User: frw publish ./updated-site
 
 ---
 
-## 📈 Monitoring & Observability
+## [GROWTH] Monitoring & Observability
 
 ### Metrics Collected
 
@@ -468,7 +468,7 @@ User: frw publish ./updated-site
 
 ---
 
-## 🌟 Why This Architecture is State-of-the-Art
+## [STAR] Why This Architecture is State-of-the-Art
 
 1. **No Blockchain Required**
    - Avoids: High costs, energy waste, complexity
@@ -497,21 +497,21 @@ User: frw publish ./updated-site
 
 ---
 
-## 🎯 Conclusion
+## [TARGET] Conclusion
 
 **FRW's distributed architecture represents the state-of-the-art in decentralized naming systems.**
 
 It combines:
-- ✅ Battle-tested technologies (IPFS, Libp2p)
-- ✅ Modern protocols (Gossipsub, IPNS)
-- ✅ Innovative optimizations (multi-tier caching, hybrid resolution)
-- ✅ Cryptographic security (Ed25519, PoW)
-- ✅ Global scale (millions of names, billions of users)
+- [OK] Battle-tested technologies (IPFS, Libp2p)
+- [OK] Modern protocols (Gossipsub, IPNS)
+- [OK] Innovative optimizations (multi-tier caching, hybrid resolution)
+- [OK] Cryptographic security (Ed25519, PoW)
+- [OK] Global scale (millions of names, billions of users)
 
-**This is how you replace the World Wide Web.** 🚀
+**This is how you replace the World Wide Web.** [LAUNCH]
 
 ---
 
 **Ready for production deployment.**
 **Ready to change the world.**
-**Ready for launch.** 🌍
+**Ready for launch.** [WORLD]

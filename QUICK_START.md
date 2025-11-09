@@ -105,7 +105,7 @@ npm run electron:dev
 1. Wait for browser window to open
 2. Enter in address bar: `frw://alice/`
 3. Click **Go**
-4. **See your page!** 🎉
+4. **See your page!** [SUCCESS]
 
 ---
 

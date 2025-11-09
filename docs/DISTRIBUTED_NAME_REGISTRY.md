@@ -448,17 +448,17 @@ propagation_time = time2 - time1
 - Update launch posts
 
 ### Step 6: Launch (Thursday)
-- With fully functional distributed names! 🚀
+- With fully functional distributed names! [LAUNCH]
 
 ---
 
 ## Success Criteria
 
-✅ User A registers `pouet` on Machine A  
-✅ User B can resolve `frw://pouet/` on Machine B  
-✅ Resolution time < 30 seconds  
-✅ No central server required  
-✅ Works with >2 IPFS peers connected  
+[OK] User A registers `pouet` on Machine A  
+[OK] User B can resolve `frw://pouet/` on Machine B  
+[OK] Resolution time < 30 seconds  
+[OK] No central server required  
+[OK] Works with >2 IPFS peers connected  
 
 ---
 
@@ -469,7 +469,7 @@ If DHT doesn't work reliably by Tuesday:
 - Document as "temporary centralization"
 - DHT comes in next release
 
-But let's make DHT work! 💪
+But let's make DHT work! [STRONG]
 
 ---
 

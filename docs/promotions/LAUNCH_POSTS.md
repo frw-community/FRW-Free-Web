@@ -1,4 +1,4 @@
-# 📝 Launch Post Templates
+# [NOTE] Launch Post Templates
 
 Copy-paste ready posts for each platform. Customize as needed.
 
@@ -44,10 +44,10 @@ FRW restores the original principles of the World Wide Web:
 - **Custom protocol handler** - Works like HTTP but decentralized
 
 **What makes it different:**
-- ❌ **Not a crypto project** - No blockchain, no tokens, no ICO
-- ❌ **Not a darknet** - Not hiding, not anonymous (use Tor for that)
-- ✅ **Fixing the WWW** - Same HTML/CSS/JS, same browser UX
-- ✅ **Working today** - Alpha stage, fully functional
+- [NO] **Not a crypto project** - No blockchain, no tokens, no ICO
+- [NO] **Not a darknet** - Not hiding, not anonymous (use Tor for that)
+- [OK] **Fixing the WWW** - Same HTML/CSS/JS, same browser UX
+- [OK] **Working today** - Alpha stage, fully functional
 
 ---
 
@@ -90,16 +90,16 @@ Your site is now:
 ## Current Status
 
 **Alpha release:**
-- ✅ CLI tool works
-- ✅ Browser works
-- ✅ End-to-end flow functional
-- ✅ Comprehensive docs
-- ⚠️ Needs more testing, features, polish
+- [OK] CLI tool works
+- [OK] Browser works
+- [OK] End-to-end flow functional
+- [OK] Comprehensive docs
+- [WARNING] Needs more testing, features, polish
 
 **Open source:**
 - 🔓 MIT License
 - 📖 Full documentation
-- 🤝 Looking for contributors
+- [HANDSHAKE] Looking for contributors
 
 ---
 
@@ -145,7 +145,7 @@ This is the web from 1995, rebuilt with 2025 tech.
 
 **Questions? Criticisms? Thoughts? I'm here to answer!**
 
-Thanks for reading 🙏
+Thanks for reading [THANKS]
 ```
 
 ---
@@ -217,22 +217,22 @@ This is not the web we were promised.
 
 3/ FRW restores the original WWW principles with modern tech:
 
-✅ IPFS storage (distributed across 100k+ nodes)
-✅ Ed25519 signatures (math proves authenticity)
-✅ Human names (frw://alice not Qm...hash)
-✅ Same web tech (HTML/CSS/JS)
+[OK] IPFS storage (distributed across 100k+ nodes)
+[OK] Ed25519 signatures (math proves authenticity)
+[OK] Human names (frw://alice not Qm...hash)
+[OK] Same web tech (HTML/CSS/JS)
 
 [Screenshot: browser]
 
 4/ It's NOT:
-❌ A blockchain (no tokens, no ICO)
-❌ A darknet (not anonymous/hiding)
-❌ Vaporware (working today, 397 tests)
+[NO] A blockchain (no tokens, no ICO)
+[NO] A darknet (not anonymous/hiding)
+[NO] Vaporware (working today, 397 tests)
 
 It IS:
-✅ The WWW, but decentralized
-✅ Open source (MIT)
-✅ Production-ready alpha
+[OK] The WWW, but decentralized
+[OK] Open source (MIT)
+[OK] Production-ready alpha
 
 5/ How it works:
 
@@ -259,11 +259,11 @@ No experimental tech. Just proven tools, right architecture.
 
 7/ Current status: Alpha
 
-✅ CLI works
-✅ Browser works
-✅ Signatures work
-✅ IPFS integration works
-⚠️ Needs polish, testing, features
+[OK] CLI works
+[OK] Browser works
+[OK] Signatures work
+[OK] IPFS integration works
+[WARNING] Needs polish, testing, features
 
 Open source, looking for contributors.
 
@@ -281,26 +281,26 @@ Not with new tech. With the RIGHT architecture.
 
 9/ Looking for:
 
-✅ Feedback ("does this solve your problem?")
-✅ Early testers (try it, break it, report)
-✅ Contributors (UX/UI, mobile, extensions)
-✅ Discussion (is this the right approach?)
+[OK] Feedback ("does this solve your problem?")
+[OK] Early testers (try it, break it, report)
+[OK] Contributors (UX/UI, mobile, extensions)
+[OK] Discussion (is this the right approach?)
 
 NOT looking for:
-❌ Money (it's free forever)
-❌ Investors (no company)
+[NO] Money (it's free forever)
+[NO] Investors (no company)
 
 10/ Links:
 
 🔗 GitHub: https://github.com/frw-community/FRW-Free-Web
 📖 Manifesto: [link]
-📚 Docs: [link]
+[DOCS] Docs: [link]
 
-If you believe the web should be free, give it a star ⭐
+If you believe the web should be free, give it a star [STAR]
 
 If you want to help, check the issues.
 
-Let's reclaim the web. 🌐
+Let's reclaim the web. [GLOBE]
 
 /end
 ```
@@ -547,11 +547,11 @@ Spent 30% of time on docs. Worth it:
 ## Current Status
 
 **Alpha release:**
-- ✅ Core protocol works
-- ✅ CLI functional
-- ✅ Browser functional
-- ✅ End-to-end flow works
-- ⚠️ Needs polish, features, testing
+- [OK] Core protocol works
+- [OK] CLI functional
+- [OK] Browser functional
+- [OK] End-to-end flow works
+- [WARNING] Needs polish, features, testing
 
 **Open source:**
 - MIT License
@@ -590,7 +590,7 @@ frw publish ./your-site
 - Join GitHub Discussions
 
 **Spread the word:**
-- Star the repo ⭐
+- Star the repo [STAR]
 - Share with friends
 - Write about it
 
@@ -790,7 +790,7 @@ If you want to support: contribute code, spread the word, use it.
 
 ### Thank you (star/positive comment)
 ```
-Thank you! 🙏
+Thank you! [THANKS]
 
 If you have feedback or find bugs, please open an issue on GitHub.
 
@@ -872,4 +872,4 @@ Happy to discuss further if you have specific technical questions.
 - Respond to EVERYTHING first 48h
 - This is a marathon, not a sprint
 
-**Good luck! 🚀**
+**Good luck! [LAUNCH]**

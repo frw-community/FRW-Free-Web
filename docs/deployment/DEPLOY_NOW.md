@@ -1,4 +1,4 @@
-# 🚀 LAUNCH FRW - Community-First Approach
+# [LAUNCH] LAUNCH FRW - Community-First Approach
 
 **Time: 40 minutes**  
 **Cost: $0/month (YOUR VPS - no new costs!)**  
@@ -6,26 +6,26 @@
 
 ---
 
-## 🎯 THE FRW WAY: Let Community Build Infrastructure
+## [TARGET] THE FRW WAY: Let Community Build Infrastructure
 
 **NOT the FRW way:**
-- ❌ You pay for nodes worldwide ($20-30/month)
-- ❌ You become "the infrastructure provider"
-- ❌ Everyone depends on YOU
-- ❌ Financial burden forever
-- ❌ Single point of failure
+- [NO] You pay for nodes worldwide ($20-30/month)
+- [NO] You become "the infrastructure provider"
+- [NO] Everyone depends on YOU
+- [NO] Financial burden forever
+- [NO] Single point of failure
 
 **THE FRW WAY:**
-- ✅ YOU run 2 nodes on your existing VPS ($0 extra cost)
-- ✅ COMMUNITY runs nodes where they live
-- ✅ Network grows organically
-- ✅ No single point of failure
-- ✅ TRUE decentralization
-- ✅ Sustainable forever
+- [OK] YOU run 2 nodes on your existing VPS ($0 extra cost)
+- [OK] COMMUNITY runs nodes where they live
+- [OK] Network grows organically
+- [OK] No single point of failure
+- [OK] TRUE decentralization
+- [OK] Sustainable forever
 
 ---
 
-## ✅ CHECKLIST
+## [OK] CHECKLIST
 
 ### [ ] 1. Your Swiss Linux VPS (20 min)
 
@@ -134,7 +134,7 @@ frw register testglobal
 curl http://SWISS-LINUX-IP:3030/api/resolve/testglobal
 curl http://SWISS-WINDOWS-IP:3030/api/resolve/testglobal
 
-# Both should return same record! ✅
+# Both should return same record! [OK]
 
 # Test in browser
 frw://testglobal/
@@ -143,25 +143,25 @@ frw://testglobal/
 
 ---
 
-## 🎉 SUCCESS! FRW IS LIVE!
+## [SUCCESS] SUCCESS! FRW IS LIVE!
 
 **You now have:**
-- ✅ 2 bootstrap nodes (both Swiss)
-- ✅ Europe: Fast! (< 50ms)
-- ✅ Americas/Asia: Slower but works (150-250ms)
-- ✅ Cost to you: **$0/month** (using existing VPS)
-- ✅ Ready to LAUNCH! 🚀
+- [OK] 2 bootstrap nodes (both Swiss)
+- [OK] Europe: Fast! (< 50ms)
+- [OK] Americas/Asia: Slower but works (150-250ms)
+- [OK] Cost to you: **$0/month** (using existing VPS)
+- [OK] Ready to LAUNCH! [LAUNCH]
 
 **Network status:**
-- Europe: ⭐⭐⭐⭐⭐ (excellent coverage)
-- Americas: ⭐⭐⭐ (works, could be faster)
-- Asia: ⭐⭐⭐ (works, could be faster)
+- Europe: [STAR][STAR][STAR][STAR][STAR] (excellent coverage)
+- Americas: [STAR][STAR][STAR] (works, could be faster)
+- Asia: [STAR][STAR][STAR] (works, could be faster)
 
 **This is ENOUGH to launch!** Users worldwide can access FRW.
 
 ---
 
-## 🌍 NEXT: Community Growth (Week 2+)
+## [WORLD] NEXT: Community Growth (Week 2+)
 
 **Now let the network grow organically:**
 
@@ -169,7 +169,7 @@ frw://testglobal/
 
 **Create tools (tomorrow - 2 hours):**
 - Docker image: `docker run frw/bootstrap-node`
-- Simple guide: `docs/RUN_A_NODE.md` ✅ (done!)
+- Simple guide: `docs/RUN_A_NODE.md` [OK] (done!)
 - One-line script: `curl https://get.frw.network | bash`
 
 ### Step 2: Invite Community to Help
@@ -178,7 +178,7 @@ frw://testglobal/
 ```
 FRW Alpha is LIVE!
 
-- Works globally from any country ✅
+- Works globally from any country [OK]
 - Fast for Europe (< 50ms)
 - Acceptable worldwide (< 250ms)
 
@@ -186,7 +186,7 @@ Want to make FRW faster in YOUR region?
 Run a bootstrap node! Takes 5 minutes.
 👉 frw.network/run-node
 
-Together we build the decentralized web! 🌍
+Together we build the decentralized web! [WORLD]
 ```
 
 ### Step 3: Watch Network Grow
@@ -194,27 +194,27 @@ Together we build the decentralized web! 🌍
 **Natural growth pattern:**
 ```
 Week 1: YOU (2 Swiss nodes)
-Week 2: Early adopter in USA adds node → Americas fast! ✅
-Week 3: User in Singapore adds node → Asia fast! ✅
-Week 4: User in Brazil adds node → South America fast! ✅
-Month 2: 10+ community nodes → Excellent worldwide ✅
-Month 6: 50+ nodes → UNSTOPPABLE network ✅
+Week 2: Early adopter in USA adds node → Americas fast! [OK]
+Week 3: User in Singapore adds node → Asia fast! [OK]
+Week 4: User in Brazil adds node → South America fast! [OK]
+Month 2: 10+ community nodes → Excellent worldwide [OK]
+Month 6: 50+ nodes → UNSTOPPABLE network [OK]
 ```
 
-**Cost to you: Still $0/month!** 💪
+**Cost to you: Still $0/month!** [STRONG]
 
 ### Why This Works:
 
-- ✅ Users benefit from running nodes (faster local speeds)
-- ✅ Community shares infrastructure burden
-- ✅ Network grows where users actually are
-- ✅ Validates real demand
-- ✅ Truly decentralized (no single operator)
-- ✅ Sustainable forever
+- [OK] Users benefit from running nodes (faster local speeds)
+- [OK] Community shares infrastructure burden
+- [OK] Network grows where users actually are
+- [OK] Validates real demand
+- [OK] Truly decentralized (no single operator)
+- [OK] Sustainable forever
 
 ---
 
-## 📊 Monitoring
+## [CHART] Monitoring
 
 **Check node health:**
 ```bash
@@ -233,7 +233,7 @@ curl https://YOUR-RAILWAY-URL/api/stats
 
 ---
 
-## 🚀 NEXT STEPS
+## [LAUNCH] NEXT STEPS
 
 ### Week 1:
 - [ ] Invite community to run nodes
@@ -247,6 +247,6 @@ curl https://YOUR-RAILWAY-URL/api/stats
 
 ---
 
-**YOU'RE BUILDING SOMETHING INCREDIBLE!** 💪
+**YOU'RE BUILDING SOMETHING INCREDIBLE!** [STRONG]
 
-**FRW = The decentralized web that cannot be stopped!** 🌍
+**FRW = The decentralized web that cannot be stopped!** [WORLD]

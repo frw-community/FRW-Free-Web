@@ -306,4 +306,4 @@ Both work! The frw:// URL is cleaner.
 
 ---
 
-**Enjoy the decentralized web!** 🌐
+**Enjoy the decentralized web!** [GLOBE]

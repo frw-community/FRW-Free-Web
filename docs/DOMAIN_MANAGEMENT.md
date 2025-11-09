@@ -702,4 +702,4 @@ A: You can still use FRW names: `frw://myname/`
 
 ---
 
-**Happy domain mapping! 🌐**
+**Happy domain mapping! [GLOBE]**

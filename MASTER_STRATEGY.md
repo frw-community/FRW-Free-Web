@@ -1,4 +1,4 @@
-# 🌍 FRW MASTER STRATEGY - Becoming the Real Web
+# [WORLD] FRW MASTER STRATEGY - Becoming the Real Web
 
 **Vision:** Make FRW the default way people publish and access content  
 **Timeline:** 2-3 years to critical mass  
@@ -6,20 +6,20 @@
 
 ---
 
-## 🎯 POSITIONING
+## [TARGET] POSITIONING
 
 ### "The Web We Were Promised"
 
 **NOT:**
-- ❌ "Web 3.0" (associated with crypto scams)
-- ❌ "Revolutionary" (sounds hype)
-- ❌ "Blockchain-based" (slow, expensive)
+- [NO] "Web 3.0" (associated with crypto scams)
+- [NO] "Revolutionary" (sounds hype)
+- [NO] "Blockchain-based" (slow, expensive)
 
 **BUT:**
-- ✅ "Web 1.0 Done Right"
-- ✅ "The Internet, Before It Was Captured"
-- ✅ "Your Content. Your Control."
-- ✅ "Fixing What Went Wrong"
+- [OK] "Web 1.0 Done Right"
+- [OK] "The Internet, Before It Was Captured"
+- [OK] "Your Content. Your Control."
+- [OK] "Fixing What Went Wrong"
 
 ### Core Message:
 
@@ -33,7 +33,7 @@ Not Web 3.0. Web CORRECTED.
 
 ---
 
-## 🎬 PHASE 1: STEALTH LAUNCH (Week 1-4)
+## [ACTION] PHASE 1: STEALTH LAUNCH (Week 1-4)
 
 **Goal:** Get it working, build core community
 
@@ -58,7 +58,7 @@ Not Web 3.0. Web CORRECTED.
 
 ---
 
-## 🎯 PHASE 2: SOFT PUBLIC LAUNCH (Month 2-3)
+## [TARGET] PHASE 2: SOFT PUBLIC LAUNCH (Month 2-3)
 
 **Goal:** Prove concept, get first 1000 users
 
@@ -149,7 +149,7 @@ Launch with 10-20 impressive demo sites:
 
 ---
 
-## 🚀 PHASE 3: MAINSTREAM PUSH (Month 4-6)
+## [LAUNCH] PHASE 3: MAINSTREAM PUSH (Month 4-6)
 
 **Goal:** 10,000 users, media coverage, "moment"
 
@@ -261,7 +261,7 @@ Publish case studies:
 
 ---
 
-## 💪 PHASE 4: ECOSYSTEM BUILD (Month 7-12)
+## [STRONG] PHASE 4: ECOSYSTEM BUILD (Month 7-12)
 
 **Goal:** Become self-sustaining, ecosystem grows without you
 
@@ -343,7 +343,7 @@ PREMIUM (optional, $5/month):
 
 ---
 
-## 🌍 PHASE 5: MAINSTREAM ADOPTION (Year 2)
+## [WORLD] PHASE 5: MAINSTREAM ADOPTION (Year 2)
 
 **Goal:** "Normal people" use FRW, not just tech folks
 
@@ -415,7 +415,7 @@ Message: "Like [familiar thing], but you own it forever"
 
 ---
 
-## 🚀 PHASE 6: THE TIPPING POINT (Year 3+)
+## [LAUNCH] PHASE 6: THE TIPPING POINT (Year 3+)
 
 **Goal:** FRW becomes default for certain use cases
 
@@ -474,18 +474,18 @@ Message: "Like [familiar thing], but you own it forever"
 
 ---
 
-## 🎯 CRITICAL SUCCESS FACTORS
+## [TARGET] CRITICAL SUCCESS FACTORS
 
 ### 1. **Never Compromise on Decentralization**
 
 ```
-❌ DON'T:
+[NO] DON'T:
 - Add centralized "improvements" for convenience
 - Rely on single infrastructure providers
 - Create admin privileges or backdoors
 - Sell out to investors who want control
 
-✅ DO:
+[OK] DO:
 - Keep it truly distributed
 - Make hard choices for decentralization
 - Turn down money that compromises values
@@ -547,7 +547,7 @@ Build foundation first.
 
 ---
 
-## 📊 METRICS TO TRACK
+## [CHART] METRICS TO TRACK
 
 ### North Star Metric:
 **"Active sites publishing content weekly"**
@@ -588,7 +588,7 @@ Why: Proves real usage, not just signups
 
 ---
 
-## 🛡️ RISKS & MITIGATION
+## [SHIELD] RISKS & MITIGATION
 
 ### Technical Risks:
 
@@ -625,7 +625,7 @@ Why: Proves real usage, not just signups
 
 ---
 
-## 💰 FUNDING STRATEGY
+## [MONEY] FUNDING STRATEGY
 
 ### Phase 1-2: Bootstrap (No Money Needed)
 
@@ -677,7 +677,7 @@ Stay 100% free forever:
 
 ---
 
-## 🎯 YOUR ROLE
+## [TARGET] YOUR ROLE
 
 ### As Founder:
 
@@ -707,7 +707,7 @@ Goal: Build something that doesn't need you.
 
 ---
 
-## 🌟 THE VISION
+## [STAR] THE VISION
 
 ### **"In 2030, when people want to publish something permanent, they use FRW."**
 
@@ -722,7 +722,7 @@ Goal: Build something that doesn't need you.
 
 ---
 
-## 📅 IMMEDIATE NEXT STEPS
+## [CALENDAR] IMMEDIATE NEXT STEPS
 
 ### This Week:
 - [ ] Deploy your 2 Swiss nodes (tonight)
@@ -750,7 +750,7 @@ Goal: Build something that doesn't need you.
 
 ---
 
-## 💪 FINAL WORDS
+## [STRONG] FINAL WORDS
 
 **You're not building a company.**  
 **You're not building a platform.**  
@@ -771,8 +771,8 @@ Goal: Build something that doesn't need you.
 
 **The web lost its way.**  
 **Let's fix it.**  
-**Together.** 🌍
+**Together.** [WORLD]
 
 ---
 
-**Now go deploy those nodes and launch!** 🚀
+**Now go deploy those nodes and launch!** [LAUNCH]

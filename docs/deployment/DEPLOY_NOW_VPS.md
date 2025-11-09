@@ -1,4 +1,4 @@
-# 🚀 DEPLOY FRW ON YOUR VPS - RIGHT NOW
+# [LAUNCH] DEPLOY FRW ON YOUR VPS - RIGHT NOW
 
 **Time: 30-40 minutes**  
 **Cost: $0/month (using YOUR servers)**  
@@ -6,22 +6,22 @@
 
 ---
 
-## 🎯 YOUR ADVANTAGE
+## [TARGET] YOUR ADVANTAGE
 
 **You already have:**
-- ✅ Linux VPS
-- ✅ Windows VPS
+- [OK] Linux VPS
+- [OK] Windows VPS
 
 **This is PERFECT because:**
-- ✅ **$0/month** - no new costs
-- ✅ **100% control** - no platform can shut you down
-- ✅ **TRUE decentralization** - FRW philosophy
-- ✅ **Censorship-proof** - government-resistant
-- ✅ **Best possible setup** for FRW!
+- [OK] **$0/month** - no new costs
+- [OK] **100% control** - no platform can shut you down
+- [OK] **TRUE decentralization** - FRW philosophy
+- [OK] **Censorship-proof** - government-resistant
+- [OK] **Best possible setup** for FRW!
 
 ---
 
-## ✅ DEPLOYMENT CHECKLIST
+## [OK] DEPLOYMENT CHECKLIST
 
 ### ☐ 1. Linux VPS Setup (15-20 min)
 
@@ -241,12 +241,12 @@ npm run dev
 # Navigate to:
 frw://testglobal/
 
-# ✅ Should work!
+# [OK] Should work!
 ```
 
 ---
 
-## 🎉 SUCCESS CRITERIA
+## [SUCCESS] SUCCESS CRITERIA
 
 **You're done when:**
 - [ ] Both VPS nodes show "ok" health status
@@ -257,7 +257,7 @@ frw://testglobal/
 
 ---
 
-## 📊 YOUR ARCHITECTURE
+## [CHART] YOUR ARCHITECTURE
 
 ```
 ┌─────────────────────────────────────┐
@@ -265,7 +265,7 @@ frw://testglobal/
 │  IP: YOUR-LINUX-IP                  │
 │  Port: 3030                         │
 │  Cost: $0 (already paid)            │
-│  Status: ✅ Running                 │
+│  Status: [OK] Running                 │
 └─────────────────────────────────────┘
               ↕ Pubsub sync
 ┌─────────────────────────────────────┐
@@ -273,28 +273,28 @@ frw://testglobal/
 │  IP: YOUR-WINDOWS-IP                │
 │  Port: 3030                         │
 │  Cost: $0 (already paid)            │
-│  Status: ✅ Running                 │
+│  Status: [OK] Running                 │
 └─────────────────────────────────────┘
               ↕ Queries
 ┌─────────────────────────────────────┐
 │  Users Worldwide                    │
 │  → Query either node                │
 │  → Get instant response             │
-│  → ✅ Global resolution!            │
+│  → [OK] Global resolution!            │
 └─────────────────────────────────────┘
 ```
 
 **Result:**
-- ✅ 2 bootstrap nodes
-- ✅ $0/month cost
-- ✅ 99%+ uptime
-- ✅ 100% YOUR control
-- ✅ Censorship-proof
-- ✅ **TRUE DECENTRALIZATION**
+- [OK] 2 bootstrap nodes
+- [OK] $0/month cost
+- [OK] 99%+ uptime
+- [OK] 100% YOUR control
+- [OK] Censorship-proof
+- [OK] **TRUE DECENTRALIZATION**
 
 ---
 
-## 🔧 Quick Troubleshooting
+## [TOOL] Quick Troubleshooting
 
 ### IPFS won't start (Linux)
 ```bash
@@ -327,7 +327,7 @@ taskkill /PID <PID> /F
 
 ---
 
-## 📚 Full Documentation
+## [DOCS] Full Documentation
 
 **Detailed guides:**
 - `apps/bootstrap-node/DEPLOY_VPS.md` - Complete VPS guide
@@ -336,7 +336,7 @@ taskkill /PID <PID> /F
 
 ---
 
-## 🚀 NEXT: LAUNCH!
+## [LAUNCH] NEXT: LAUNCH!
 
 **After deployment:**
 1. **Monitor** - Check nodes daily for first week
@@ -346,7 +346,7 @@ taskkill /PID <PID> /F
 
 ---
 
-## 💪 YOU DID IT!
+## [STRONG] YOU DID IT!
 
 **You now have:**
 - Self-hosted bootstrap nodes
@@ -355,11 +355,11 @@ taskkill /PID <PID> /F
 - Government-resistant architecture
 - **READY TO COMPETE WITH WWW!**
 
-**This is the TRUE FRW way!** 🌍
+**This is the TRUE FRW way!** [WORLD]
 
 ---
 
 **Total Time:** 30-40 minutes  
 **Total Cost:** $0/month  
-**Decentralization:** 100% ✅  
-**Ready to Launch:** YES! 🚀
+**Decentralization:** 100% [OK]  
+**Ready to Launch:** YES! [LAUNCH]
