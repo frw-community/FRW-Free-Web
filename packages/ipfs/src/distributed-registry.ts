@@ -332,14 +332,13 @@ export class DistributedNameRegistry {
    */
   private async queryHTTPBootstrap(name: string): Promise<DistributedNameRecord | null> {
     const BOOTSTRAP_NODES = [
-      // PRIMARY NODES (Production)
-      // TODO: Replace with your actual Railway/Fly.io URLs after deployment
-      // 'https://frw-us.up.railway.app',         // US-East (Railway)
-      // 'https://frw-bootstrap-eu.fly.dev',      // Europe (Fly.io)
-      // 'https://frw-bootstrap-asia.fly.dev',    // Asia (Fly.io)
+      // PRIMARY NODES (Swiss VPS - Production)
+      'http://83.228.214.189:3100',                // Swiss VPS 1 (Debian Linux) - IPv4
+      'http://[2001:1600:18:102::165]:3100',       // Swiss VPS 1 (Debian Linux) - IPv6
+      // Windows VPS will be added after setup
       
       // LOCAL DEV
-      'http://localhost:3030',
+      'http://localhost:3100',
       
       // COMMUNITY NODES (Anyone can add)
       // Community members can submit PRs to add their bootstrap nodes here

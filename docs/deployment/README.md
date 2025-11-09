@@ -18,12 +18,18 @@
    - Step-by-step instructions
    - Ready to launch immediately
 
-3. **[DEPLOY_NOW_VPS.md](./DEPLOY_NOW_VPS.md)** - Detailed VPS deployment guide
+3. **[DEPLOY_SWISS_VPS.md](./DEPLOY_SWISS_VPS.md)** - **NEW!** Swiss VPS deployment guide
+   - Docker deployment (15 min) [RECOMMENDED]
+   - Manual deployment option
+   - Systemd service setup
+   - Your specific VPS configuration
+
+4. **[DEPLOY_NOW_VPS.md](./DEPLOY_NOW_VPS.md)** - General VPS deployment guide
    - Complete Linux VPS setup (20 min)
    - Complete Windows VPS setup (20 min)
    - Troubleshooting included
 
-4. **[DEPLOYMENT_STRATEGY.md](./DEPLOYMENT_STRATEGY.md)** - Multi-node architecture
+5. **[DEPLOYMENT_STRATEGY.md](./DEPLOYMENT_STRATEGY.md)** - Multi-node architecture
    - Geographic distribution strategy
    - Community node growth plan
    - Scaling roadmap
