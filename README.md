@@ -53,7 +53,7 @@ No servers. No middlemen. Just the free web.
 
 ## Quick Start
 
-### Docker Deployment (Recommended)
+### Docker Installation (Recommended)
 
 ```bash
 # Clone repository
@@ -66,14 +66,17 @@ docker-compose up -d
 # Initialize FRW
 docker-compose exec frw-cli frw init
 
-# Register name
+# Register a name
 docker-compose exec frw-cli frw register myname
 
-# Configure site
-docker-compose exec frw-cli frw configure /data/sites/mysite
+# Configure your site
+docker-compose exec frw-cli frw configure /data/sites/my-site
 
-# Publish content
-docker-compose exec frw-cli frw publish /data/sites/mysite
+# Publish
+docker-compose exec frw-cli frw publish /data/sites/my-site
+
+# Check your site's metrics
+docker-compose exec frw-cli frw metrics myname
 
 # Access via FRW protocol: frw://myname/
 # Access via HTTP gateway: http://localhost:3000/frw/myname/
@@ -115,15 +118,19 @@ npm run electron:dev
 # Address bar: frw://myname/
 ```
 
-### Secondary: HTTP Gateway
+### Access Your Site
 
-```bash
-# Access via standard browser
+**Primary (FRW Browser):**
+```
+frw://myname/
+```
+
+**Secondary (HTTP Gateway):**
+```
 http://localhost:3000/frw/myname/
 ```
 
-### Tertiary: Custom Domain
-
+**Tertiary (Custom Domain):**
 ```bash
 # Configure domain mapping
 frw domain add example.com myname
@@ -134,6 +141,27 @@ frw domain add example.com myname
 
 Reference: [Access Methods Documentation](docs/ACCESS_METHODS.md)
 
+### Protect Your Name
+
+**Check Usage Metrics:**
+```bash
+frw metrics myname
+```
+
+**Challenge Inactive Names:**
+```bash
+frw challenge create squattedname \
+  --reason squatting \
+  --bond 1000000
+```
+
+**Respond to Challenges:**
+```bash
+frw challenge respond <challenge-id> --counter-bond 1000000
+```
+
+Reference: [Challenge System User Guide](docs/USER_GUIDE_CHALLENGES.md)
+
 ## Documentation
 
 Complete documentation available in [docs/](docs/) directory.
@@ -143,6 +171,7 @@ Complete documentation available in [docs/](docs/) directory.
 - [Architecture](docs/ARCHITECTURE.md) - System design and component interaction
 - [Security Model](docs/SECURITY.md) - Cryptographic primitives and threat analysis
 - [Access Methods](docs/ACCESS_METHODS.md) - Protocol comparison and usage guidelines
+- [Name Registry Specification](docs/NAME_REGISTRY_SPEC.md) - Anti-squatting system technical spec
 
 ### Deployment Guides
 - [Docker Deployment](docs/DOCKER_DEPLOYMENT.md) - Containerized deployment procedures
@@ -152,7 +181,9 @@ Complete documentation available in [docs/](docs/) directory.
 
 ### Operational Guides
 - [User Guide](docs/USER_GUIDE.md) - End-user operations
+- [Challenge System Guide](docs/USER_GUIDE_CHALLENGES.md) - Name disputes and challenges
 - [Domain Management](docs/DOMAIN_MANAGEMENT.md) - DNS bridge configuration
+- [DNS Resolution](docs/DNS_RESOLUTION.md) - DNS TXT-based name resolution in FRW browser
 - [Site Configuration](docs/SITE_CONFIGURATION.md) - Site structure and metadata
 - [IPFS Setup](docs/IPFS_SETUP.md) - IPFS node configuration
 
@@ -302,7 +333,7 @@ Found a security issue? Email: security@frw.dev
 
 ### Implemented
 - FRW protocol specification v1.0
-- CLI tooling (init, register, publish, verify)
+- CLI tooling (init, register, publish, verify, metrics, challenges)
 - Electron browser with frw:// protocol handler
 - IPFS integration via Kubo
 - Ed25519 cryptographic signing
@@ -311,13 +342,19 @@ Found a security issue? Email: security@frw.dev
 - DNS domain mapping
 - Docker deployment configuration
 - Site configuration system
+- Anti-squatting challenge system (Phase 1)
+- IPFS metrics collection and scoring
+- Automatic dispute resolution
 
 ### In Development
 - Browser tab management
 - Bookmark system
 - History tracking
-- DHT-based name registry
 - Browser extension for standard browsers
+- Bond management system (crypto integration)
+- DHT publication for challenges
+- Trust graph (Phase 2)
+- Community voting (Phase 2)
 
 ### Planned
 - Native installers for Windows/Mac/Linux

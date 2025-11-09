@@ -45,29 +45,91 @@ Challenge mechanism:
 - Automatic resolution via metrics
 - Bond distribution to winner
 
-### Phase 2: 6 Months
+### Phase 2: 6 Months (Trust Graph + Community Voting)
 
-**Trust Graph + Reputation Voting**
+**Status:** Architecture defined, implementation planned
 
-Social verification layer:
-- Trust relationships
-- Attestations
-- Reputation scoring
-- Weighted community votes
+**Trigger Conditions:**
+- Network has 1000+ active users
+- 100+ challenges completed
+- Metrics show need for social layer (close-call disputes >5%)
 
-### Phase 3: 1 Year
+**Components:**
 
-**Cryptographic Jury + ZK Proofs**
+#### Trust Graph System
+- User attestations (identity, reputation, expertise)
+- Trust score calculation (0-1000)
+- Trust path discovery (6 degrees max)
+- Attestation management and revocation
 
-Advanced mechanisms:
-- Random jury selection
-- Stake-weighted validators
-- Zero-knowledge usage proofs
-- Privacy-preserving verification
+#### Reputation System
+- Activity-based scoring (content, updates, participation)
+- Tier system (BRONZE → SILVER → GOLD → PLATINUM)
+- Reputation requirements for privileges
+- Decay for inactivity
+
+#### Community Voting
+- Escalation for close-call challenges (score diff < 20%)
+- Reputation-weighted ballots
+- 14-day voting period
+- 60% supermajority required
+- Quorum of 100 minimum votes
+
+**CLI Commands:**
+```bash
+frw trust attest <publicKey> --type identity --strength 8
+frw trust score <publicKey>
+frw reputation show <publicKey>
+frw vote cast <voteId> --choice 0
+```
+
+**See:** `docs/NAME_REGISTRY_PHASE2_SPEC.md` for detailed implementation
+
+### Phase 3: 1 Year (Cryptographic Jury + ZK Proofs)
+
+**Status:** Research phase, specifications to be defined
+
+**Components:**
+- Cryptographic sortition for unbiased jury selection
+- Stake-weighted random sampling
+- Zero-knowledge proofs for usage verification
+- Privacy-preserving metrics
+
+**See:** Phase 3 specification (TBD)
+
+---
+
+## Implementation Status
+
+| Phase | Component | Status | Completion |
+|-------|-----------|--------|------------|
+| 1 | Content Metrics | ✅ Complete | 100% |
+| 1 | Challenge System | ✅ Complete | 100% |
+| 1 | DNS Verification | ✅ Complete | 100% |
+| 1 | Automatic Resolution | ✅ Complete | 100% |
+| 2 | Trust Graph | 📋 Planned | 0% |
+| 2 | Reputation System | 📋 Planned | 0% |
+| 2 | Community Voting | 📋 Planned | 0% |
+| 3 | Jury Selection | 🔬 Research | 0% |
+| 3 | ZK Proofs | 🔬 Research | 0% |
+
+---
 
 ## Technical Details
 
-See implementation files:
+### Documentation
+- `docs/NAME_REGISTRY_PHASE2_SPEC.md` - Phase 2 detailed specification
+- `docs/USER_GUIDE_CHALLENGES.md` - User guide for challenge system
+- `docs/SECURITY_AUDIT_CHECKLIST.md` - Security review checklist
+- `tests/e2e/challenge-workflow.test.md` - End-to-end test scenarios
+
+### Implementation
 - `packages/name-registry/` - Core implementation
-- `apps/cli/src/commands/challenge.ts` - CLI interface
-- `docs/NAME_REGISTRY_IMPLEMENTATION.md` - Code specifications
+- `apps/cli/src/commands/challenge.ts` - CLI challenge commands
+- `packages/name-registry/src/dns/verifier.ts` - DNS verification
+- `packages/name-registry/src/metrics/collector.ts` - IPFS metrics
+
+### Completion Summaries
+- `PHASE_1A_COMPLETE.md` - Metrics collection implementation
+- `PHASE_1B_COMPLETE.md` - Challenge system implementation
+- `DNS_VERIFICATION_COMPLETE.md` - DNS verification implementation
