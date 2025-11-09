@@ -9,7 +9,7 @@ import { DNSVerifier, requiresDNSVerification } from '@frw/name-registry';
 
 interface RegisterOptions {
   key?: string;
-  skipDns?: boolean;  // For testing only
+  verifyDns?: boolean;  // Optional: Verify DNS ownership for official status
 }
 
 export async function registerCommand(name: string, options: RegisterOptions): Promise<void> {
@@ -33,23 +33,18 @@ export async function registerCommand(name: string, options: RegisterOptions): P
     process.exit(1);
   }
   
-  // Check if DNS verification required
-  const needsDNS = requiresDNSVerification(name);
+  // Optional DNS verification for domain-like names
+  const isDomainLike = requiresDNSVerification(name);
   let dnsVerified = false;
   
-  if (needsDNS && !options.skipDns) {
-    logger.section('DNS Verification Required');
+  if (isDomainLike && options.verifyDns) {
+    logger.section('Optional DNS Verification');
     logger.info('');
-    logger.warn(`"${name}" requires DNS verification to prevent squatting`);
-    logger.info('');
-    logger.info('This name is either:');
-    logger.info('  - A domain name (e.g., example.com)');
-    logger.info('  - A reserved brand name (e.g., google, microsoft)');
-    logger.info('');
-    logger.info('You must prove ownership via DNS TXT record.');
+    logger.info(`"${name}" appears to be a domain name or reserved brand.`);
+    logger.info('Verify ownership via DNS to get "Official" status.');
     logger.info('');
     
-    // Load public key first to show in instructions
+    // Load public key for DNS instructions
     const spinner = ora('Loading keypair...').start();
     let publicKeyForDNS: string;
     try {
@@ -78,7 +73,7 @@ export async function registerCommand(name: string, options: RegisterOptions): P
     }
     
     // Show DNS instructions
-    logger.info(logger.code('Required DNS Configuration:'));
+    logger.info(logger.code('DNS Configuration:'));
     logger.info('');
     logger.info('Add this TXT record to your DNS:');
     logger.info('');
@@ -95,49 +90,39 @@ export async function registerCommand(name: string, options: RegisterOptions): P
       {
         type: 'confirm',
         name: 'confirm',
-        message: 'Have you added the DNS TXT record?',
+        message: 'Ready to verify DNS?',
         default: false
       }
     ]);
     
-    if (!confirm) {
+    if (confirm) {
+      // Verify DNS
       logger.info('');
-      logger.info('Registration cancelled. Add the DNS record and try again.');
-      process.exit(0);
-    }
-    
-    // Verify DNS
-    logger.info('');
-    const verifySpinner = ora('Verifying DNS...').start();
-    const verifier = new DNSVerifier();
-    const result = await verifier.verifyDomainOwnership(name, publicKeyForDNS);
-    
-    if (!result.verified) {
-      verifySpinner.fail('DNS verification failed');
-      logger.error('');
-      if (result.error) {
-        logger.error(result.error);
+      const verifySpinner = ora('Verifying DNS...').start();
+      const verifier = new DNSVerifier();
+      const result = await verifier.verifyDomainOwnership(name, publicKeyForDNS);
+      
+      if (result.verified) {
+        verifySpinner.succeed('DNS verification passed');
+        dnsVerified = true;
+        logger.info('');
+      } else {
+        verifySpinner.fail('DNS verification failed');
+        logger.warn('');
+        if (result.error) {
+          logger.warn(result.error);
+        }
+        logger.info('');
+        logger.info('Continuing without DNS verification.');
+        logger.info('You can verify later with: frw verify-dns ' + name);
+        logger.info('');
       }
-      if (result.dnsKey && result.dnsKey !== publicKeyForDNS) {
-        logger.error('DNS public key does not match:');
-        logger.error(`  Expected: ${publicKeyForDNS}`);
-        logger.error(`  Found:    ${result.dnsKey}`);
-      }
+    } else {
       logger.info('');
-      logger.info('Please check:');
-      logger.info('  1. DNS record is correctly added');
-      logger.info('  2. DNS has propagated (wait 5-10 minutes)');
-      logger.info('  3. Public key matches exactly');
+      logger.info('Skipping DNS verification.');
+      logger.info('You can verify later with: frw verify-dns ' + name);
       logger.info('');
-      logger.info('Test DNS manually:');
-      logger.info(`  dig _frw.${name} TXT`);
-      logger.info(`  nslookup -type=TXT _frw.${name}`);
-      process.exit(1);
     }
-    
-    verifySpinner.succeed('DNS verification passed');
-    dnsVerified = true;
-    logger.info('');
   }
 
   // Load key
@@ -205,13 +190,27 @@ export async function registerCommand(name: string, options: RegisterOptions): P
 
   logger.section('Registration Complete');
   logger.success(`Name "${name}" registered successfully!`);
+  
   if (dnsVerified) {
-    logger.success('✓ DNS verified - Protected from squatting');
+    logger.success('✓ DNS Verified - Official status granted');
+    logger.info('  Users will see this as the verified site');
+  } else if (isDomainLike) {
+    logger.warn('⚠ Not DNS verified');
+    logger.info('  Users will see an unverified warning');
+    logger.info('  To verify: frw verify-dns ' + name);
   }
+  
   logger.info('');
   logger.info('Name: ' + logger.code(name));
   logger.info('Public key: ' + logger.code(publicKeyEncoded));
   logger.info('IPNS: ' + logger.code(ipnsName));
+  
+  if (dnsVerified) {
+    logger.info('Status: ' + logger.code('✓ DNS Verified'));
+  } else if (isDomainLike) {
+    logger.info('Status: ' + logger.code('⚠ Unverified'));
+  }
+  
   logger.info('');
   logger.info('Your site will be accessible at:');
   logger.info('  ' + logger.url(`frw://${name}/`));
