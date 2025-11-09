@@ -1,7 +1,26 @@
 # FRW - Free Resilient Web
 
-> **In 2025, five companies control what 5 billion people can say.**  
-> **This is how we take it back.**
+**The Web Was Born Free.**
+
+Open protocols. Open standards. Open access. No one owned it. No one controlled it. Everyone could publish.
+
+**Then we gave it away to five companies.**
+
+Today, your content lives on their servers. Your identity exists in their databases. Your voice depends on their algorithms.
+
+Big Tech decides what you see.  
+Big Tech decides what exists.  
+Big Tech decides who can speak.  
+Big Tech decides what stays online.  
+Big Tech decides what you can install.
+
+One company bans you, your audience vanishes.  
+One server fails, your life's work disappears.  
+One terms of service changes, you lose everything.
+
+**This is not the web we were promised.**
+
+---
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen.svg)](https://nodejs.org)
@@ -11,56 +30,71 @@
 
 ---
 
-## ⚠️ This Is Not Another Crypto Project
+## We Declare Independence
 
-No tokens. No ICO. No blockchain. No bullshit.
+**From centralized platforms that silence voices.**  
+**From surveillance systems that track every click.**  
+**From walled gardens that cage our content.**  
+**From corporate masters who decide what's acceptable.**
 
-**This is infrastructure for freedom.**
+We reclaim the original vision. We build a web that cannot be shut down, censored, or controlled.
+
+**Welcome to the Free Web. Welcome to FRW.**
 
 ---
 
-## This Is Not a Darknet
+## What FRW Is
 
-**FRW is not Tor. It's not I2P. It's not "going underground."**
+**FRW is the World Wide Web, fixed.**
 
-This is not about hiding. This is not about anonymity. This is not a parallel internet for criminals.
+Not a replacement. Not a darknet. Not an underground network. 
 
-**This is about fixing the World Wide Web.**
+**The legitimate successor to what Tim Berners-Lee created in 1989.**
 
-### We're Not Building Something New. We're Fixing Something Broken.
+### The Original Vision (1989)
 
-In 1989, Tim Berners-Lee designed the WWW with these principles:
-- Open protocols (HTTP, HTML)
-- Decentralized by default (anyone can run a server)
-- URLs that work everywhere
-- No permission needed to publish
+Tim Berners-Lee designed the WWW to be:
+- **Open protocols** - HTTP, HTML, anyone can implement
+- **Decentralized** - Anyone can run a server
+- **Universal** - URLs work everywhere
+- **Permissionless** - No authority to ask
 
-**Then we made architectural mistakes:**
+**This changed everything. This created trillions of dollars of value. This changed human civilization.**
 
-**Mistake #1:** Centralized everything on corporate servers  
-**Mistake #2:** Let platforms control identity  
-**Mistake #3:** Built surveillance into the foundation  
-**Mistake #4:** Created walled gardens instead of open networks
+### The Corruption (1995-2025)
 
-**FRW doesn't replace the WWW. It restores it.**
+Then we made mistakes:
+- Centralized everything on corporate servers
+- Let platforms own our identities
+- Built surveillance into the foundation
+- Created walled gardens instead of open networks
 
-### What We Keep From The Original WWW
+**We traded freedom for convenience. They kept the convenience and took the freedom.**
 
-✓ **URLs** - `frw://alice/blog` works like `http://alice.com/blog`  
-✓ **HTML/CSS/JS** - Same technologies, same skills  
-✓ **Browser experience** - Address bar, links, bookmarks  
-✓ **Open standards** - Anyone can implement the protocol  
-✓ **Human-readable names** - Not cryptographic hashes
+### The Restoration (2025+)
 
-### What We Fix From 40 Years of Mistakes
+**FRW restores the original principles with modern technology:**
 
-🔧 **Decentralized hosting** - IPFS instead of corporate servers  
-🔧 **Cryptographic identity** - Your keys instead of their accounts  
-🔧 **Content verification** - Signatures instead of "trust us"  
-🔧 **Peer-to-peer** - Direct connections instead of middlemen  
-🔧 **Privacy by design** - No surveillance in the foundation
+| What We Keep | What We Fix |
+|--------------|-------------|
+| URLs (`frw://alice/blog`) | Decentralized hosting (IPFS) |
+| HTML/CSS/JavaScript | Cryptographic identity (your keys) |
+| Browser experience | Content verification (signatures) |
+| Human-readable names | Peer-to-peer distribution |
+| Open standards | Privacy by design |
 
-**This is the WWW 2.0. Not a darknet. Not underground. Just the web, done right.**
+**Same web. Same experience. But free.**
+
+---
+
+## How It's Different
+
+**Not a crypto project** - No tokens. No blockchain. No ICO. No financial speculation.  
+**Not a darknet** - Not hiding. Not anonymous. Not underground. This is the real WWW.  
+**Not vaporware** - Working today. 397+ tests passing. Production ready.  
+**Not complicated** - HTML, CSS, JS. Same skills. 5-minute install.
+
+**FRW is what the web should have been all along.**
 
 ---
 
