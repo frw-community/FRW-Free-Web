@@ -1,234 +1,307 @@
-# 🌐 FRW - Free Web Modern
+# FRW - Free Web Modern
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Status: Alpha](https://img.shields.io/badge/Status-Alpha-orange.svg)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Node](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen.svg)](https://nodejs.org)
+[![IPFS](https://img.shields.io/badge/IPFS-Powered-blueviolet.svg)](https://ipfs.tech)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)](https://typescriptlang.org)
 
-Decentralized web protocol - Liberté, sécurité, créativité
+A fully decentralized, censorship-resistant web publishing and browsing system
 
-## Vision
+## What is FRW?
 
-**FRW (Free Web)** est un protocole web alternatif décentralisé inspiré de l'esprit du WWW des années 90-2000:
+FRW (Free Web Modern) is a complete decentralized web ecosystem that enables:
 
-- Liberté totale sans contrôle des grandes entreprises tech
-- Sécurité via chiffrement et signatures cryptographiques
-- Décentralisation complète basée sur IPFS/libp2p
-- Créativité avec pages personnelles, guestbooks, webrings
-- Communauté avec découverte humaine sans algorithmes
+- Publish uncensorable websites on IPFS
+- Cryptographically sign content with Ed25519
+- Use human-readable names instead of hashes
+- Share globally via distributed networks
+- Browse with custom protocol (`frw://`)
 
-## Caractéristiques
+No servers. No middlemen. Just the free web.
 
-### Design moderne, philosophie rétro
-- Pages HTML/CSS/JS standards servies en P2P
-- Design moderne et responsive
-- Interactions riches mais sécurisées (sandbox JS)
+## Features
 
-### Caractéristiques Principales
+### Complete System
 
-- **✨ Noms Lisibles** - `frw://alice/blog` au lieu de clés cryptographiques
-- **📛 Système de Nommage** - Utilisation de noms lisibles pour les sites et les utilisateurs
-- **🌐 Compatible WWW** - Hébergement dual HTTP + FRW via DNS
-- **🔐 Cryptographie Ed25519** - Signatures numériques robustes
-- **📦 IPFS/IPNS** - Stockage distribué et adressage content-addressable
-- **🔒 Sandbox JavaScript** - Exécution sécurisée avec VM isolée
-- **⚡ Protocole léger** - Métadonnées minimales dans les en-têtes HTML
-- **🌐 Client Electron** - Navigation décentralisée native
-- **📝 Auto-documentation** - Le contenu est son propre manifeste
-- **🔓 Open Source** - Licence MIT, communauté ouverte les utilisateurs
-- Réplication automatique P2P
-- Découverte via webrings et annuaires
+- **CLI Tool** - Publish, verify, and manage content
+- **Browser App** - Navigate frw:// URLs
+- **IPFS Integration** - Distributed storage
+- **Cryptography** - Ed25519 signatures
+- **Naming System** - Human-readable URLs
+- **TypeScript** - Full type safety
 
-### Sécurité intégrée
-- Signatures Ed25519 pour authentifier tout contenu
-- Sandbox JavaScript pour exécution sécurisée
-- Pas de tracking, cookies tiers, ou publicité
+### Production Ready
 
-### Décentralisation complète
-- Protocole `frw://` basé sur IPFS
-- Hébergement distribué par les utilisateurs
-- Réplication automatique P2P
-- Découverte via webrings et annuaires
+- Monorepo architecture
+- Comprehensive error handling
+- Detailed logging
+- Full documentation
+- Working end-to-end
 
-### Identité cryptographique
-- Clé publique = identité utilisateur
-- Pas de comptes centralisés
-- Signature de tout contenu publié
+## Quick Start
 
-## Installation
+### Installation
 
 ```bash
+# Clone repository
 git clone https://github.com/your-org/frw-free-web-modern.git
 cd frw-free-web-modern
 
-# Installer toutes les dépendances
+# Install dependencies
 npm install
 
-# Build tous les packages
-npm run bootstrap
+# Build packages
+npm run build
 
-# Lancer le client
-npm run dev
-
-# Lancer le CLI
-npm run dev:cli
+# Install CLI
+cd apps/cli
+npm link
 ```
 
-## Utilisation Rapide
+### Create Your First Site
 
-### 1. Enregistrer un nom lisible
 ```bash
-frw register mywebsite
+# Initialize FRW
+frw init
+
+# Register your name
+frw register myname
+
+# Create content
+mkdir my-site && cd my-site
+echo '<html><body><h1>Hello FRW!</h1></body></html>' > index.html
+
+# Publish
+frw publish
 ```
 
-### 2. Créer une page
-```html
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Ma Page FRW</title>
-  <meta name="frw-version" content="1.0">
-  <meta name="frw-author" content="@mywebsite">
-  <meta name="frw-date" content="2025-11-08T00:00:00Z">
-</head>
-<body>
-  <h1>Hello FRW!</h1>
-</body>
-</html>
-```
+### Launch Browser
 
-### 3. Publier
 ```bash
-frw publish ./my-site
+# Navigate to browser
+cd apps/browser
+
+# Start browser
+npm run electron:dev
+
+# Navigate to: frw://myname/
 ```
 
-### 4. Naviguer
-```
-✨ Nom lisible: frw://mywebsite/index.frw
-🔑 Clé publique: frw://12D3KooWBc5T.../index.frw
-```
+See the full guide: [QUICK_START.md](QUICK_START.md)
 
-### Compatibilité WWW
-```bash
-# Ajouter un enregistrement DNS TXT
-_frw.example.com TXT "frw-key=12D3KooW...;frw-name=mywebsite"
+## Philosophy
 
-# Votre site est maintenant accessible via:
-https://example.com          # Web traditionnel
-frw://mywebsite              # Protocole FRW
-```
+**📜 [Read The FRW Manifesto](MANIFESTO.md)** - Our vision for a free, decentralized web
 
 ## Documentation
 
-- [📘 Spécification](./docs/SPECIFICATION.md) - Protocole FRW v1.0
-- [🏗️ Architecture](./docs/ARCHITECTURE.md) - Structure système
-- [🛣️ Roadmap](./docs/ROADMAP.md) - Phases développement
-- [🔐 Sécurité](./docs/SECURITY.md) - Modèle sécurité
-- [👨‍💻 Guide Développeur](./docs/DEVELOPER_GUIDE.md) - API référence
-- [📚 Guide Utilisateur](./docs/USER_GUIDE.md) - Manuel utilisateur
-- [⚡ Quick Start](./docs/QUICKSTART.md) - Setup 5 minutes
+**📚 [Complete Documentation Index](docs/DOCUMENTATION_INDEX.md)** - All documentation organized by topic
 
-## Architecture Monorepo
+### Quick Access
+
+**Getting Started:**
+- [Quick Start](QUICK_START.md) - Get running in 5 minutes
+- [Installation Guide](docs/INSTALLATION_GUIDE.md) - Complete setup instructions
+- [User Guide](docs/USER_GUIDE.md) - How to use the browser
+
+**Technical:**
+- [Specification](docs/SPECIFICATION.md) - FRW Protocol v1.0
+- [Architecture](docs/ARCHITECTURE.md) - System design
+- [Security](docs/SECURITY.md) - Security model
+- [Developer Guide](docs/DEVELOPER_GUIDE.md) - API reference
+
+**For Contributors:**
+- [Contributing Guide](CONTRIBUTING.md) - How to contribute
+- [Roadmap](docs/ROADMAP.md) - Development phases
+
+## Architecture
+
+```
+FRW Ecosystem
+├── CLI Tool (@frw/cli)
+│   ├── Key management
+│   ├── Content publishing
+│   ├── Name registration
+│   └── Signature verification
+│
+├── Browser (@frw/browser)
+│   ├── frw:// protocol handler
+│   ├── IPFS content fetching
+│   ├── Signature verification
+│   └── Modern React UI
+│
+└── Core Packages
+    ├── @frw/common    - Shared types
+    ├── @frw/crypto    - Ed25519 signatures
+    ├── @frw/protocol  - URL parsing
+    ├── @frw/ipfs      - IPFS client
+    ├── @frw/sandbox   - VM execution
+    └── @frw/storage   - Caching layer
+```
+
+## Technology Stack
+
+- **Language:** TypeScript 5.3
+- **Runtime:** Node.js 20+
+- **Browser:** Electron 28
+- **UI:** React 18 + TailwindCSS
+- **Build:** Vite
+- **Storage:** IPFS (Kubo)
+- **Crypto:** TweetNaCl (Ed25519)
+- **CLI:** Commander + Inquirer
+
+## Usage Examples
+
+### Publishing
+
+```bash
+# Publish a website
+frw publish ./my-site
+
+# Output:
+# ✔ Published to IPFS
+# CID: QmYwAPJzv5XgEvfF4KmGv...
+# URL: frw://myname/
+```
+
+### Browsing
+
+```bash
+# Launch browser
+npm run electron:dev
+
+# Navigate to any frw:// URL
+frw://alice/
+frw://bob/blog/
+frw://charlie/about.html
+```
+
+### Verification
+
+```bash
+# Verify content signature
+frw verify index.html
+
+# Output:
+# ✓ Signature verified successfully!
+# Content is authentic and unmodified
+```
+
+## Project Structure
 
 ```
 frw-free-web-modern/
-├── packages/              # Librairies core (publishables npm)
-│   ├── common/           # @frw/common - Utilitaires partagés
-│   ├── crypto/           # @frw/crypto - Signatures Ed25519
-│   ├── ipfs/             # @frw/ipfs - Intégration IPFS
-│   ├── protocol/         # @frw/protocol - Résolution URLs
-│   ├── sandbox/          # @frw/sandbox - Exécution JS sécurisée
-│   └── storage/          # @frw/storage - Cache et BDD locale
-├── apps/                 # Applications
-│   ├── client/          # Browser desktop (Electron)
-│   └── cli/             # Outil ligne de commande
-└── docs/                # Documentation complète
+├── apps/
+│   ├── cli/          # Command-line tool
+│   └── browser/      # Electron browser
+├── packages/
+│   ├── common/       # Shared utilities
+│   ├── crypto/       # Cryptography
+│   ├── protocol/     # Protocol & parsing
+│   ├── ipfs/         # IPFS integration
+│   ├── sandbox/      # VM execution
+│   └── storage/      # Storage layer
+├── docs/             # Documentation
+└── tests/            # Test suites
 ```
 
-## Flux de Données
+## Development
 
+### Build
+
+```bash
+npm run build         # Build all packages
+npm run build:cli     # Build CLI only
 ```
-[Auteur] → crée/signe → [IPFS] → distribue → [Client FRW]
-                           ↓                      ↓
-                    [Autres nœuds]          [Utilisateur]
+
+### Test
+
+```bash
+npm test             # Run all tests
+npm run test:watch   # Watch mode
+npm run test:coverage # Coverage report
 ```
 
-## Stack Technique
+### Lint
 
-| Couche | Technologie | Rôle |
-|--------|------------|------|
-| Réseau | IPFS (libp2p) | Transport P2P |
-| Découverte | IPNS/OrbitDB | Résolution noms |
-| Contenu | HTML/CSS/JS | Pages interactives |
-| Auth | Ed25519 | Signatures |
-| Client | Electron | Browser desktop |
-| Stockage | SQLite | Cache local |
-| Tests | Jest | Tests auto |
-| CI/CD | GitHub Actions | Build/deploy |
-
-## Exemple
-
-```html
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>Hello FRW</title>
-  <meta name="frw-version" content="1.0">
-  <meta name="frw-author" content="@key">
-  <meta name="frw-date" content="2025-11-08T00:00:00Z">
-  <style>
-    body { font-family: sans-serif; max-width: 900px; margin: 0 auto; padding: 2rem; }
-  </style>
-</head>
-<body>
-  <h1>Bienvenue sur le Free Web!</h1>
-  <p>Page décentralisée, sécurisée, libre.</p>
-  <a href="frw://autre-cle/page.frw">Visiter site voisin</a>
-  <script src="frw://key/script.frw.js"></script>
-</body>
-</html>
+```bash
+npm run lint         # Check code
+npm run lint:fix     # Fix issues
+npm run format       # Format code
 ```
+
+## Contributing
+
+Contributions welcome. See [CONTRIBUTING.md](CONTRIBUTING.md)
+
+1. Fork repository
+2. Create feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add AmazingFeature'`)
+4. Push branch (`git push origin feature/AmazingFeature`)
+5. Open Pull Request
+
+## Security
+
+FRW uses:
+- Ed25519 cryptographic signatures
+- IPFS content addressing
+- Sandboxed execution
+- Signature verification on all content
+
+Found a security issue? Email: security@frw.dev
 
 ## Roadmap
 
-| Phase | Statut | Description |
-|-------|--------|-------------|
-| Phase 0 | ✅ | Benchmark & inspirations |
-| Phase 1 | ✅ | Spécification FRW v1.0 |
-| Phase 2 | 📋 | Prototype CLI & Client |
-| Phase 3 | 📋 | Alpha réseau P2P |
-| Phase 4 | 📋 | Beta publique |
-| Phase 5 | 📋 | Version stable |
+### Phase 1: Core (Complete)
+- [x] CLI tool
+- [x] IPFS publishing
+- [x] Browser with frw:// protocol
+- [x] Signature verification
+- [x] Name resolution
 
-## Contribuer
+### Phase 2: Features (In Progress)
+- [x] Electron browser working
+- [x] IPFS content fetching
+- [ ] Tab support
+- [ ] Bookmarks
+- [ ] History
 
-Contributions bienvenues! Voir [CONTRIBUTING.md](./CONTRIBUTING.md)
+### Phase 3: Distribution
+- [ ] Installers (Win/Mac/Linux)
+- [ ] Auto-updates
+- [ ] Public release
+- [ ] Documentation site
 
-1. Fork le projet
-2. Créer branche feature (`git checkout -b feature/AmazingFeature`)
-3. Commit changements (`git commit -m 'Add AmazingFeature'`)
-4. Push vers branche (`git push origin feature/AmazingFeature`)
-5. Ouvrir Pull Request
+See full roadmap: [PRODUCTION_ROADMAP.md](docs/PRODUCTION_ROADMAP.md)
 
-## Manifeste FRW
+## License
 
-1. **Liberté** - Contrôle utilisateur du contenu et identité
-2. **Décentralisation** - Pas d'autorité centrale
-3. **Transparence** - Code open source, protocoles documentés
-4. **Confidentialité** - Pas de tracking, pas de collecte données
-5. **Simplicité** - Facile à utiliser et comprendre
-6. **Créativité** - Encourager expression personnelle
-7. **Communauté** - Découverte humaine, pas d'algorithmes
+MIT License - see [LICENSE](LICENSE) for details
 
-## Licence
+## Community
 
-MIT License - Voir [LICENSE](./LICENSE)
+- **GitHub:** https://github.com/frw-community/frw-free-web-modern
+- **Discord:** [Coming soon]
+- **Twitter:** [@FRWProtocol](https://twitter.com/FRWProtocol)
+- **Website:** [Coming soon]
 
-## Communauté
+## Acknowledgments
 
-Fait avec passion par la communauté FRW
+Built with:
+- [IPFS](https://ipfs.tech) - Distributed storage
+- [Electron](https://electronjs.org) - Cross-platform apps
+- [React](https://react.dev) - UI framework
+- [TweetNaCl](https://tweetnacl.js.org) - Cryptography
+- [TypeScript](https://typescriptlang.org) - Type safety
+
+## Support
+
+- **Documentation:** See `/docs` folder
+- **Issues:** [GitHub Issues](https://github.com/frw-community/frw-free-web-modern/issues)
+- **Discussions:** [GitHub Discussions](https://github.com/frw-community/frw-free-web-modern/discussions)
 
 ---
 
-**Projet initié:** 8 Novembre 2025  
-**Statut:** Phase 1 Complète - Prêt pour Phase 2
+**Welcome to the Free Web**
+
+Building a decentralized, censorship-resistant internet, one page at a time.

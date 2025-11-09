@@ -1,311 +1,309 @@
-# FRW User Guide
+# FRW Browser User Guide
 
-## Getting Started
+Complete guide to using the FRW Browser and decentralized web system.
 
-### Installation
+---
 
-```bash
-# Clone repository
-git clone https://github.com/your-org/frw-free-web-modern.git
-cd frw-free-web-modern
+## Quick Start
 
-# Install dependencies
-npm install
-
-# Install IPFS (if not already installed)
-# Download from https://ipfs.io or use package manager
-```
-
-### First Time Setup
-
-1. **Start IPFS daemon**
-```bash
-ipfs init
-ipfs daemon
-```
-
-2. **Initialize FRW**
-```bash
-npm run frw init
-```
-
-This creates a `.frw` directory with your cryptographic keys.
-
-### Creating Your First Page
-
-Create `index.frw` in your project directory:
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>My FRW Page</title>
-  <meta name="frw-version" content="1.0">
-  <meta name="frw-author" content="@YOUR_PUBLIC_KEY">
-  <meta name="frw-date" content="2025-11-08T00:00:00Z">
-  <style>
-    body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 2rem; }
-  </style>
-</head>
-<body>
-  <h1>Hello FRW!</h1>
-  <p>This is my first decentralized page.</p>
-</body>
-</html>
-```
-
-### Publishing Your Page
+### Launch the Browser
 
 ```bash
-npm run frw publish
+# Navigate to browser directory
+cd "C:\Projects\FRW - Free Web Modern\apps\browser"
+
+# Start browser
+npm run electron:dev
 ```
 
-Your page is now on the FRW network! The CLI will output your FRW URL:
+The FRW Browser window opens after 5-10 seconds.
+
+---
+
+## Browser Interface
+
+### Main Components
+
 ```
-frw://YOUR_PUBLIC_KEY/index.frw
+┌─────────────────────────────────────────┐
+│  ←  →  ↻         FRW Browser           │ Navigation Bar
+├─────────────────────────────────────────┤
+│  🔒 frw://alice/              [Go]     │ Address Bar
+├─────────────────────────────────────────┤
+│  ✓ Verified @alice                     │ Verification Badge
+│     Published: 09/11/2025              │
+├─────────────────────────────────────────┤
+│                                         │
+│         [Page Content Here]             │ Content Viewer
+│                                         │
+├─────────────────────────────────────────┤
+│  🟢 IPFS Connected    FRW Browser v1.0  │ Status Bar
+└─────────────────────────────────────────┘
 ```
 
-### Browsing FRW Content
+### Controls
 
-1. **Start the FRW Client**
+- **←** Back button
+- **→** Forward button  
+- **↻** Reload page
+- **Address Bar** - Enter frw:// URLs
+- **Go** - Navigate to URL
+
+---
+
+## Publishing Content
+
+### 1. Create Your Website
+
 ```bash
-npm run dev
+# Create directory
+mkdir my-site
+cd my-site
+
+# Create HTML file
+notepad index.html
 ```
 
-2. **Enter FRW URL in the address bar**
-```
-frw://PUBLIC_KEY/page.frw
-```
-
-## Core Concepts
-
-### FRW URLs
-
-Format: `frw://PUBLIC_KEY/PATH`
-
-- `PUBLIC_KEY`: Author's Ed25519 public key (base58)
-- `PATH`: Path to resource (e.g., `index.frw`, `blog/post.frw`)
-
-### Content Signing
-
-All content must be signed with your private key. The signature proves:
-- You are the author
-- Content hasn't been tampered with
-- Content is authentic
-
-### IPFS Integration
-
-FRW uses IPFS for:
-- **Storage**: Distribute content across peers
-- **Addressing**: Content-addressed by hash
-- **Discovery**: DHT for peer/content discovery
-- **Naming**: IPNS for mutable references
-
-## Creating Content
-
-### Page Structure
-
+**Minimal FRW page:**
 ```html
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Page Title</title>
-  
-  <!-- Required FRW metadata -->
+  <title>My Site</title>
   <meta name="frw-version" content="1.0">
-  <meta name="frw-author" content="@your-public-key">
-  <meta name="frw-date" content="2025-11-08T00:00:00Z">
-  
-  <!-- Optional metadata -->
-  <meta name="frw-keywords" content="tags, keywords">
-  <meta name="frw-license" content="CC-BY-4.0">
-  
-  <link rel="stylesheet" href="style.css">
+  <meta name="frw-author" content="@yourname">
+  <meta name="frw-date" content="2025-11-09T00:00:00Z">
 </head>
 <body>
-  <!-- Your content -->
-  <script src="script.frw.js"></script>
+  <h1>Hello World!</h1>
 </body>
 </html>
 ```
 
-### Linking Pages
+### 2. Publish to IPFS
 
-```html
-<!-- Link to another FRW page -->
-<a href="frw://other-key/page.frw">Visit site</a>
-
-<!-- Link within your site -->
-<a href="frw://your-key/about.frw">About</a>
+```bash
+frw publish
 ```
 
-### Adding Images
-
-```html
-<!-- Local images -->
-<img src="images/photo.jpg" alt="Photo">
-
-<!-- From IPFS -->
-<img src="ipfs://QmHash..." alt="Image">
+**Output:**
+```
+✔ Published to IPFS
+IPFS CID: QmYwAPJzv...
+Your site is accessible at: frw://yourname/
 ```
 
-### JavaScript
+### 3. Update Config (Important!)
 
-JavaScript works normally but runs in a sandbox for security:
+Add the CID to your config at `~/.frw/config.json`:
 
-```javascript
-// Safe operations
-document.getElementById('btn').onclick = () => {
-  alert('Hello!');
-};
-
-// IPFS API (if permission granted)
-const content = await ipfs.cat('QmHash...');
+```json
+{
+  "publishedSites": {
+    "yourname": "QmYourActualCIDFromAbove"
+  }
+}
 ```
+
+### 4. Browse Your Site
+
+1. Open FRW Browser
+2. Enter `frw://yourname/`
+3. Click **Go**
+4. Your page loads!
+
+---
+
+## Navigating Content
+
+### Entering URLs
+
+**Format:** `frw://name/path`
+
+**Examples:**
+- `frw://alice/` - Alice's homepage
+- `frw://alice/about.html` - About page
+- `frw://alice/blog/post1.html` - Blog post
+
+### Verification Badge
+
+**Green badge (✓ Verified):**
+- Content is cryptographically signed
+- Signature is valid
+- Author confirmed
+
+**Yellow badge (⚠ Unverified):**
+- No signature found
+- Content cannot be verified
+- View with caution
+
+---
 
 ## CLI Commands
 
-### Initialize Site
+### Essential Commands
 
 ```bash
-npm run frw init
+# Initialize FRW
+frw init
+
+# Register a name
+frw register myname
+
+# Publish content
+frw publish ./my-site
+
+# Verify a file
+frw verify index.html
+
+# Preview locally
+frw serve
+
+# Check IPFS connection
+frw ipfs
+
+# List keys
+frw keys --list
 ```
 
-Generates cryptographic keypair and creates `.frw/` directory.
-
-### Publish Content
+### Publishing Workflow
 
 ```bash
-# Publish current directory
-npm run frw publish
+# 1. Create content
+mkdir website && cd website
+echo '<html>...</html>' > index.html
 
-# Publish specific directory
-npm run frw publish ./my-site
+# 2. Preview locally
+frw serve
+# Opens http://localhost:3000
+
+# 3. Publish to IPFS
+frw publish
+
+# 4. Note the CID and update config
+
+# 5. Browse in FRW Browser
+# Navigate to frw://yourname/
 ```
 
-### Verify Signature
+---
 
-```bash
-npm run frw verify index.frw
+## Configuration
+
+### Config Location
+
+**Windows:** `C:\Users\YourName\.frw\config.json`  
+**macOS/Linux:** `~/.frw/config.json`
+
+### Config Structure
+
+```json
+{
+  "defaultKeyPath": "C:\\Users\\You\\.frw\\keys\\default.json",
+  "ipfsHost": "localhost",
+  "ipfsPort": 5001,
+  "registeredNames": {
+    "alice": "HwKdx6DgXwpEW43Px1Vos1BpWmQwEVYcp7S1DWD3VFcK"
+  },
+  "publishedSites": {
+    "alice": "QmWdZUNyME2jmaArxuaudRzrocC6BuokFPkGpa8v68xMEe"
+  }
+}
 ```
 
-Checks if signature is valid.
+---
 
-## Security
+## Keyboard Shortcuts
 
-### Key Management
+- **Ctrl+L** - Focus address bar
+- **Ctrl+R** - Reload page
+- **Ctrl+Shift+I** - Open DevTools
+- **Alt+←** - Back
+- **Alt+→** - Forward
 
-**Private Key**
-- Stored in `.frw/private.key`
-- Keep encrypted
-- Never share
-- Backup securely
-
-**Public Key**
-- Stored in `.frw/public.key`
-- Your FRW identity
-- Safe to share
-
-### Content Verification
-
-Client automatically verifies:
-1. Signature matches author
-2. Content hasn't been modified
-3. Script permissions
-
-### Sandbox
-
-JavaScript runs in isolated environment:
-- No file system access
-- No network access (except approved IPFS API)
-- Limited DOM access
-- No eval/Function constructor
+---
 
 ## Troubleshooting
 
-### IPFS Not Starting
+### Page doesn't load
 
-```bash
-# Check IPFS status
-ipfs id
+1. Check IPFS is running: `ipfs id`
+2. Verify CID in config matches published CID
+3. Test in regular browser: `http://localhost:8080/ipfs/[CID]/`
 
-# Restart daemon
-ipfs daemon
-```
+### "Site Not Found" error
 
-### Content Not Found
+- Site hasn't been published yet
+- CID not in `publishedSites` config
+- Run `frw publish` and update config
 
-- Wait for DHT propagation (can take minutes)
-- Check IPFS daemon is running
-- Verify CID is correct
-- Try different gateway
+### IPFS Disconnected
 
-### Signature Verification Failed
+- Start IPFS daemon: `ipfs daemon`
+- Or launch IPFS Desktop
 
-- Content was modified after signing
-- Wrong public key
-- Re-publish with correct key
+---
 
-### Client Won't Load Page
+## Advanced Features
 
-- Check IPFS connection
-- Verify URL format
-- Check browser console for errors
-
-## Advanced
-
-### Custom Permissions
-
-Request specific permissions:
-
-```html
-<meta name="frw-permissions" content="ipfs:read, storage:local">
-```
-
-### Directory Structure
+### Multiple Pages
 
 ```
 my-site/
-  index.frw           # Homepage
-  about.frw           # About page
-  blog/
-    post1.frw
-    post2.frw
-  assets/
-    style.css
-    logo.png
-  scripts/
-    main.frw.js       # Signed scripts
+├── index.html
+├── about.html
+├── blog/
+│   └── post1.html
+└── css/
+    └── style.css
 ```
 
-### Webrings
+Publish entire directory: `frw publish my-site`
 
-Join communities by linking member sites:
+### Custom Styles
 
+Include CSS in your HTML:
 ```html
-<nav class="webring">
-  <a href="frw://prev-site/index.frw">← Previous</a>
-  <a href="frw://ring-hub/index.frw">Ring Hub</a>
-  <a href="frw://next-site/index.frw">Next →</a>
-</nav>
+<link rel="stylesheet" href="css/style.css">
 ```
+
+FRW serves all files from your published directory.
+
+---
 
 ## Best Practices
 
-1. **Keep private key secure** - Use strong encryption, backup safely
-2. **Sign all content** - Ensures authenticity
-3. **Optimize images** - Faster loading on P2P network
-4. **Use semantic HTML** - Better accessibility
-5. **Test locally** - Verify before publishing
-6. **Version content** - Use metadata dates
-7. **Pin important content** - Ensure availability
+1. **Always sign content** - Include FRW metadata
+2. **Test locally first** - Use `frw serve`
+3. **Keep backups** - Save your keypair
+4. **Update regularly** - Republish for changes
+5. **Verify signatures** - Check verification badge
 
-## Resources
+---
 
-- [Protocol Specification](./SPECIFICATION.md)
-- [Architecture Overview](./ARCHITECTURE.md)
-- [Security Model](./SECURITY.md)
-- [Developer Guide](./DEVELOPER_GUIDE.md)
-- [Example Sites](../examples/)
+## Sharing Your Site
+
+**Share the frw:// URL:**
+```
+frw://yourname/
+```
+
+**Or share IPFS gateway URL:**
+```
+https://ipfs.io/ipfs/QmYourCID/
+```
+
+Both work! The frw:// URL is cleaner.
+
+---
+
+## Support
+
+- **Installation Guide:** `INSTALLATION_GUIDE.md`
+- **IPFS Setup:** `IPFS_SETUP.md`
+- **Technical Docs:** `BROWSER_PLAN.md`
+
+---
+
+**Enjoy the decentralized web!** 🌐
