@@ -1,0 +1,67 @@
+import { app, BrowserWindow } from 'electron';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { registerFRWProtocol } from './protocol.js';
+import { setupIPC } from './ipc.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+let mainWindow: BrowserWindow | null = null;
+
+function createWindow() {
+  mainWindow = new BrowserWindow({
+    width: 1200,
+    height: 800,
+    webPreferences: {
+      preload: path.join(__dirname, '../preload/index.js'),
+      contextIsolation: true,
+      nodeIntegration: false,
+      sandbox: true
+    },
+    title: 'FRW Browser',
+    icon: path.join(__dirname, '../../assets/icon.png')
+  });
+
+  // Load the app
+  const isDev = !app.isPackaged;
+  if (isDev) {
+    // In development, load from Vite dev server
+    mainWindow.loadURL('http://localhost:5173');
+    mainWindow.webContents.openDevTools();
+  } else {
+    // In production, load from built files
+    mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'));
+  }
+
+  mainWindow.on('closed', () => {
+    mainWindow = null;
+  });
+}
+
+app.whenReady().then(async () => {
+  // Register frw:// protocol
+  registerFRWProtocol();
+  
+  // Setup IPC handlers
+  setupIPC();
+  
+  // Wait a bit for Vite to start in dev mode
+  if (!app.isPackaged) {
+    await new Promise(resolve => setTimeout(resolve, 2000));
+  }
+  
+  // Create window
+  createWindow();
+
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+    }
+  });
+});
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
+});
