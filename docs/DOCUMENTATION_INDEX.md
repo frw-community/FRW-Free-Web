@@ -66,6 +66,26 @@ Complete guide to all documentation in the FRW project.
 - **[RUN_A_NODE.md](RUN_A_NODE.md)** - Community guide to running bootstrap nodes
 - **[../apps/bootstrap-node/DEPLOY_VPS.md](../apps/bootstrap-node/DEPLOY_VPS.md)** - Bootstrap node VPS deployment
 
+### Strategy
+
+- **[strategy/README.md](strategy/README.md)** - Strategy documentation overview
+- **[strategy/MASTER_STRATEGY.md](strategy/MASTER_STRATEGY.md)** - Complete 6-phase launch strategy (2-3 years)
+
+### Status & Progress
+
+- **[status/README.md](status/README.md)** - Status documentation overview
+- **[status/COMPLETE.md](status/COMPLETE.md)** - Mission complete report (7 hours work summary)
+- **[status/BUILD_STATUS.md](status/BUILD_STATUS.md)** - Build and compilation status
+- **[status/LAUNCH_READY.md](status/LAUNCH_READY.md)** - Launch readiness checklist
+- **[status/DOCS_UPDATED.md](status/DOCS_UPDATED.md)** - Documentation update summary
+- **[status/DOCS_PHILOSOPHY_UPDATE.md](status/DOCS_PHILOSOPHY_UPDATE.md)** - Community-first philosophy
+- **[status/DOCS_REORGANIZED.md](status/DOCS_REORGANIZED.md)** - Documentation reorganization summary
+
+### Testing
+
+- **[tests/QUICK_TEST.md](tests/QUICK_TEST.md)** - Quick test procedures
+- **[TESTING_GUIDE.md](TESTING_GUIDE.md)** - Comprehensive testing guide
+
 ---
 
 ## Development
@@ -128,6 +148,23 @@ Complete guide to all documentation in the FRW project.
 - [deployment/DEPLOYMENT_STRATEGY.md](deployment/DEPLOYMENT_STRATEGY.md) - Multi-node architecture
 - [RUN_A_NODE.md](RUN_A_NODE.md) - Community node guide
 
+### Strategy
+- [strategy/README.md](strategy/README.md) - Strategy overview
+- [strategy/MASTER_STRATEGY.md](strategy/MASTER_STRATEGY.md) - 6-phase launch plan
+
+### Status & Progress
+- [status/README.md](status/README.md) - Status overview
+- [status/COMPLETE.md](status/COMPLETE.md) - Completion report
+- [status/BUILD_STATUS.md](status/BUILD_STATUS.md) - Build status
+- [status/LAUNCH_READY.md](status/LAUNCH_READY.md) - Launch readiness
+- [status/DOCS_UPDATED.md](status/DOCS_UPDATED.md) - Doc updates
+- [status/DOCS_PHILOSOPHY_UPDATE.md](status/DOCS_PHILOSOPHY_UPDATE.md) - Philosophy changes
+- [status/DOCS_REORGANIZED.md](status/DOCS_REORGANIZED.md) - Doc reorganization
+
+### Testing
+- [tests/QUICK_TEST.md](tests/QUICK_TEST.md) - Quick tests
+- [TESTING_GUIDE.md](TESTING_GUIDE.md) - Full testing guide
+
 ---
 
 ## Documentation Status
@@ -163,6 +200,19 @@ All documentation files are up-to-date as of **November 9, 2025**.
 - [DONE] deployment/DEPLOY_NOW_VPS.md - Detailed VPS guide
 - [DONE] deployment/DEPLOYMENT_STRATEGY.md - Multi-node architecture
 - [DONE] RUN_A_NODE.md - Community node guide
+
+**Strategy Documentation:**
+- [DONE] strategy/README.md - Strategy overview
+- [DONE] strategy/MASTER_STRATEGY.md - 6-phase launch strategy
+
+**Status Documentation:**
+- [DONE] status/README.md - Status overview
+- [DONE] status/COMPLETE.md - Mission complete report
+- [DONE] status/BUILD_STATUS.md - Build status
+- [DONE] status/LAUNCH_READY.md - Launch readiness
+- [DONE] status/DOCS_UPDATED.md - Documentation updates
+- [DONE] status/DOCS_PHILOSOPHY_UPDATE.md - Philosophy changes
+- [DONE] status/DOCS_REORGANIZED.md - Reorganization summary
 
 ### [IN PROGRESS] Needs Future Updates
 
@@ -205,6 +255,8 @@ The following obsolete files were removed during documentation cleanup:
 - **Install FRW** → [INSTALLATION_GUIDE.md](INSTALLATION_GUIDE.md)
 - **Deploy FRW nodes** → [deployment/README.md](deployment/README.md)
 - **Run a bootstrap node** → [RUN_A_NODE.md](RUN_A_NODE.md)
+- **See launch strategy** → [strategy/MASTER_STRATEGY.md](strategy/MASTER_STRATEGY.md)
+- **Check project status** → [status/COMPLETE.md](status/COMPLETE.md)
 - **Learn to browse** → [USER_GUIDE.md](USER_GUIDE.md)
 - **Contribute code** → [../CONTRIBUTING.md](../CONTRIBUTING.md)
 - **Understand architecture** → [ARCHITECTURE.md](ARCHITECTURE.md)
