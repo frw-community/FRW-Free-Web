@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Hello FRW</title>
+  <meta name="frw-version" content="1.0">
+  <meta name="frw-author" content="@your-public-key-here">
+  <meta name="frw-date" content="2025-11-08T22:30:00Z">
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: #f4f4f9;
+      color: #222;
+      line-height: 1.6;
+    }
+    h1 {
+      color: #4a90e2;
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .subtitle {
+      color: #666;
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+    }
+    .content {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    button {
+      background: #4a90e2;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #357abd;
+    }
+    input {
+      padding: 0.75rem;
+      margin-right: 0.5rem;
+      width: 60%;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    #guestbook {
+      margin-top: 2rem;
+      border-top: 2px solid #eee;
+      padding-top: 2rem;
+    }
+    .message {
+      padding: 1rem;
+      background: #f8f8f8;
+      border-left: 3px solid #4a90e2;
+      margin: 0.5rem 0;
+      border-radius: 4px;
+    }
+    .footer {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid #eee;
+      color: #666;
+      font-size: 0.9rem;
+    }
+    a {
+      color: #4a90e2;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to the Free Web! 🌐</h1>
+  <p class="subtitle">This is your first FRW page - decentralized, secure, and free</p>
+
+  <div class="content">
+    <h2>What is FRW?</h2>
+    <p>
+      FRW (Free Web Modern) is a decentralized web protocol that brings back the spirit 
+      of the early web - personal pages, creativity, and community - without the 
+      tracking, ads, and corporate control.
+    </p>
+
+    <h3>Key Features:</h3>
+    <ul>
+      <li><strong>Decentralized</strong>: Powered by IPFS, no central servers</li>
+      <li><strong>Secure</strong>: Content signed with Ed25519 cryptography</li>
+      <li><strong>Private</strong>: No tracking, no data collection</li>
+      <li><strong>Creative</strong>: Full HTML/CSS/JS support</li>
+    </ul>
+
+    <h3>Interactive Guestbook:</h3>
+    <div id="interactive"></div>
+    <input id="msg" placeholder="Leave a message..." />
+    <button id="submitBtn">Send</button>
+
+    <div id="guestbook"></div>
+  </div>
+
+  <div class="footer">
+    <p>
+      Powered by FRW | 
+      <a href="frw://documentation/index.frw">Documentation</a> | 
+      <a href="frw://community/index.frw">Community</a>
+    </p>
+  </div>
+
+  <script>
+    document.getElementById('submitBtn').addEventListener('click', () => {
+      const input = document.getElementById('msg');
+      const msg = input.value.trim();
+      
+      if (!msg) return;
+      
+      const guestbook = document.getElementById('guestbook');
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'message';
+      messageDiv.textContent = msg;
+      
+      guestbook.appendChild(messageDiv);
+      input.value = '';
+    });
+
+    // Enter key support
+    document.getElementById('msg').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        document.getElementById('submitBtn').click();
+      }
+    });
+  </script>
+</body>
+</html>

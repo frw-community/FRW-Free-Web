@@ -1,0 +1,58 @@
+{
+  "name": "frw-free-web-modern",
+  "version": "0.1.0",
+  "description": "Decentralized web protocol and client - Monorepo",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "bootstrap": "npm install && npm run build",
+    "build": "npx tsc -b packages/common && npx tsc -b packages/crypto packages/ipfs packages/protocol packages/sandbox packages/storage",
+    "type-check": "tsc --noEmit",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "eslint \"packages/**/*.{js,ts}\"",
+    "lint:fix": "eslint \"packages/**/*.{js,ts}\" --fix",
+    "format": "prettier --write \"**/*.{js,ts,json,md}\"",
+    "clean": "npx tsc -b --clean",
+    "version": "lerna version",
+    "publish": "lerna publish from-package"
+  },
+  "keywords": [
+    "frw",
+    "decentralized",
+    "p2p",
+    "ipfs",
+    "web3"
+  ],
+  "author": "FRW Community",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frw-community/frw-free-web-modern.git"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.1",
+    "@types/jest": "^29.5.11",
+    "@types/node": "^20.10.6",
+    "esbuild": "^0.19.11",
+    "eslint": "^8.56.0",
+    "jest": "^29.7.0",
+    "lerna": "^8.0.1",
+    "prettier": "^3.1.1",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@types/bs58": "^4.0.4",
+    "bs58": "^6.0.0",
+    "ipfs-http-client": "^60.0.1",
+    "tweetnacl": "^1.0.3",
+    "vm2": "^3.10.0"
+  }
+}

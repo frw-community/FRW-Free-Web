@@ -1,0 +1,41 @@
+{
+  "files": [],
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "lib": ["ES2022"],
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "allowJs": false,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "removeComments": false,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "skipLibCheck": true,
+    "types": ["node"],
+    "paths": {
+      "@frw/common": ["./packages/common/src"],
+      "@frw/crypto": ["./packages/crypto/src"],
+      "@frw/ipfs": ["./packages/ipfs/src"],
+      "@frw/protocol": ["./packages/protocol/src"],
+      "@frw/sandbox": ["./packages/sandbox/src"],
+      "@frw/storage": ["./packages/storage/src"]
+    }
+  },
+  "references": [
+    { "path": "./packages/common" },
+    { "path": "./packages/crypto" },
+    { "path": "./packages/ipfs" },
+    { "path": "./packages/protocol" },
+    { "path": "./packages/sandbox" },
+    { "path": "./packages/storage" }
+  ],
+  "exclude": ["node_modules", "dist", "**/*.test.ts"]
+}

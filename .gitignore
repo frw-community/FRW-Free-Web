@@ -1,0 +1,15 @@
+node_modules/
+dist/
+build/
+*.log
+.DS_Store
+.env
+.vscode/
+.idea/
+*.sqlite
+*.db
+ipfs-data/
+orbitdb-data/
+.keys/
+coverage/
+.nyc_output/
