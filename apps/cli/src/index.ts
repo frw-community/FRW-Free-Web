@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import chalk from 'chalk';
 import { initCommand } from './commands/init.js';
 import { registerCommand } from './commands/register.js';
 import { publishCommand } from './commands/publish.js';
 import { verifyCommand } from './commands/verify.js';
 import { serveCommand } from './commands/serve.js';
 import { keysCommand } from './commands/keys.js';
+import { ipfsStatusCommand } from './commands/ipfs-status.js';
 
 const program = new Command();
 
@@ -54,5 +54,10 @@ program
   .option('-e, --export <name>', 'Export key')
   .option('-i, --import <file>', 'Import key')
   .action(keysCommand);
+
+program
+  .command('ipfs')
+  .description('Check IPFS connection status')
+  .action(ipfsStatusCommand);
 
 program.parse();
