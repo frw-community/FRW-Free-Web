@@ -17,6 +17,10 @@
   "author": "FRW Community",
   "license": "MIT",
   "dependencies": {
+    "@frw/common": "1.0.0",
+    "@frw/crypto": "1.0.0",
+    "@frw/ipfs": "1.0.0",
+    "@frw/protocol": "1.0.0",
     "commander": "^11.1.0",
     "inquirer": "^9.2.12",
     "chalk": "^5.3.0",
