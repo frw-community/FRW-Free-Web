@@ -372,7 +372,7 @@ CLIENT_SITES=${CLIENTS:-./sites/clients}
 EOF
 
 echo ""
-echo "✓ Configuration saved to .env"
+echo "[x] Configuration saved to .env"
 echo ""
 echo "Add to docker-compose.yml:"
 echo "  volumes:"
@@ -404,7 +404,7 @@ CLIENT_SITES=$clients
 Set-Content -Path .env -Value $content
 
 Write-Host ""
-Write-Host "✓ Configuration saved to .env" -ForegroundColor Green
+Write-Host "[x] Configuration saved to .env" -ForegroundColor Green
 Write-Host ""
 Write-Host "Add to docker-compose.yml:"
 Write-Host "  volumes:"
@@ -551,7 +551,7 @@ Better:
 ### 2. Use Descriptive Names
 
 ```
-✓ Good:
+[x] Good:
   - /data/clients/acme-corp
   - /data/personal/tech-blog
   - /data/work/company-marketing
@@ -676,11 +676,11 @@ docker run --rm \
 
 **FRW supports ANY folder location:**
 
-✅ **Native**: Any path on your system  
-✅ **Docker**: Mount any folder as volume  
-✅ **Multiple folders**: Mount as many as needed  
-✅ **Dynamic**: Use environment variables  
-✅ **Flexible**: Relative or absolute paths  
+[DONE] **Native**: Any path on your system  
+[DONE] **Docker**: Mount any folder as volume  
+[DONE] **Multiple folders**: Mount as many as needed  
+[DONE] **Dynamic**: Use environment variables  
+[DONE] **Flexible**: Relative or absolute paths  
 
 **Key Points:**
 
@@ -692,4 +692,4 @@ docker run --rm \
 
 ---
 
-**No limitations on where your sites can live! 📁**
+**No limitations on where your sites can live! [FOLDER]**

@@ -1,4 +1,4 @@
-# DNS Verification - Optional Trust Model ✓
+# DNS Verification - Optional Trust Model [x]
 
 **Implemented:** November 9, 2025  
 **Status:** Complete - DNS verification now optional
@@ -35,9 +35,9 @@ Users decide who to trust
 # Anyone can register any name
 frw register google
 
-✓ Registered: google
-⚠ Not DNS verified
-💡 To verify: frw verify-dns google
+[x] Registered: google
+[!] Not DNS verified
+[NOTE] To verify: frw verify-dns google
 ```
 
 ### 2. Optional DNS Verification
@@ -47,8 +47,8 @@ frw register google
 frw register google --verify-dns
 
 ? Ready to verify DNS? Yes
-✓ DNS verification passed
-✓ Official status granted
+[x] DNS verification passed
+[x] Official status granted
 
 # Or verify later
 frw verify-dns google
@@ -62,9 +62,9 @@ frw verify-dns google
 ```
 $ frw register mysite
 
-✓ Name registered: mysite
+[x] Name registered: mysite
   Your site: frw://mysite/
-  Status: ⚠ Unverified
+  Status: [!] Unverified
   
 Next: frw publish
 ```
@@ -77,9 +77,9 @@ Add DNS TXT record:
   _frw.example.com → "frw-key=12D3KooW..."
 
 ? Ready to verify? Yes
-✓ DNS verification passed
-✓ Name registered: example.com
-  Status: ✓ DNS Verified
+[x] DNS verification passed
+[x] Name registered: example.com
+  Status: [x] DNS Verified
   
 Users will see this as the official site
 ```
@@ -90,7 +90,7 @@ Users will see this as the official site
 
 **Unverified Site:**
 ```
-⚠ UNVERIFIED SITE
+[!] UNVERIFIED SITE
 
 frw://google/
 
@@ -102,9 +102,9 @@ It may not be the official Google.
 
 **Verified Site:**
 ```
-✅ VERIFIED SITE
+[DONE] VERIFIED SITE
 
-frw://google/ ✓
+frw://google/ [x]
 
 Official site verified by DNS
 Domain: google.com
@@ -142,19 +142,19 @@ frw verify-dns example.com
 ### Protection Layers Still Active
 
 **Layer 1: Registration Barriers**
-- ✅ Proof of Work (10+ min for short names)
-- ✅ Economic bonds (10M units for 3-letter)
-- ✅ Rate limits (20/day max)
+- [DONE] Proof of Work (10+ min for short names)
+- [DONE] Economic bonds (10M units for 3-letter)
+- [DONE] Rate limits (20/day max)
 
 **Layer 2: Trust Signaling**
-- ✅ DNS verification badge (optional)
-- ✅ User warnings (unverified sites)
-- ✅ Clear status indicators
+- [DONE] DNS verification badge (optional)
+- [DONE] User warnings (unverified sites)
+- [DONE] Clear status indicators
 
 **Layer 3: Dispute Resolution**
-- ✅ Challenge system
-- ✅ DNS verification bonus in challenges
-- ✅ Auto-win for DNS-verified challengers
+- [DONE] Challenge system
+- [DONE] DNS verification bonus in challenges
+- [DONE] Auto-win for DNS-verified challengers
 
 ---
 
@@ -193,13 +193,13 @@ if (owner.dnsVerified) {
 
 | Component | Status |
 |-----------|--------|
-| Optional --verify-dns flag | ✅ Done |
-| verify-dns command | ✅ Done |
-| Registration flow | ✅ Updated |
-| CLI integration | ✅ Done |
-| Database schema | ⏳ TODO |
-| Browser UI | ⏳ TODO |
-| Challenge bonus | ⏳ TODO |
+| Optional --verify-dns flag | [DONE] Done |
+| verify-dns command | [DONE] Done |
+| Registration flow | [DONE] Updated |
+| CLI integration | [DONE] Done |
+| Database schema | [TODO] TODO |
+| Browser UI | [TODO] TODO |
+| Challenge bonus | [TODO] TODO |
 
 ---
 
@@ -233,10 +233,10 @@ if (owner.dnsVerified) {
 
 ## Result
 
-✅ **DNS verification is now optional, not required**  
-✅ **Anyone can register any name with PoW/bonds**  
-✅ **DNS adds "official" status badge**  
-✅ **Users make informed trust decisions**  
-✅ **True decentralization achieved**
+[DONE] **DNS verification is now optional, not required**  
+[DONE] **Anyone can register any name with PoW/bonds**  
+[DONE] **DNS adds "official" status badge**  
+[DONE] **Users make informed trust decisions**  
+[DONE] **True decentralization achieved**
 
 **Philosophy:** Freedom first, trust through transparency

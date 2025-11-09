@@ -1,12 +1,12 @@
 # FRW Quick Test - Verify Everything Works
 
-## Setup Complete ✓
+## Setup Complete [x]
 
 ```bash
 # Build status
-✅ packages/name-registry - Built
-✅ apps/cli - Built
-✅ frw command - Linked globally
+[DONE] packages/name-registry - Built
+[DONE] apps/cli - Built
+[DONE] frw command - Linked globally
 ```
 
 ## Quick Tests
@@ -29,9 +29,9 @@ frw --help
 frw init
 
 # Expected output:
-# ✓ Configuration directory created
-# ✓ Keypair generated  
-# ✓ Configuration saved
+# [x] Configuration directory created
+# [x] Keypair generated  
+# [x] Configuration saved
 ```
 
 ### 3. Test Basic Registration
@@ -42,8 +42,8 @@ frw register mytestsite123
 
 # Expected:
 # Generating proof of work...
-# ✓ Proof generated
-# ✓ Name registered: mytestsite123
+# [x] Proof generated
+# [x] Name registered: mytestsite123
 ```
 
 ### 4. Test DNS Verification Commands
@@ -78,23 +78,23 @@ frw metrics --help
 
 | Component | Status | Command |
 |-----------|--------|---------|
-| CLI Build | ✅ | `npm run build` |
-| Global Command | ✅ | `frw --version` |
-| Proof of Work | ✅ | In register flow |
-| DNS Verification | ✅ | `frw verify-dns` |
-| Rate Limiting | ✅ | Active in register |
-| Bond Calculator | ✅ | Active in register |
-| Challenge System | ✅ | `frw challenge` |
-| Nonce Manager | ✅ | Replay prevention |
+| CLI Build | [DONE] | `npm run build` |
+| Global Command | [DONE] | `frw --version` |
+| Proof of Work | [DONE] | In register flow |
+| DNS Verification | [DONE] | `frw verify-dns` |
+| Rate Limiting | [DONE] | Active in register |
+| Bond Calculator | [DONE] | Active in register |
+| Challenge System | [DONE] | `frw challenge` |
+| Nonce Manager | [DONE] | Replay prevention |
 
 ## Security Features Active
 
-✅ **Proof of Work** - CPU-intensive registration
-✅ **Economic Bonds** - 10M units for short names  
-✅ **Rate Limiting** - 1/min, 20/day, 100/month
-✅ **Nonce System** - Replay attack prevention
-✅ **Challenge Spam Prevention** - 2/hour limit
-✅ **DNS Verification** - Optional trust badge
+[DONE] **Proof of Work** - CPU-intensive registration
+[DONE] **Economic Bonds** - 10M units for short names  
+[DONE] **Rate Limiting** - 1/min, 20/day, 100/month
+[DONE] **Nonce System** - Replay attack prevention
+[DONE] **Challenge Spam Prevention** - 2/hour limit
+[DONE] **DNS Verification** - Optional trust badge
 
 ## Ready to Test
 

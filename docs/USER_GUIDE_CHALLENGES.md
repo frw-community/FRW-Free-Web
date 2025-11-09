@@ -125,12 +125,12 @@ frw challenge create abandonedsite \
 
 ### What Happens
 
-1. ✓ System validates the name exists
-2. ✓ Collects current owner's metrics
-3. ✓ Creates challenge record
-4. ✓ Locks your bond
-5. ✓ Sets response deadline (30 days)
-6. ✓ Returns challenge ID
+1. [x] System validates the name exists
+2. [x] Collects current owner's metrics
+3. [x] Creates challenge record
+4. [x] Locks your bond
+5. [x] Sets response deadline (30 days)
+6. [x] Returns challenge ID
 
 ### Output
 
@@ -207,13 +207,13 @@ frw challenge respond chal_abc123def456 \
 
 ### What Happens
 
-1. ✓ System validates you own the name
-2. ✓ Checks deadline hasn't passed
-3. ✓ Validates counter-bond amount
-4. ✓ Collects fresh metrics for you
-5. ✓ Records response
-6. ✓ Changes status to "under_evaluation"
-7. ✓ Locks your counter-bond
+1. [x] System validates you own the name
+2. [x] Checks deadline hasn't passed
+3. [x] Validates counter-bond amount
+4. [x] Collects fresh metrics for you
+5. [x] Records response
+6. [x] Changes status to "under_evaluation"
+7. [x] Locks your counter-bond
 
 ### Output
 
@@ -386,11 +386,11 @@ Winner: 12D3KooW...
 ### For Challengers
 
 **Do:**
-- ✓ Research the name thoroughly
-- ✓ Collect solid evidence
-- ✓ Challenge only legitimate cases
-- ✓ Be prepared to lose your bond
-- ✓ Have an active site ready
+- [x] Research the name thoroughly
+- [x] Collect solid evidence
+- [x] Challenge only legitimate cases
+- [x] Be prepared to lose your bond
+- [x] Have an active site ready
 
 **Don't:**
 - ✗ Challenge active legitimate sites
@@ -401,11 +401,11 @@ Winner: 12D3KooW...
 ### For Owners
 
 **Do:**
-- ✓ Publish content regularly
-- ✓ Maintain active IPFS presence
-- ✓ Respond to challenges quickly
-- ✓ Keep evidence of usage
-- ✓ Monitor your names
+- [x] Publish content regularly
+- [x] Maintain active IPFS presence
+- [x] Respond to challenges quickly
+- [x] Keep evidence of usage
+- [x] Monitor your names
 
 **Don't:**
 - ✗ Ignore challenges (you'll lose)

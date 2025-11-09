@@ -1,4 +1,4 @@
-# Critical Security Implementation - COMPLETE ✓
+# Critical Security Implementation - COMPLETE [x]
 
 **Date:** November 9, 2025  
 **Status:** Core protections implemented, integration required
@@ -7,7 +7,7 @@
 
 ## What Was Implemented
 
-### 1. Bot Mass Registration Prevention ✅
+### 1. Bot Mass Registration Prevention [DONE]
 
 **Files Created:**
 - `packages/name-registry/src/pow/generator.ts` - Proof of Work system
@@ -47,7 +47,7 @@
 
 ---
 
-### 2. Replay Attack Prevention ✅
+### 2. Replay Attack Prevention [DONE]
 
 **File Created:**
 - `packages/name-registry/src/security/nonce-manager.ts`
@@ -69,7 +69,7 @@
 
 ---
 
-### 3. Challenge Spam Prevention ✅
+### 3. Challenge Spam Prevention [DONE]
 
 **File Created:**
 - `packages/name-registry/src/challenge/spam-prevention.ts`
@@ -100,7 +100,7 @@
 
 ---
 
-### 4. Database Storage Management ✅
+### 4. Database Storage Management [DONE]
 
 **File Created:**
 - `packages/name-registry/src/storage/cleanup.ts`
@@ -131,14 +131,14 @@
 
 | Protection | Status | Priority | Files |
 |-----------|--------|----------|-------|
-| Bot Registration | ✅ DONE | CRITICAL | pow/, bonds/, limits/ |
-| Replay Attack | ✅ DONE | CRITICAL | security/nonce-manager.ts |
-| Challenge Spam | ✅ DONE | CRITICAL | challenge/spam-prevention.ts |
-| Database Cleanup | ✅ DONE | HIGH | storage/cleanup.ts |
-| DNS Verification | ✅ DONE | CRITICAL | dns/verifier.ts |
-| DHT Caching | ⏳ TODO | HIGH | - |
-| Front-Running | ⏳ TODO | MEDIUM | - |
-| Content Reporting | ⏳ TODO | MEDIUM | - |
+| Bot Registration | [DONE] DONE | CRITICAL | pow/, bonds/, limits/ |
+| Replay Attack | [DONE] DONE | CRITICAL | security/nonce-manager.ts |
+| Challenge Spam | [DONE] DONE | CRITICAL | challenge/spam-prevention.ts |
+| Database Cleanup | [DONE] DONE | HIGH | storage/cleanup.ts |
+| DNS Verification | [DONE] DONE | CRITICAL | dns/verifier.ts |
+| DHT Caching | [TODO] TODO | HIGH | - |
+| Front-Running | [TODO] TODO | MEDIUM | - |
+| Content Reporting | [TODO] TODO | MEDIUM | - |
 
 ---
 
@@ -329,14 +329,14 @@ node benchmark-rate-limit.js
 
 | Threat | Before | After | Status |
 |--------|--------|-------|--------|
-| Bot Mass Registration | ❌ Vulnerable | ✅ Protected | FIXED |
-| Replay Attacks | ❌ Vulnerable | ✅ Protected | FIXED |
-| Challenge Spam | ❌ Vulnerable | ✅ Protected | FIXED |
-| Database Exhaustion | ❌ Vulnerable | ✅ Protected | FIXED |
-| DNS Squatting | ❌ Vulnerable | ✅ Protected | FIXED (earlier) |
-| DHT Poisoning | ⚠️ Partial | ⚠️ Partial | NEEDS CACHE |
-| Front-Running | ❌ Vulnerable | ❌ Vulnerable | MEDIUM PRIORITY |
-| Content Bombing | ❌ Vulnerable | ❌ Vulnerable | NEEDS GOVERNANCE |
+| Bot Mass Registration | [FAILED] Vulnerable | [DONE] Protected | FIXED |
+| Replay Attacks | [FAILED] Vulnerable | [DONE] Protected | FIXED |
+| Challenge Spam | [FAILED] Vulnerable | [DONE] Protected | FIXED |
+| Database Exhaustion | [FAILED] Vulnerable | [DONE] Protected | FIXED |
+| DNS Squatting | [FAILED] Vulnerable | [DONE] Protected | FIXED (earlier) |
+| DHT Poisoning | [!]️ Partial | [!]️ Partial | NEEDS CACHE |
+| Front-Running | [FAILED] Vulnerable | [FAILED] Vulnerable | MEDIUM PRIORITY |
+| Content Bombing | [FAILED] Vulnerable | [FAILED] Vulnerable | NEEDS GOVERNANCE |
 
 ---
 
@@ -386,10 +386,10 @@ node benchmark-rate-limit.js
 ## Estimated Timeline
 
 **Week 1 (Current):**
-- ✅ Bot prevention implementation
-- ✅ Replay attack prevention
-- ✅ Challenge spam prevention
-- ✅ Database cleanup
+- [DONE] Bot prevention implementation
+- [DONE] Replay attack prevention
+- [DONE] Challenge spam prevention
+- [DONE] Database cleanup
 
 **Week 2:**
 - DHT caching implementation
@@ -414,15 +414,15 @@ node benchmark-rate-limit.js
 
 Before launch, system must:
 
-- ✅ Prevent bot mass registration (PoW + bonds + rate limits)
-- ✅ Prevent replay attacks (nonce system)
-- ✅ Prevent challenge spam (spam prevention)
-- ✅ Prevent database exhaustion (cleanup + limits)
-- ✅ Prevent DNS squatting (verification)
-- ⏳ Cache DHT records securely
-- ⏳ Pass security penetration tests
-- ⏳ Handle 1000 concurrent users
-- ⏳ Complete documentation
+- [DONE] Prevent bot mass registration (PoW + bonds + rate limits)
+- [DONE] Prevent replay attacks (nonce system)
+- [DONE] Prevent challenge spam (spam prevention)
+- [DONE] Prevent database exhaustion (cleanup + limits)
+- [DONE] Prevent DNS squatting (verification)
+- [TODO] Cache DHT records securely
+- [TODO] Pass security penetration tests
+- [TODO] Handle 1000 concurrent users
+- [TODO] Complete documentation
 
 ---
 

@@ -1,4 +1,4 @@
-# Phase 1B: Challenge System - COMPLETE ✓
+# Phase 1B: Challenge System - COMPLETE [x]
 
 ## Status: Fully Implemented
 
@@ -14,12 +14,12 @@
 **File:** `packages/name-registry/src/challenge/system.ts`
 
 **Implemented Features:**
-- ✓ Challenge creation with validation
-- ✓ Challenge response handling
-- ✓ Automatic resolution via metrics comparison
-- ✓ Bond calculation and distribution
-- ✓ Status tracking and querying
-- ✓ Challenge listing with filters
+- [x] Challenge creation with validation
+- [x] Challenge response handling
+- [x] Automatic resolution via metrics comparison
+- [x] Bond calculation and distribution
+- [x] Status tracking and querying
+- [x] Challenge listing with filters
 
 **Key Methods:**
 ```typescript
@@ -34,10 +34,10 @@ listChallenges(filter)
 **File:** `apps/cli/src/commands/challenge.ts`
 
 **Implemented Commands:**
-- ✓ `frw challenge create` - Create challenge
-- ✓ `frw challenge respond` - Respond to challenge  
-- ✓ `frw challenge status` - Check challenge status
-- ✓ `frw challenge list` - List challenges
+- [x] `frw challenge create` - Create challenge
+- [x] `frw challenge respond` - Respond to challenge  
+- [x] `frw challenge status` - Check challenge status
+- [x] `frw challenge list` - List challenges
 
 ---
 
@@ -278,25 +278,25 @@ CREATE INDEX idx_challenges_challenger ON challenges(challenger);
 
 ### Challenge Creation
 
-- ✓ Name must be 3+ characters
-- ✓ Bond must be ≥ 1,000,000
-- ✓ Name must be registered
-- ✓ Challenger must have keypair
+- [x] Name must be 3+ characters
+- [x] Bond must be ≥ 1,000,000
+- [x] Name must be registered
+- [x] Challenger must have keypair
 
 ### Challenge Response
 
-- ✓ Only current owner can respond
-- ✓ Must respond before deadline
-- ✓ Counter-bond must match or exceed challenge bond
-- ✓ Cannot respond twice
-- ✓ Challenge must exist
+- [x] Only current owner can respond
+- [x] Must respond before deadline
+- [x] Counter-bond must match or exceed challenge bond
+- [x] Cannot respond twice
+- [x] Challenge must exist
 
 ### Challenge Resolution
 
-- ✓ Evaluation period must be complete
-- ✓ Cannot resolve twice
-- ✓ Challenge must exist
-- ✓ Fresh metrics collected for both parties
+- [x] Evaluation period must be complete
+- [x] Cannot resolve twice
+- [x] Challenge must exist
+- [x] Fresh metrics collected for both parties
 
 ---
 
@@ -362,14 +362,14 @@ if (resolution.winner === challenger) {
 
 | Component | Status |
 |-----------|--------|
-| Content Metrics | ✓ Complete |
-| Metrics Database | ✓ Complete |
-| Challenge Creation | ✓ Complete |
-| Challenge Response | ✓ Complete |
-| Automatic Resolution | ✓ Complete |
-| Bond Management | ✓ Placeholder |
-| CLI Commands | ✓ Complete |
-| DHT Publication | ⚠ Optional |
+| Content Metrics | [x] Complete |
+| Metrics Database | [x] Complete |
+| Challenge Creation | [x] Complete |
+| Challenge Response | [x] Complete |
+| Automatic Resolution | [x] Complete |
+| Bond Management | [x] Placeholder |
+| CLI Commands | [x] Complete |
+| DHT Publication | [!] Optional |
 
 **Phase 1 Core:** 100% Complete
 
@@ -469,10 +469,10 @@ frw challenge list
 Phase 1B complete. Full challenge system operational. All core features implemented. Ready for Phase 2 when network matures.
 
 **Commands working:**
-- ✓ `frw metrics <name>`
-- ✓ `frw challenge create <name>`
-- ✓ `frw challenge respond <id>`
-- ✓ `frw challenge status <id>`
-- ✓ `frw challenge list`
+- [x] `frw metrics <name>`
+- [x] `frw challenge create <name>`
+- [x] `frw challenge respond <id>`
+- [x] `frw challenge status <id>`
+- [x] `frw challenge list`
 
 **Phase 1 Status:** PRODUCTION READY

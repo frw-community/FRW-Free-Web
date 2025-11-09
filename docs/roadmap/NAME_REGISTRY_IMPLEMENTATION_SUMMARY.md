@@ -68,7 +68,7 @@ Complete implementation framework for all three phases of FRW name registry anti
 
 ## Implementation Status
 
-### ✅ Complete
+### [DONE] Complete
 
 - Type definitions (all phases)
 - Package structure

@@ -28,16 +28,16 @@ The FRW Browser window opens after 5-10 seconds.
 ┌─────────────────────────────────────────┐
 │  ←  →  ↻         FRW Browser           │ Navigation Bar
 ├─────────────────────────────────────────┤
-│  🔒 frw://alice/              [Go]     │ Address Bar
+│  [SECURE] frw://alice/              [Go]     │ Address Bar
 ├─────────────────────────────────────────┤
-│  ✓ Verified @alice                     │ Verification Badge
+│  [x] Verified @alice                     │ Verification Badge
 │     Published: 09/11/2025              │
 ├─────────────────────────────────────────┤
 │                                         │
 │         [Page Content Here]             │ Content Viewer
 │                                         │
 ├─────────────────────────────────────────┤
-│  🟢 IPFS Connected    FRW Browser v1.0  │ Status Bar
+│  [OK] IPFS Connected    FRW Browser v1.0  │ Status Bar
 └─────────────────────────────────────────┘
 ```
 
@@ -128,12 +128,12 @@ Add the CID to your config at `~/.frw/config.json`:
 
 ### Verification Badge
 
-**Green badge (✓ Verified):**
+**Green badge ([x] Verified):**
 - Content is cryptographically signed
 - Signature is valid
 - Author confirmed
 
-**Yellow badge (⚠ Unverified):**
+**Yellow badge ([!] Unverified):**
 - No signature found
 - Content cannot be verified
 - View with caution

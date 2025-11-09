@@ -27,23 +27,40 @@ Multi-phase implementation combining objective IPFS metrics, economic incentives
 
 ## Implementation Phases
 
-### Phase 1: Launch (Immediate)
+### Phase 1: Foundation [DONE] COMPLETE
 
-**Content Metrics + Time-Locked Challenges**
+**Status:** Production Ready (November 9, 2025)
 
-Metrics collected automatically from IPFS:
-- Peer connections
-- Content fetches
-- IPNS updates
-- Content size and complexity
-- Inbound links
-- Verification count
+**Content Metrics + Time-Locked Challenges + Bot Prevention**
 
-Challenge mechanism:
-- Economic bond required
-- 30-day response period
-- Automatic resolution via metrics
-- Bond distribution to winner
+**Implemented Features:**
+- [DONE] Proof of Work system (CPU-intensive registration)
+- [DONE] Economic bonds (progressive pricing by name length)
+- [DONE] Rate limiting (1/min, 20/day, 100/month per user)
+- [DONE] Content metrics from IPFS (peers, size, updates)
+- [DONE] Challenge system (30-day response, automatic resolution)
+- [DONE] DNS verification (optional, for domain-like names)
+- [DONE] Replay attack prevention (nonce management)
+- [DONE] Challenge spam prevention (2/hour limit)
+- [DONE] Database cleanup (storage limits, automatic maintenance)
+
+**CLI Commands Available:**
+```bash
+frw register <name>              # With PoW and bonds
+frw register <name> --verify-dns # Optional DNS verification
+frw verify-dns <name>            # Verify DNS later
+frw metrics <name>               # View usage metrics
+frw challenge create <name>      # Challenge ownership
+frw challenge respond <id>       # Respond to challenge
+frw challenge status <id>        # Check challenge status
+frw challenge list               # List all challenges
+```
+
+**Documentation:**
+- Implementation: `docs/roadmap/PHASE_1A_COMPLETE.md`
+- Challenge System: `docs/roadmap/PHASE_1B_COMPLETE.md`
+- DNS Verification: `docs/roadmap/DNS_VERIFICATION_COMPLETE.md`
+- Security: `docs/roadmap/CRITICAL_SECURITY_IMPLEMENTATION.md`
 
 ### Phase 2: 6 Months (Trust Graph + Community Voting)
 
@@ -101,17 +118,24 @@ frw vote cast <voteId> --choice 0
 
 ## Implementation Status
 
-| Phase | Component | Status | Completion |
-|-------|-----------|--------|------------|
-| 1 | Content Metrics | ✅ Complete | 100% |
-| 1 | Challenge System | ✅ Complete | 100% |
-| 1 | DNS Verification | ✅ Complete | 100% |
-| 1 | Automatic Resolution | ✅ Complete | 100% |
-| 2 | Trust Graph | 📋 Planned | 0% |
-| 2 | Reputation System | 📋 Planned | 0% |
-| 2 | Community Voting | 📋 Planned | 0% |
-| 3 | Jury Selection | 🔬 Research | 0% |
-| 3 | ZK Proofs | 🔬 Research | 0% |
+| Phase | Component | Status | Completion | Files |
+|-------|-----------|--------|------------|-------|
+| 1 | Proof of Work | [DONE] Complete | 100% | `pow/generator.ts` |
+| 1 | Economic Bonds | [DONE] Complete | 100% | `bonds/calculator.ts` |
+| 1 | Rate Limiting | [DONE] Complete | 100% | `limits/rate-limiter.ts` |
+| 1 | Content Metrics | [DONE] Complete | 100% | `metrics/collector.ts` |
+| 1 | Challenge System | [DONE] Complete | 100% | `challenge/system.ts` |
+| 1 | DNS Verification | [DONE] Complete | 100% | `dns/verifier.ts` |
+| 1 | Automatic Resolution | [DONE] Complete | 100% | `challenge/system.ts` |
+| 1 | Nonce Manager | [DONE] Complete | 100% | `security/nonce-manager.ts` |
+| 1 | Database Cleanup | [DONE] Complete | 100% | `storage/cleanup.ts` |
+| 2 | Trust Graph | [PLANNED] Planned | 0% | TBD |
+| 2 | Reputation System | [PLANNED] Planned | 0% | TBD |
+| 2 | Community Voting | [PLANNED] Planned | 0% | TBD |
+| 3 | Jury Selection | [RESEARCH] Research | 0% | TBD |
+| 3 | ZK Proofs | [RESEARCH] Research | 0% | TBD |
+
+**Note:** All Phase 1 components are production-ready as of November 9, 2025.
 
 ---
 

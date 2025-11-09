@@ -439,8 +439,8 @@ apps/browser/
 ### Verification Display
 ```
 ┌─────────────────────────────────────────┐
-│ ✓ Verified | @alice                     │
-│ frw://alice/                      🔒    │
+│ [x] Verified | @alice                     │
+│ frw://alice/                      [SECURE]    │
 ├─────────────────────────────────────────┤
 │                                         │
 │   [Page content rendered here]          │
@@ -494,14 +494,14 @@ apps/browser/
 
 ## Success Metrics
 
-- ✅ Load frw:// URLs successfully
-- ✅ Verify signatures correctly
-- ✅ Display content securely
-- ✅ Navigate between pages
-- ✅ Manage history/bookmarks
-- ✅ <1s page load time
-- ✅ <100MB memory usage
-- ✅ <3s startup time
+- [DONE] Load frw:// URLs successfully
+- [DONE] Verify signatures correctly
+- [DONE] Display content securely
+- [DONE] Navigate between pages
+- [DONE] Manage history/bookmarks
+- [DONE] <1s page load time
+- [DONE] <100MB memory usage
+- [DONE] <3s startup time
 
 ---
 
@@ -529,4 +529,4 @@ npm install
 npm run dev
 ```
 
-Let's build the FRW browser! 🚀
+Let's build the FRW browser! [LAUNCH]

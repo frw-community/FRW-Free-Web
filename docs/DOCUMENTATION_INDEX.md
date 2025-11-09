@@ -69,7 +69,8 @@ Complete guide to all documentation in the FRW project.
 ### Roadmap & Planning
 
 - **[ROADMAP.md](ROADMAP.md)** - Development phases and milestones
-- **[PRODUCTION_ROADMAP.md](PRODUCTION_ROADMAP.md)** - Production readiness checklist
+- **[PRODUCTION_ROADMAP.md](roadmap/PRODUCTION_ROADMAP.md)** - Production readiness checklist
+- **[SECURITY_FIRST_ROADMAP.md](roadmap/SECURITY_FIRST_ROADMAP.md)** - Comprehensive security strategy
 - **[../CHANGELOG.md](../CHANGELOG.md)** - Version history and changes
 
 ---
@@ -102,7 +103,8 @@ Complete guide to all documentation in the FRW project.
 
 ### Planning
 - [ROADMAP.md](ROADMAP.md) - Development roadmap
-- [PRODUCTION_ROADMAP.md](PRODUCTION_ROADMAP.md) - Production checklist
+- [PRODUCTION_ROADMAP.md](roadmap/PRODUCTION_ROADMAP.md) - Production checklist
+- [SECURITY_FIRST_ROADMAP.md](roadmap/SECURITY_FIRST_ROADMAP.md) - Security strategy
 - [../CHANGELOG.md](../CHANGELOG.md) - Version history
 
 ### Naming System
@@ -112,31 +114,31 @@ Complete guide to all documentation in the FRW project.
 
 ## Documentation Status
 
-### ✅ Complete & Current
+### [DONE] Complete & Current
 
 All documentation files are up-to-date as of **November 9, 2025**.
 
 **Core Documentation:**
-- ✅ ../README.md - English, current project status
-- ✅ ../QUICK_START.md - Tested workflow
-- ✅ INSTALLATION_GUIDE.md - Comprehensive
-- ✅ USER_GUIDE.md - Complete usage instructions
-- ✅ ../CONTRIBUTING.md - Current monorepo workflow
+- [DONE] ../README.md - English, current project status
+- [DONE] ../QUICK_START.md - Tested workflow
+- [DONE] INSTALLATION_GUIDE.md - Comprehensive
+- [DONE] USER_GUIDE.md - Complete usage instructions
+- [DONE] ../CONTRIBUTING.md - Current monorepo workflow
 
 **Technical Documentation:**
-- ✅ ARCHITECTURE.md - System design
-- ✅ SPECIFICATION.md - Protocol v1.0
-- ✅ SECURITY.md - Security model
-- ✅ DEVELOPER_GUIDE.md - API reference
-- ✅ BROWSER_PLAN.md - Implementation details
+- [DONE] ARCHITECTURE.md - System design
+- [DONE] SPECIFICATION.md - Protocol v1.0
+- [DONE] SECURITY.md - Security model
+- [DONE] DEVELOPER_GUIDE.md - API reference
+- [DONE] BROWSER_PLAN.md - Implementation details
 
 **Project Management:**
-- ✅ ../CHANGELOG.md - Current achievements listed
-- ✅ ROADMAP.md - Phase status updated
-- ✅ PRODUCTION_ROADMAP.md - Progress tracked
-- ✅ MIGRATION_GUIDE.md - Monorepo instructions
+- [DONE] ../CHANGELOG.md - Current achievements listed
+- [DONE] ROADMAP.md - Phase status updated
+- [DONE] roadmap/PRODUCTION_ROADMAP.md - Progress tracked
+- [DONE] MIGRATION_GUIDE.md - Monorepo instructions
 
-### 🔄 Needs Future Updates
+### [IN PROGRESS] Needs Future Updates
 
 - **Tab support** - When implemented, update USER_GUIDE.md
 - **Bookmarks** - When implemented, update USER_GUIDE.md
@@ -161,12 +163,12 @@ Planned documentation to create:
 
 The following obsolete files were removed during documentation cleanup:
 
-- ❌ `CLI_READY.md` - Outdated (said IPFS not working)
-- ❌ `NEXT_STEPS.md` - Outdated (browser now complete)
-- ❌ `PROJECT_SUMMARY.md` - Outdated (said Phase 1 only)
-- ❌ `README_EN.md` - Redundant (README.md now in English)
-- ❌ `docs/USER_GUIDE.md` - Duplicate (consolidated to root)
-- ❌ `docs/QUICKSTART.md` - Duplicate (consolidated to root)
+- [FAILED] `CLI_READY.md` - Outdated (said IPFS not working)
+- [FAILED] `NEXT_STEPS.md` - Outdated (browser now complete)
+- [FAILED] `PROJECT_SUMMARY.md` - Outdated (said Phase 1 only)
+- [FAILED] `README_EN.md` - Redundant (README.md now in English)
+- [FAILED] `docs/USER_GUIDE.md` - Duplicate (consolidated to root)
+- [FAILED] `docs/QUICKSTART.md` - Duplicate (consolidated to root)
 
 ---
 

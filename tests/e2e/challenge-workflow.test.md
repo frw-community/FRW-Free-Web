@@ -364,13 +364,13 @@ rm ~/.frw/metrics.db
 
 ## Success Criteria
 
-✓ All challenge states transition correctly  
-✓ All validations enforce rules  
-✓ All error conditions handled gracefully  
-✓ Database persists data correctly  
-✓ Performance within acceptable limits  
-✓ No memory leaks  
-✓ No crashes or unhandled exceptions  
+[x] All challenge states transition correctly  
+[x] All validations enforce rules  
+[x] All error conditions handled gracefully  
+[x] Database persists data correctly  
+[x] Performance within acceptable limits  
+[x] No memory leaks  
+[x] No crashes or unhandled exceptions  
 
 ---
 

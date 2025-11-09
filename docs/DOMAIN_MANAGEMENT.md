@@ -174,7 +174,7 @@ frw domain add example.com mysite
 ```
 Add Domain: example.com
 ──────────────────────────
-✓ Domain "example.com" linked to "mysite"
+[x] Domain "example.com" linked to "mysite"
 
 DNS Configuration Required
 ──────────────────────────
@@ -204,7 +204,7 @@ Verify Domain: example.com
 ✔ Checking DNS records...
 ✔ Domain verified successfully!
 
-✓ example.com → frw://mysite/
+[x] example.com → frw://mysite/
 
 Your site is now accessible at both:
   • https://example.com
@@ -235,11 +235,11 @@ frw domain list
 Domain Mappings
 ───────────────
 
-✓ example.com
+[x] example.com
   → frw://mysite/
   Status: Verified
 
-⚠ test.com
+[!] test.com
   → frw://testsite/
   Status: Not verified
   Action: Run frw domain verify test.com
@@ -261,7 +261,7 @@ Domain Info: example.com
 Domain:     example.com
 FRW Name:   mysite
 Public Key: GMZjnckbhcdPxnZWhAbuRWRpsELbR6fZLbgQacUdErSb
-Status:     ✓ Verified
+Status:     [x] Verified
 Added:      11/9/2025, 12:00:00 PM
 Last Check: 11/9/2025, 12:15:00 PM
 
@@ -283,7 +283,7 @@ frw domain remove example.com
 ```
 Remove Domain: example.com
 ──────────────────────────
-✓ Domain "example.com" removed
+[x] Domain "example.com" removed
 ```
 
 ---

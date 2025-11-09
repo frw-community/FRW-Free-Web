@@ -1,4 +1,4 @@
-# DNS Verification System - COMPLETE ✓
+# DNS Verification System - COMPLETE [x]
 
 ## Status: Anti-Squatting Prevention Implemented
 
@@ -61,7 +61,7 @@ Register Name: example.com
 DNS Verification Required
 ──────────────────────────
 
-⚠ "example.com" requires DNS verification to prevent squatting
+[!] "example.com" requires DNS verification to prevent squatting
 
 This name is either:
   - A domain name (e.g., example.com)
@@ -97,7 +97,7 @@ Value: frw-key=GMZjnckbhcdPxnZWhAbuRWRpsELbR6fZLbgQacUdErSb
 
 ✔ Keypair loaded
 ✔ Name record created
-⚠ Network publish not yet implemented
+[!] Network publish not yet implemented
 
 Registration Complete
 ─────────────────────
@@ -114,7 +114,7 @@ $ frw register google
 DNS Verification Required
 ──────────────────────────
 
-⚠ "google" requires DNS verification to prevent squatting
+[!] "google" requires DNS verification to prevent squatting
 
 # Same flow as above
 # Must own google.com and add DNS TXT record
@@ -175,10 +175,10 @@ Works with ALL DNS providers:
 
 ### What's Protected
 
-✅ **Domain squatting:** Can't register `google` without owning google.com  
-✅ **Brand squatting:** Reserved names require DNS proof  
-✅ **Impersonation:** DNS proves domain ownership  
-✅ **Upfront prevention:** Blocks registration immediately
+[DONE] **Domain squatting:** Can't register `google` without owning google.com  
+[DONE] **Brand squatting:** Reserved names require DNS proof  
+[DONE] **Impersonation:** DNS proves domain ownership  
+[DONE] **Upfront prevention:** Blocks registration immediately
 
 ### What DNS Provides
 
@@ -388,14 +388,14 @@ TTL: 1 Hour
 
 | Component | Status | Notes |
 |-----------|--------|-------|
-| DNS Verifier | ✓ Complete | Works with all DNS providers |
-| Reserved Names | ✓ Complete | 100+ protected names |
-| Registration Integration | ✓ Complete | DNS check on register |
-| CLI Commands | ✓ Complete | User prompts and verification |
-| Error Handling | ✓ Complete | Helpful error messages |
-| Documentation | ✓ Complete | User guides and examples |
-| Proof of Work | ⏳ TODO | Phase 1B addition |
-| Challenge System | ✓ Complete | Phase 1 working |
+| DNS Verifier | [x] Complete | Works with all DNS providers |
+| Reserved Names | [x] Complete | 100+ protected names |
+| Registration Integration | [x] Complete | DNS check on register |
+| CLI Commands | [x] Complete | User prompts and verification |
+| Error Handling | [x] Complete | Helpful error messages |
+| Documentation | [x] Complete | User guides and examples |
+| Proof of Work | [TODO] TODO | Phase 1B addition |
+| Challenge System | [x] Complete | Phase 1 working |
 
 ---
 
@@ -410,12 +410,12 @@ TTL: 1 Hour
 
 ## Security Audit Results
 
-✅ **DNS query timeout:** 5 seconds max  
-✅ **No DNS caching:** Fresh query each time  
-✅ **Public key format validation:** Regex checked  
-✅ **Error handling:** All DNS errors caught  
-✅ **No private key exposure:** Only public key in DNS  
-✅ **Decentralized:** Uses global DNS infrastructure
+[DONE] **DNS query timeout:** 5 seconds max  
+[DONE] **No DNS caching:** Fresh query each time  
+[DONE] **Public key format validation:** Regex checked  
+[DONE] **Error handling:** All DNS errors caught  
+[DONE] **No private key exposure:** Only public key in DNS  
+[DONE] **Decentralized:** Uses global DNS infrastructure
 
 ---
 

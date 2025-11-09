@@ -6,7 +6,7 @@ labels: security
 assignees: ''
 ---
 
-⚠️ **STOP: Do not file public security issues!**
+[!]️ **STOP: Do not file public security issues!**
 
 If you've discovered a security vulnerability:
 

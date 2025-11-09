@@ -46,9 +46,9 @@ npm run build --workspaces
 frw init
 
 # Expected output:
-✓ Configuration directory created
-✓ Keypair generated
-✓ Configuration saved
+[x] Configuration directory created
+[x] Keypair generated
+[x] Configuration saved
 
 # Verify files created
 dir %USERPROFILE%\.frw
@@ -62,7 +62,7 @@ dir %USERPROFILE%\.frw
 frw ipfs
 
 # Expected output (if IPFS running):
-✓ IPFS node is running
+[x] IPFS node is running
 Peer ID: 12D3KooW...
 Addresses: [list of addresses]
 
@@ -89,9 +89,9 @@ frw register testsite123
 # Expected output:
 Generating proof of work...
 Attempts: 12345
-✓ Proof generated
+[x] Proof generated
 
-✓ Name registered: testsite123
+[x] Name registered: testsite123
   Status: Regular name (no verification needed)
   Your site: frw://testsite123/
 ```
@@ -126,10 +126,10 @@ Generating proof of work (difficulty: 6)...
 Attempts: 100000
 Attempts: 200000
 ...
-✓ Proof generated (1,234,567 attempts)
+[x] Proof generated (1,234,567 attempts)
 
 Required bond: 10,000,000 units
-✓ Name registered: abc
+[x] Name registered: abc
 ```
 
 ---
@@ -143,8 +143,8 @@ Required bond: 10,000,000 units
 frw register example.com
 
 # Expected output:
-✓ Name registered: example.com
-⚠ Not DNS verified
+[x] Name registered: example.com
+[!] Not DNS verified
   Users will see an unverified warning
   To verify: frw verify-dns example.com
 ```
@@ -174,9 +174,9 @@ Add this TXT record to your DNS:
 ```bash
 # Continue verification
 ? Ready to verify DNS? Yes
-✓ DNS verification passed
-✓ Name registered: mydomain.com
-  Status: ✓ DNS Verified
+[x] DNS verification passed
+[x] Name registered: mydomain.com
+  Status: [x] DNS Verified
   Users will see this as the verified site
 ```
 
@@ -190,8 +190,8 @@ frw verify-dns example.com
 Add this DNS TXT record:
   _frw.example.com → "frw-key=..."
 
-✓ DNS verification successful!
-✓ Official status granted
+[x] DNS verification successful!
+[x] Official status granted
 ```
 
 ---
@@ -228,7 +228,7 @@ frw challenge create testsite123 \
 Required bond: 1,000,000 units
 (Increased due to challenge history)
 
-✓ Challenge created
+[x] Challenge created
   Challenge ID: challenge_abc123
   Name: testsite123
   Bond locked: 1,000,000 units
@@ -265,9 +265,9 @@ Challenger: 12D3KooW... (you)
 Owner: 12D3KooWXyz...
 
 Timeline:
-  ✓ Created: Nov 9, 2025
-  ⏳ Response Deadline: Dec 9, 2025 (30 days)
-  ⏳ Evaluation: Dec 23, 2025 (44 days)
+  [x] Created: Nov 9, 2025
+  [TODO] Response Deadline: Dec 9, 2025 (30 days)
+  [TODO] Evaluation: Dec 23, 2025 (44 days)
 
 Bond: 1,000,000 units locked
 ```
@@ -598,7 +598,7 @@ npm install --save-dev @types/node
 
 ## Success Criteria
 
-✅ **System is working when:**
+[DONE] **System is working when:**
 - All packages build without errors
 - CLI commands execute successfully
 - PoW generation works at expected speeds
@@ -607,7 +607,7 @@ npm install --save-dev @types/node
 - Challenge system operational
 - Error messages are helpful
 
-🎯 **Ready for next phase when:**
+[TARGET] **Ready for next phase when:**
 - All tests pass
 - Performance benchmarks met
 - Security features verified
