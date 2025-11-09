@@ -1,0 +1,35 @@
+{
+  "name": "@frw/name-registry",
+  "version": "1.0.0",
+  "description": "FRW decentralized name registry with anti-squatting mechanisms",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "frw",
+    "name-registry",
+    "anti-squatting",
+    "decentralized"
+  ],
+  "author": "FRW Community",
+  "license": "MIT",
+  "dependencies": {
+    "@frw/common": "1.0.0",
+    "@frw/crypto": "1.0.0",
+    "@frw/ipfs": "1.0.0",
+    "better-sqlite3": "^12.4.1",
+    "ipfs-http-client": "^60.0.1"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^20.10.6",
+    "jest": "^29.7.0",
+    "typescript": "^5.3.3"
+  }
+}

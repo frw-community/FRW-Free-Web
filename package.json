@@ -4,7 +4,13 @@
   "description": "Decentralized web protocol and client - Monorepo",
   "private": true,
   "workspaces": [
-    "packages/*",
+    "packages/common",
+    "packages/crypto",
+    "packages/ipfs",
+    "packages/protocol",
+    "packages/sandbox",
+    "packages/storage",
+    "packages/name-registry",
     "apps/cli",
     "apps/browser"
   ],
