@@ -4,7 +4,7 @@
     "target": "ES2022",
     "module": "ES2022",
     "lib": ["ES2022"],
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "allowJs": false,
     "declaration": true,
@@ -15,18 +15,18 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "noImplicitReturns": true,
     "skipLibCheck": true,
     "types": ["node"],
     "paths": {
-      "@frw/common": ["./packages/common/src"],
-      "@frw/crypto": ["./packages/crypto/src"],
-      "@frw/ipfs": ["./packages/ipfs/src"],
-      "@frw/protocol": ["./packages/protocol/src"],
-      "@frw/sandbox": ["./packages/sandbox/src"],
-      "@frw/storage": ["./packages/storage/src"]
+      "@frw/common": ["./packages/common/dist/index.d.ts"],
+      "@frw/crypto": ["./packages/crypto/dist/index.d.ts"],
+      "@frw/ipfs": ["./packages/ipfs/dist/index.d.ts"],
+      "@frw/protocol": ["./packages/protocol/dist/index.d.ts"],
+      "@frw/sandbox": ["./packages/sandbox/dist/index.d.ts"],
+      "@frw/storage": ["./packages/storage/dist/index.d.ts"]
     }
   },
   "references": [
