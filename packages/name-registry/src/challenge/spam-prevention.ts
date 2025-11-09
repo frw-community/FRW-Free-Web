@@ -196,6 +196,36 @@ export class ChallengeSpamPrevention {
     }
     
     /**
+     * Record challenge outcome by name
+     */
+    recordOutcome(
+        publicKey: string,
+        name: string,
+        won: boolean
+    ): void {
+        const history = this.getHistory(publicKey);
+        const challenge = history.challenges.find(c => c.name === name && c.outcome === 'pending');
+        
+        if (challenge) {
+            challenge.outcome = won ? 'won' : 'lost';
+            this.history.set(publicKey, history);
+        }
+    }
+    
+    /**
+     * Record challenge withdrawal
+     */
+    recordWithdrawal(publicKey: string, name: string): void {
+        this.recordOutcome(publicKey, name, false);
+        const history = this.getHistory(publicKey);
+        const challenge = history.challenges.find(c => c.name === name);
+        if (challenge) {
+            challenge.outcome = 'withdrawn';
+            this.history.set(publicKey, history);
+        }
+    }
+    
+    /**
      * Get challenge statistics for user
      */
     getStats(publicKey: string): {

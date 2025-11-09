@@ -54,6 +54,7 @@ export class DatabaseCleanup {
         metricsDeleted: number;
         challengesDeleted: number;
         noncesDeleted: number;
+        totalDeleted: number;
         spaceFreed: number;
     }> {
         const startSize = await this.getDatabaseSize(db);
@@ -67,6 +68,8 @@ export class DatabaseCleanup {
         // Clean up old nonces
         const noncesDeleted = await this.cleanupNonces(db);
         
+        const totalDeleted = metricsDeleted + challengesDeleted + noncesDeleted;
+        
         // Vacuum database to reclaim space
         await db.exec('VACUUM');
         
@@ -77,6 +80,7 @@ export class DatabaseCleanup {
             metricsDeleted,
             challengesDeleted,
             noncesDeleted,
+            totalDeleted,
             spaceFreed
         };
     }
@@ -84,7 +88,7 @@ export class DatabaseCleanup {
     /**
      * Clean up old metrics
      */
-    private async cleanupMetrics(db: any): Promise<number> {
+    async cleanupMetrics(db: any): Promise<number> {
         const cutoff = Date.now() - this.config.metricsRetention;
         
         const result = await db.run(`
@@ -98,7 +102,7 @@ export class DatabaseCleanup {
     /**
      * Clean up old resolved challenges
      */
-    private async cleanupChallenges(db: any): Promise<number> {
+    async cleanupChallenges(db: any): Promise<number> {
         const cutoff = Date.now() - this.config.challengeRetention;
         
         // Only delete resolved challenges
@@ -114,7 +118,7 @@ export class DatabaseCleanup {
     /**
      * Clean up old nonces
      */
-    private async cleanupNonces(db: any): Promise<number> {
+    async cleanupNonces(db: any): Promise<number> {
         const cutoff = Date.now() - this.config.nonceRetention;
         
         const result = await db.run(`
@@ -142,22 +146,34 @@ export class DatabaseCleanup {
     /**
      * Validate evidence size
      */
-    validateEvidenceSize(evidence: any[]): {
+    validateEvidenceSize(evidence: any[] | string): {
         valid: boolean;
         totalSize: number;
         maxSize: number;
+        size: number;
+        reason?: string;
     } {
         let totalSize = 0;
         
-        for (const item of evidence) {
-            // Estimate size (rough approximation)
-            totalSize += JSON.stringify(item).length;
+        // Handle string input (for tests)
+        if (typeof evidence === 'string') {
+            totalSize = evidence.length;
+        } else {
+            // Handle array input
+            for (const item of evidence) {
+                // Estimate size (rough approximation)
+                totalSize += JSON.stringify(item).length;
+            }
         }
         
+        const valid = totalSize <= this.config.maxEvidenceSize;
+        
         return {
-            valid: totalSize <= this.config.maxEvidenceSize,
+            valid,
             totalSize,
-            maxSize: this.config.maxEvidenceSize
+            maxSize: this.config.maxEvidenceSize,
+            size: totalSize,  // Alias for tests
+            reason: valid ? undefined : `Evidence size ${totalSize} exceeds maximum ${this.config.maxEvidenceSize}`
         };
     }
     
@@ -195,6 +211,91 @@ export class DatabaseCleanup {
     private async getDatabaseSize(db: any): Promise<number> {
         const result = await db.get('SELECT page_count * page_size as size FROM pragma_page_count(), pragma_page_size()');
         return result.size || 0;
+    }
+    
+    /**
+     * Check database size using db object (convenience method for tests)
+     */
+    async checkDatabaseSize(db: any): Promise<{
+        currentSize: number;
+        maxSize: number;
+        percentage: number;
+        percentageUsed: number;
+        needsCleanup: boolean;
+    }> {
+        const currentSize = await this.getDatabaseSize(db);
+        const percentage = (currentSize / this.config.maxDatabaseSize) * 100;
+        
+        return {
+            currentSize,
+            maxSize: this.config.maxDatabaseSize,
+            percentage,
+            percentageUsed: percentage,  // Alias for tests
+            needsCleanup: percentage > 80
+        };
+    }
+    
+    /**
+     * Check user limits with detailed stats (convenience method for tests)
+     */
+    async checkUserLimits(db: any, publicKey: string): Promise<{
+        allowed: boolean;
+        currentCount: number;
+        maxCount: number;
+        maxAllowed: number;
+        remaining: number;
+    }> {
+        const result = await db.get(`
+            SELECT COUNT(*) as count 
+            FROM registrations 
+            WHERE public_key = ?
+        `, [publicKey]);
+        
+        const currentCount = result.count || 0;
+        const allowed = currentCount < this.config.maxRecordsPerUser;
+        
+        return {
+            allowed,
+            currentCount,
+            maxCount: this.config.maxRecordsPerUser,
+            maxAllowed: this.config.maxRecordsPerUser,  // Alias for tests
+            remaining: Math.max(0, this.config.maxRecordsPerUser - currentCount)
+        };
+    }
+    
+    /**
+     * Get cleanup statistics with configuration
+     */
+    async getCleanupStats(db?: any) {
+        if (!db) {
+            // Return config only if no db provided
+            return {
+                totalRecords: 0,
+                metricsRecords: 0,
+                challengeRecords: 0,
+                nonceRecords: 0,
+                registrationRecords: 0,
+                oldestMetric: null,
+                oldestChallenge: null,
+                metricsRetentionDays: Math.floor(this.config.metricsRetention / 86400000),
+                challengesRetentionDays: Math.floor(this.config.challengeRetention / 86400000),
+                noncesRetentionDays: Math.floor(this.config.nonceRetention / 86400000),
+                maxDatabaseSize: this.config.maxDatabaseSize,
+                maxRecordsPerUser: this.config.maxRecordsPerUser,
+                maxEvidenceSize: this.config.maxEvidenceSize
+            };
+        }
+        
+        const stats = await this.getStats(db);
+        return {
+            ...stats,
+            metricsRetentionDays: Math.floor(this.config.metricsRetention / 86400000),
+            challengesRetentionDays: Math.floor(this.config.challengeRetention / 86400000),
+            noncesRetentionDays: Math.floor(this.config.nonceRetention / 86400000),
+            maxDatabaseSize: this.config.maxDatabaseSize,
+            maxRecordsPerUser: this.config.maxRecordsPerUser,
+            maxEvidenceSize: this.config.maxEvidenceSize
+        };
     }
     
     /**

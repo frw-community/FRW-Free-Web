@@ -90,6 +90,13 @@ export class NonceManager {
     }
     
     /**
+     * Verify nonce is valid (alias for isValid)
+     */
+    verifyNonce(publicKey: string, nonce: string): boolean {
+        return this.isValid(publicKey, nonce);
+    }
+    
+    /**
      * Get nonce statistics
      */
     getStats(): {
@@ -125,9 +132,42 @@ export class NonceManager {
     }
     
     /**
+     * Get nonce statistics for specific public key
+     */
+    getNonceStats(publicKey: string): {
+        total: number;
+        used: number;
+        available: number;
+    } {
+        let used = 0;
+        let available = 0;
+        
+        const now = Date.now();
+        
+        for (const record of this.usedNonces.values()) {
+            if (record.publicKey !== publicKey) continue;
+            
+            const age = now - record.timestamp;
+            if (age > this.expirationTime) continue;
+            
+            if (record.used) {
+                used++;
+            } else {
+                available++;
+            }
+        }
+        
+        return {
+            total: used + available,
+            used,
+            available
+        };
+    }
+    
+    /**
      * Clean up expired nonces
      */
-    private cleanup(): void {
+    cleanup(): void {
         const now = Date.now();
         const toDelete: string[] = [];
         
@@ -168,6 +208,13 @@ export class NonceManager {
                 VALUES (?, ?, ?, ?)
             `, [record.publicKey, record.nonce, record.timestamp, record.used ? 1 : 0]);
         }
+    }
+    
+    /**
+     * Persist nonce records to database (alias for saveToDatabase)
+     */
+    async persistToDatabase(db: any): Promise<void> {
+        return this.saveToDatabase(db);
     }
     
     /**
