@@ -1,8 +1,9 @@
-import { readFile, readdir, stat } from 'fs/promises';
-import { join, relative } from 'path';
+import { readFile, readdir, stat, writeFile } from 'fs/promises';
+import { join, relative, basename } from 'path';
 import ora from 'ora';
 import inquirer from 'inquirer';
 import { KeyManager, SignatureManager } from '@frw/crypto';
+import { IPFSClient } from '@frw/ipfs';
 import { config } from '../utils/config.js';
 import { logger } from '../utils/logger.js';
 
@@ -59,35 +60,99 @@ export async function publishCommand(directory: string = '.', options: PublishOp
   // Sign HTML files
   spinner.start('Signing HTML files...');
   let signedCount = 0;
-  for (const file of files) {
-    if (file.endsWith('.html') || file.endsWith('.frw')) {
-      const content = await readFile(file, 'utf-8');
+  const signedFiles: Array<{ path: string; content: Buffer }> = [];
+  
+  for (const filePath of files) {
+    const relativePath = relative(directory, filePath);
+    
+    if (filePath.endsWith('.html') || filePath.endsWith('.frw')) {
+      const content = await readFile(filePath, 'utf-8');
       const signed = SignatureManager.signPage(content, keyPair.privateKey);
-      // In real implementation, would write back
+      signedFiles.push({
+        path: relativePath,
+        content: Buffer.from(signed, 'utf-8')
+      });
       signedCount++;
+    } else {
+      // Include other files as-is
+      const content = await readFile(filePath);
+      signedFiles.push({
+        path: relativePath,
+        content
+      });
     }
   }
   spinner.succeed(`Signed ${signedCount} HTML files`);
 
-  // Publish to IPFS (placeholder)
-  spinner.start('Publishing to IPFS...');
-  spinner.warn('IPFS publish not yet implemented');
-  
-  const fakeCID = 'Qm' + Math.random().toString(36).substring(7);
+  // Connect to IPFS
+  spinner.start('Connecting to IPFS...');
+  const ipfsClient = new IPFSClient({
+    host: config.get('ipfsHost') || 'localhost',
+    port: config.get('ipfsPort') || 5001,
+    protocol: 'http'
+  });
 
+  try {
+    await ipfsClient.init();
+    spinner.succeed('Connected to IPFS');
+  } catch (error) {
+    spinner.fail('Failed to connect to IPFS');
+    logger.error('Make sure IPFS daemon is running: ' + logger.code('ipfs daemon'));
+    logger.info('Or install IPFS Desktop: https://docs.ipfs.tech/install/');
+    process.exit(1);
+  }
+
+  // Publish to IPFS
+  spinner.start('Publishing to IPFS...');
+  let rootCID: string;
+  try {
+    rootCID = await ipfsClient.addDirectory(signedFiles);
+    spinner.succeed('Published to IPFS');
+  } catch (error) {
+    spinner.fail('IPFS publish failed');
+    logger.error(error instanceof Error ? error.message : String(error));
+    process.exit(1);
+  }
+
+  // Pin content
+  spinner.start('Pinning content...');
+  try {
+    await ipfsClient.pin(rootCID);
+    spinner.succeed('Content pinned');
+  } catch (error) {
+    spinner.warn('Pinning failed, content may not persist');
+  }
+
+  // Publish to IPNS
+  spinner.start('Publishing to IPNS...');
+  let ipnsName: string | undefined;
+  try {
+    ipnsName = await ipfsClient.publishName(rootCID);
+    spinner.succeed('Published to IPNS');
+  } catch (error) {
+    spinner.warn('IPNS publish failed');
+    logger.debug('You can still access via CID');
+  }
+
+  // Display results
   logger.section('Publish Complete');
   logger.success('Content published successfully!');
   logger.info('');
-  logger.info('CID: ' + logger.code(fakeCID));
-  logger.info('Public key: ' + logger.code(publicKeyEncoded));
+  logger.info('IPFS CID: ' + logger.code(rootCID));
+  if (ipnsName) {
+    logger.info('IPNS Name: ' + logger.code(ipnsName));
+  }
+  logger.info('Public Key: ' + logger.code(publicKeyEncoded));
   logger.info('');
   logger.info('Your site is accessible at:');
   if (options.name) {
     logger.info('  ' + logger.url(`frw://${options.name}/`));
   }
   logger.info('  ' + logger.url(`frw://${publicKeyEncoded}/`));
-  logger.info('');
-  logger.info('Note: Full IPFS integration coming soon');
+  logger.info('  ' + logger.url(`https://ipfs.io/ipfs/${rootCID}/`));
+  if (ipnsName) {
+    logger.info('  ' + logger.url(`https://ipfs.io/ipns/${ipnsName}/`));
+  }
 }
 
 async function scanDirectory(dir: string, baseDir: string = dir): Promise<string[]> {
