@@ -19,6 +19,16 @@ FRW (Free Web Modern) is a complete decentralized web ecosystem that enables:
 
 No servers. No middlemen. Just the free web.
 
+## See It In Action
+
+![FRW Browser showing verified frw://alice/ content](docs/images/browser-screenshot.png)
+*FRW Browser displaying a verified decentralized website - no servers, no censorship, just cryptographic proof*
+
+### Complete Workflow
+
+![CLI Workflow from init to publish](docs/images/cli-workflow.png)
+*From identity creation to publishing - the full FRW experience in your terminal*
+
 ## Features
 
 ### Complete System

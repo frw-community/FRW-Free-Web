@@ -152,13 +152,13 @@ apps/browser/
 
 ### Day 1-2: Setup & Protocol
 - [x] CLI tool complete
-- [ ] Create Electron app structure
-- [ ] Setup React + TypeScript + Vite
-- [ ] Implement basic window management
-- [ ] Register frw:// protocol handler
+- [x] Create Electron app structure
+- [x] Setup React + TypeScript + Vite
+- [x] Implement basic window management
+- [x] Register frw:// protocol handler
 
 ### Day 3-4: Content Loading
-- [ ] Parse frw:// URLs
+- [x] Parse frw:// URLs
 - [ ] Resolve names to public keys
 - [ ] Fetch content from IPFS
 - [ ] Display HTML content
