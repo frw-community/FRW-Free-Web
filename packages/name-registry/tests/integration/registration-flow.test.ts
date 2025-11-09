@@ -1,9 +1,10 @@
 // Integration tests for full registration flow
-import { ProofOfWorkGenerator } from '../../src/pow/generator';
+import { describe, it, expect, beforeEach, jest } from '@jest/globals';
+import { ProofOfWorkGenerator, verifyProof, getRequiredDifficulty } from '../../src/pow/generator';
 import { BondCalculator } from '../../src/bonds/calculator';
 import { RateLimiter } from '../../src/limits/rate-limiter';
 import { NonceManager } from '../../src/security/nonce-manager';
-import { DNSVerifier } from '../../src/dns/verifier';
+import { DNSVerifier, requiresDNSVerification } from '../../src/dns/verifier';
 
 describe('Registration Flow Integration', () => {
     let powGenerator: ProofOfWorkGenerator;
@@ -39,7 +40,7 @@ describe('Registration Flow Integration', () => {
             expect(proof).toHaveProperty('nonce');
 
             // Step 4: Verify PoW
-            const proofValid = powGenerator.verifyProof(name, publicKey, proof);
+            const proofValid = verifyProof(name, publicKey, proof);
             expect(proofValid).toBe(true);
 
             // Step 5: Generate nonce for signature
@@ -82,7 +83,7 @@ describe('Registration Flow Integration', () => {
 
                 // Generate PoW
                 const proof = await powGenerator.generate(name, publicKey, 2);
-                expect(powGenerator.verifyProof(name, publicKey, proof)).toBe(true);
+                expect(verifyProof(name, publicKey, proof)).toBe(true);
 
                 // Generate and verify nonce
                 const nonce = nonceManager.generateNonce(publicKey);
@@ -103,14 +104,14 @@ describe('Registration Flow Integration', () => {
             const publicKey = 'pubkey123';
 
             // Reserved names should require DNS
-            expect(dnsVerifier.requiresDNSVerification(name)).toBe(true);
+            expect(requiresDNSVerification(name)).toBe(true);
         });
 
         it('should require DNS verification for domain-like names', () => {
             const name = 'example.com';
             const publicKey = 'pubkey123';
 
-            expect(dnsVerifier.requiresDNSVerification(name)).toBe(true);
+            expect(requiresDNSVerification(name)).toBe(true);
         });
 
         it('should complete flow with DNS verification', async () => {
@@ -137,7 +138,7 @@ describe('Registration Flow Integration', () => {
 
             // PoW generation
             const proof = await powGenerator.generate(name, publicKey, 2);
-            expect(powGenerator.verifyProof(name, publicKey, proof)).toBe(true);
+            expect(verifyProof(name, publicKey, proof)).toBe(true);
 
             // Nonce handling
             const nonce = nonceManager.generateNonce(publicKey);
@@ -161,7 +162,7 @@ describe('Registration Flow Integration', () => {
             expect(bond).toBe(10_000_000n);
 
             // PoW with difficulty 6 (skip actual generation for speed, just verify it exists)
-            const difficulty = powGenerator.getRequiredDifficulty(name);
+            const difficulty = getRequiredDifficulty(name);
             expect(difficulty).toBe(6);
 
             // Estimate time
@@ -248,7 +249,7 @@ describe('Registration Flow Integration', () => {
             // Tamper with proof
             proof.hash = 'invalid';
 
-            expect(powGenerator.verifyProof(name, publicKey, proof)).toBe(false);
+            expect(verifyProof(name, publicKey, proof)).toBe(false);
         });
 
         it('should reject expired PoW', async () => {
@@ -260,7 +261,7 @@ describe('Registration Flow Integration', () => {
             // Age proof beyond 1 hour
             proof.timestamp = Date.now() - 3600001;
 
-            expect(powGenerator.verifyProof(name, publicKey, proof)).toBe(false);
+            expect(verifyProof(name, publicKey, proof)).toBe(false);
         });
 
         it('should reject forged nonces', () => {

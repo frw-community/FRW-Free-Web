@@ -1,4 +1,5 @@
 // Unit tests for Proof of Work Generator
+import { describe, it, expect, beforeEach } from '@jest/globals';
 import { ProofOfWorkGenerator, getRequiredDifficulty, verifyProof } from '../../src/pow/generator';
 
 describe('ProofOfWorkGenerator', () => {

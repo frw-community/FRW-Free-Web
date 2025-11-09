@@ -217,7 +217,7 @@ describe('Attack Scenario Simulations', () => {
                 })
             };
 
-            const limitCheck = await cleanup.checkUserLimit(mockDb, 'greedy-user');
+            const limitCheck = await cleanup.checkUserLimits(mockDb as any, 'greedy-user');
 
             expect(limitCheck.allowed).toBe(false);
             expect(limitCheck.currentCount).toBeGreaterThan(1000);
@@ -227,7 +227,7 @@ describe('Attack Scenario Simulations', () => {
             const cleanup = new DatabaseCleanup();
             const hugeEvidence = 'x'.repeat(11_000_000); // 11MB
 
-            const validation = cleanup.validateEvidence(hugeEvidence);
+            const validation = cleanup.validateEvidenceSize(hugeEvidence);
 
             expect(validation.valid).toBe(false);
             expect(validation.size).toBeGreaterThan(10_000_000);

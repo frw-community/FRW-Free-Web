@@ -1,4 +1,5 @@
 // Unit tests for Challenge Spam Prevention
+import { describe, it, expect, beforeEach, jest } from '@jest/globals';
 import { ChallengeSpamPrevention } from '../../src/challenge/spam-prevention';
 
 describe('ChallengeSpamPrevention', () => {

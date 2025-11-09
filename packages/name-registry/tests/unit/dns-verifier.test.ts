@@ -1,4 +1,5 @@
 // Unit tests for DNS Verifier
+import { describe, it, expect, beforeEach, jest } from '@jest/globals';
 import { DNSVerifier, RESERVED_NAMES, requiresDNSVerification } from '../../src/dns/verifier';
 import dns from 'dns/promises';
 

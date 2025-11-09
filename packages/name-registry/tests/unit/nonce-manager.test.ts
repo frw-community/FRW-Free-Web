@@ -1,4 +1,5 @@
 // Unit tests for Nonce Manager
+import { describe, it, expect, beforeEach, jest } from '@jest/globals';
 import { NonceManager } from '../../src/security/nonce-manager';
 import crypto from 'crypto';
 
@@ -211,6 +212,7 @@ describe('NonceManager', () => {
     describe('loadFromDatabase', () => {
         it('should load nonces from database', async () => {
             const mockDb = {
+                // @ts-ignore - Mock database for testing
                 all: jest.fn().mockResolvedValue([
                     {
                         public_key: 'key1',
@@ -221,6 +223,7 @@ describe('NonceManager', () => {
                 ])
             };
             
+            // @ts-ignore - Mock database for testing
             await manager.loadFromDatabase(mockDb);
             
             // Loaded nonce should be usable
@@ -230,6 +233,7 @@ describe('NonceManager', () => {
 
         it('should skip already-used nonces', async () => {
             const mockDb = {
+                // @ts-ignore - Mock database for testing
                 all: jest.fn().mockResolvedValue([
                     {
                         public_key: 'key1',
@@ -240,6 +244,7 @@ describe('NonceManager', () => {
                 ])
             };
             
+            // @ts-ignore - Mock database for testing
             await manager.loadFromDatabase(mockDb);
             
             // Already used nonce should reject
@@ -249,6 +254,7 @@ describe('NonceManager', () => {
 
         it('should filter expired nonces on load', async () => {
             const mockDb = {
+                // @ts-ignore - Mock database for testing
                 all: jest.fn().mockResolvedValue([
                     {
                         public_key: 'key1',
@@ -259,6 +265,7 @@ describe('NonceManager', () => {
                 ])
             };
             
+            // @ts-ignore - Mock database for testing
             await manager.loadFromDatabase(mockDb);
             
             // Expired nonce should not be loaded
@@ -270,6 +277,7 @@ describe('NonceManager', () => {
     describe('persistToDatabase', () => {
         it('should save nonces to database', async () => {
             const mockDb = {
+                // @ts-ignore - Mock database for testing
                 run: jest.fn().mockResolvedValue({})
             };
             
@@ -280,6 +288,7 @@ describe('NonceManager', () => {
         });
 
         it('should include all nonce fields', async () => {
+            // @ts-ignore - Mock database for testing
             const runMock = jest.fn().mockResolvedValue({});
             const mockDb = {
                 run: runMock
