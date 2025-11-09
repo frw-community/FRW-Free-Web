@@ -2,9 +2,23 @@ import { protocol, net } from 'electron';
 import { readFileSync } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';
+import { DistributedNameRegistry } from '@frw/ipfs';
 
-// Load registered names and published sites from FRW config
-function getConfig(): { names: Record<string, string>; sites: Record<string, string> } {
+// Global registry instance (listens to pubsub for updates)
+let registry: DistributedNameRegistry | null = null;
+
+// Initialize registry once
+function getRegistry(): DistributedNameRegistry {
+  if (!registry) {
+    console.log('[FRW] Initializing distributed name registry...');
+    registry = new DistributedNameRegistry('http://localhost:5001');
+    console.log('[FRW] ✓ Registry initialized (listening for updates via pubsub)');
+  }
+  return registry;
+}
+
+// Fallback: Load from local config if distributed resolution fails
+function getConfigFallback(): { names: Record<string, string>; sites: Record<string, string> } {
   try {
     const configPath = join(homedir(), '.frw', 'config.json');
     const config = JSON.parse(readFileSync(configPath, 'utf-8'));
@@ -32,13 +46,35 @@ export function registerFRWProtocol() {
       }
 
       const [, identifier, path] = urlMatch;
-      const config = getConfig();
       
       console.log('[FRW Protocol] Identifier:', identifier);
-      console.log('[FRW Protocol] Config:', config);
       
-      // Get the CID for this name
-      const cid = config.sites[identifier];
+      // Try distributed resolution first
+      let cid: string | null = null;
+      
+      try {
+        const reg = getRegistry();
+        const resolved = await reg.resolveName(identifier);
+        
+        if (resolved) {
+          cid = resolved.record.contentCID;
+          console.log('[FRW Protocol] ✓ Resolved via distributed registry:', cid);
+        } else {
+          console.log('[FRW Protocol] Name not found in distributed registry, trying fallback...');
+        }
+      } catch (error) {
+        console.warn('[FRW Protocol] Distributed resolution failed:', error);
+      }
+      
+      // Fallback to local config if distributed resolution failed
+      if (!cid) {
+        const config = getConfigFallback();
+        cid = config.sites[identifier] || null;
+        
+        if (cid) {
+          console.log('[FRW Protocol] ✓ Resolved via local config (fallback):', cid);
+        }
+      }
       
       if (!cid) {
         const errorHtml = `
