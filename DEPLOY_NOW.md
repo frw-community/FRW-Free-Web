@@ -1,128 +1,216 @@
-# 🚀 DEPLOY FRW GLOBALLY - RIGHT NOW
+# 🚀 LAUNCH FRW - Community-First Approach
 
-**Time: 30 minutes**  
-**Cost: $0/month (YOUR VPS!)**  
-**Result: TRUE self-hosted decentralization**
+**Time: 40 minutes**  
+**Cost: $0/month (YOUR VPS - no new costs!)**  
+**Philosophy: Community-owned infrastructure**
 
 ---
 
-## 🎯 YOU HAVE VPS! PERFECT!
+## 🎯 THE FRW WAY: Let Community Build Infrastructure
 
-**Best approach: Deploy on YOUR servers**
-- ✅ No monthly cost
-- ✅ 100% control
-- ✅ Can't be shut down
-- ✅ TRUE FRW philosophy
+**NOT the FRW way:**
+- ❌ You pay for nodes worldwide ($20-30/month)
+- ❌ You become "the infrastructure provider"
+- ❌ Everyone depends on YOU
+- ❌ Financial burden forever
+- ❌ Single point of failure
+
+**THE FRW WAY:**
+- ✅ YOU run 2 nodes on your existing VPS ($0 extra cost)
+- ✅ COMMUNITY runs nodes where they live
+- ✅ Network grows organically
+- ✅ No single point of failure
+- ✅ TRUE decentralization
+- ✅ Sustainable forever
 
 ---
 
 ## ✅ CHECKLIST
 
-### [ ] 1. Linux VPS (15 min)
+### [ ] 1. Your Swiss Linux VPS (20 min)
 
-**You're already on Railway.app!**
+**Deploy on your existing VPS:**
 
-1. Click **GitHub icon** (top left)
-2. Select your **FRW** repository
-3. **Configure:**
-   - Root Directory: `apps/bootstrap-node`
-   - Leave everything else default
-4. Click **"Deploy"**
-5. Wait ~2 minutes
-6. Copy URL from dashboard
-7. **Save URL:** `________________________________`
+```bash
+# SSH to your Linux VPS
+ssh root@your-swiss-linux-vps.com
 
-### [ ] 2. Fly.io Europe (10 min)
-
-**PowerShell:**
-```powershell
-# Install Fly
-iwr https://fly.io/install.ps1 -useb | iex
-
-# Login (opens browser)
-fly auth login
-
-# Deploy
-cd C:\Projects\FRW - Free Web Modern\apps\bootstrap-node
-fly launch --name frw-bootstrap-eu --region ams --now
-
-# Get URL
-fly info
+# Follow the Linux deployment guide
+# See: apps/bootstrap-node/DEPLOY_VPS.md
+# Or: DEPLOY_NOW_VPS.md Section 1
 ```
 
-**Save URL:** `________________________________`
+**Quick steps:**
+1. Install Node.js 20
+2. Install IPFS
+3. Clone FRW repo
+4. Build bootstrap node
+5. Start with PM2
+6. Open firewall port 3030
+7. Test: `curl http://localhost:3030/health`
 
-### [ ] 3. Fly.io Asia (5 min)
+**Save your IP:** `________________________________`
 
-**PowerShell:**
+### [ ] 2. Your Swiss Windows VPS (20 min)
+
+**Deploy on your existing Windows VPS:**
+
 ```powershell
-fly launch --name frw-bootstrap-asia --region sin --now
-fly info
+# RDP to your Windows VPS
+# Open PowerShell as Administrator
+
+# Follow the Windows deployment guide
+# See: apps/bootstrap-node/DEPLOY_VPS.md
+# Or: DEPLOY_NOW_VPS.md Section 2
 ```
 
-**Save URL:** `________________________________`
+**Quick steps:**
+1. Install Node.js 20
+2. Install IPFS
+3. Clone FRW repo
+4. Build bootstrap node
+5. Setup NSSM services
+6. Open firewall port 3030
+7. Test: `curl http://localhost:3030/health`
 
-### [ ] 4. Update Code (2 min)
+**Save your IP:** `________________________________`
 
-**Edit:** `packages/ipfs/src/distributed-registry.ts` line 337-339
+### [ ] 3. Update FRW Code (2 min)
 
-**Replace TODO lines with your actual URLs:**
+**Edit:** `packages/ipfs/src/distributed-registry.ts` line 337
+
+**Replace TODO lines with YOUR Swiss VPS IPs:**
 ```typescript
 const BOOTSTRAP_NODES = [
-  'https://YOUR-RAILWAY-URL',      // Paste Railway URL
-  'https://frw-bootstrap-eu.fly.dev',
-  'https://frw-bootstrap-asia.fly.dev',
+  'http://YOUR-SWISS-LINUX-IP:3030',    // Your Linux VPS
+  'http://YOUR-SWISS-WINDOWS-IP:3030',  // Your Windows VPS
+  'http://localhost:3030',              // Dev
+];
+
+// Example:
+const BOOTSTRAP_NODES = [
+  'http://185.12.34.56:3030',   // Swiss Linux
+  'http://185.12.34.57:3030',   // Swiss Windows
   'http://localhost:3030',
 ];
 ```
 
-### [ ] 5. Rebuild (1 min)
+### [ ] 4. Rebuild (1 min)
 
 ```bash
+cd C:\Projects\FRW - Free Web Modern
 npm run build
 ```
 
-### [ ] 6. Test (1 min)
+### [ ] 5. Test Both Nodes (1 min)
 
 ```bash
-# Test each node
-curl https://YOUR-RAILWAY-URL/health
-curl https://frw-bootstrap-eu.fly.dev/health
-curl https://frw-bootstrap-asia.fly.dev/health
+# Test Swiss Linux VPS
+curl http://SWISS-LINUX-IP:3030/health
 
-# All should return: {"status":"ok",...}
+# Test Swiss Windows VPS
+curl http://SWISS-WINDOWS-IP:3030/health
+
+# Both should return:
+{
+  "status": "ok",
+  "nodeId": "bootstrap-xxx",
+  "indexSize": 0
+}
 ```
 
-### [ ] 7. Register Test Name
+### [ ] 6. Register Test Name
 
 ```bash
 frw register testglobal
-# Wait for PoW...
-# Should broadcast to ALL 3 nodes!
+# Wait for PoW (~1-2 min)...
+# Should broadcast to BOTH Swiss nodes!
 ```
 
-### [ ] 8. Verify Global
+### [ ] 7. Verify Global
 
-**Ask a friend in another country to:**
 ```bash
+# Check both nodes received it
+curl http://SWISS-LINUX-IP:3030/api/resolve/testglobal
+curl http://SWISS-WINDOWS-IP:3030/api/resolve/testglobal
+
+# Both should return same record! ✅
+
+# Test in browser
 frw://testglobal/
-# Should work from ANYWHERE! ✅
+# Works from anywhere! (Europe fast, others slower but works)
 ```
 
 ---
 
-## 🎉 SUCCESS!
+## 🎉 SUCCESS! FRW IS LIVE!
 
 **You now have:**
-- ✅ 3 global bootstrap nodes
-- ✅ 99.9% uptime
-- ✅ < 100ms latency worldwide
-- ✅ TRUE decentralization
-- ✅ **READY TO COMPETE WITH WWW**
+- ✅ 2 bootstrap nodes (both Swiss)
+- ✅ Europe: Fast! (< 50ms)
+- ✅ Americas/Asia: Slower but works (150-250ms)
+- ✅ Cost to you: **$0/month** (using existing VPS)
+- ✅ Ready to LAUNCH! 🚀
 
-**Cost:** $15/month  
-**Users:** Unlimited  
-**Censorship:** Impossible
+**Network status:**
+- Europe: ⭐⭐⭐⭐⭐ (excellent coverage)
+- Americas: ⭐⭐⭐ (works, could be faster)
+- Asia: ⭐⭐⭐ (works, could be faster)
+
+**This is ENOUGH to launch!** Users worldwide can access FRW.
+
+---
+
+## 🌍 NEXT: Community Growth (Week 2+)
+
+**Now let the network grow organically:**
+
+### Step 1: Make it Easy for Community
+
+**Create tools (tomorrow - 2 hours):**
+- Docker image: `docker run frw/bootstrap-node`
+- Simple guide: `docs/RUN_A_NODE.md` ✅ (done!)
+- One-line script: `curl https://get.frw.network | bash`
+
+### Step 2: Invite Community to Help
+
+**Launch announcement (Friday):**
+```
+FRW Alpha is LIVE!
+
+- Works globally from any country ✅
+- Fast for Europe (< 50ms)
+- Acceptable worldwide (< 250ms)
+
+Want to make FRW faster in YOUR region?
+Run a bootstrap node! Takes 5 minutes.
+👉 frw.network/run-node
+
+Together we build the decentralized web! 🌍
+```
+
+### Step 3: Watch Network Grow
+
+**Natural growth pattern:**
+```
+Week 1: YOU (2 Swiss nodes)
+Week 2: Early adopter in USA adds node → Americas fast! ✅
+Week 3: User in Singapore adds node → Asia fast! ✅
+Week 4: User in Brazil adds node → South America fast! ✅
+Month 2: 10+ community nodes → Excellent worldwide ✅
+Month 6: 50+ nodes → UNSTOPPABLE network ✅
+```
+
+**Cost to you: Still $0/month!** 💪
+
+### Why This Works:
+
+- ✅ Users benefit from running nodes (faster local speeds)
+- ✅ Community shares infrastructure burden
+- ✅ Network grows where users actually are
+- ✅ Validates real demand
+- ✅ Truly decentralized (no single operator)
+- ✅ Sustainable forever
 
 ---
 

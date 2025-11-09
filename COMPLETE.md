@@ -168,14 +168,20 @@ User B (Japan) queries "pouet"
 
 ## 📈 NEXT STEPS
 
-### Tonight (30 min - YOUR VPS):
-- [ ] SSH to Linux VPS
-- [ ] Deploy bootstrap node (15 min)
-- [ ] RDP to Windows VPS  
-- [ ] Deploy bootstrap node (15 min)
-- [ ] Update code with both URLs
-- [ ] Test globally
-- [ ] **$0/month cost + 100% control!**
+### Tonight (40 min - YOUR VPS - $0/month):
+- [ ] Deploy on Swiss Linux VPS (20 min)
+- [ ] Deploy on Swiss Windows VPS (20 min)
+- [ ] Update code with 2 IPs
+- [ ] Test globally (works, slower for USA/Asia)
+- [ ] **LAUNCH with 2 nodes!**
+- [ ] **Cost: $0/month forever!**
+
+### Week 2+ (Community Growth):
+- [ ] Create easy Docker image for community
+- [ ] Write simple "Run a Node" guide
+- [ ] Invite community to add nodes
+- [ ] Let network grow organically
+- [ ] **Cost to you: Still $0/month!**
 
 ### Tomorrow:
 - [ ] Write launch announcement
