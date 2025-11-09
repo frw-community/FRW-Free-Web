@@ -396,21 +396,147 @@ Each package needs:
 
 ---
 
+## Anti-Squatting System Timeline (Parallel Track)
+
+### Phase 1: Name Registry Foundation ✅ COMPLETE
+
+**Status:** Production ready (November 2025)
+
+**Implemented:**
+- ✅ Content metrics collection from IPFS
+- ✅ Challenge system (creation, response, resolution)
+- ✅ DNS verification for domain names
+- ✅ Reserved names protection (100+ brands)
+- ✅ Automatic dispute resolution
+- ✅ SQLite database storage
+- ✅ CLI commands (metrics, challenge, trust)
+
+**Documentation:**
+- `docs/NAME_REGISTRY_SPEC.md` - Technical specification
+- `docs/PHASE_1A_COMPLETE.md` - Metrics implementation
+- `docs/PHASE_1B_COMPLETE.md` - Challenge system
+- `docs/DNS_VERIFICATION_COMPLETE.md` - DNS verification
+- `docs/USER_GUIDE_CHALLENGES.md` - User guide
+- `docs/SECURITY_AUDIT_CHECKLIST.md` - Security review
+
+**Commands Available:**
+```bash
+frw metrics <name>                  # View usage metrics
+frw challenge create <name>         # Create challenge
+frw challenge respond <id>          # Respond to challenge
+frw challenge status <id>           # Check status
+frw challenge list                  # List challenges
+```
+
+**Next Steps:**
+- [ ] End-to-end testing
+- [ ] Performance optimization
+- [ ] Production deployment monitoring
+- [ ] User feedback collection
+
+---
+
+### Phase 2: Trust Graph & Voting (Month 7-12)
+
+**Trigger:** 1000+ active users, 100+ challenges completed
+
+**Status:** Architecture defined, implementation pending
+
+**Planned Components:**
+
+#### Trust Graph System
+- [ ] Attestation creation and management
+- [ ] Trust score calculation (0-1000)
+- [ ] Trust path discovery (BFS algorithm)
+- [ ] Revocation mechanism
+- [ ] CLI commands (attest, score, path)
+
+#### Reputation System
+- [ ] Activity tracking (content, updates, challenges)
+- [ ] Tier system (BRONZE → SILVER → GOLD → PLATINUM)
+- [ ] Reputation score calculation
+- [ ] Decay for inactivity
+- [ ] Leaderboard system
+
+#### Community Voting
+- [ ] Vote creation for close-call challenges
+- [ ] Reputation-weighted ballots
+- [ ] Quorum requirements (100 votes min)
+- [ ] Supermajority threshold (60%)
+- [ ] Voting period (14 days)
+
+**Implementation Timeline:**
+- Month 7-8: Trust Graph implementation
+- Month 9-10: Reputation system
+- Month 11-12: Voting integration and testing
+
+**Success Criteria:**
+- 30%+ voter participation rate
+- 70%+ vote accuracy
+- <5% challenges escalate to voting
+- Community satisfaction >80%
+
+**Documentation:**
+- `docs/NAME_REGISTRY_PHASE2_SPEC.md` (to be created)
+- `docs/TRUST_GRAPH_GUIDE.md` (to be created)
+- `docs/VOTING_GUIDE.md` (to be created)
+
+---
+
+### Phase 3: Advanced Cryptography (Month 13-18)
+
+**Trigger:** Network maturity, proven Phase 2 success
+
+**Status:** Research phase
+
+**Planned Components:**
+- Cryptographic sortition for jury selection
+- Stake-weighted random sampling
+- Zero-knowledge proofs for usage verification
+- Privacy-preserving metrics
+- Multi-party computation
+
+**Research Areas:**
+- zk-SNARKs integration
+- VRF (Verifiable Random Functions)
+- Distributed key generation
+- Privacy-preserving vote tallying
+
+**Dependencies:**
+- Mature cryptographic libraries
+- Proven security models
+- Community consensus on approach
+
+---
+
 ## Current Priority Order
 
-**This Week:**
+**This Week (Core FRW):**
 1. Complete unit tests (@frw/crypto, @frw/protocol)
 2. Implement CLI basic commands (init, publish)
 3. Set up Jest configuration
 4. Write integration tests
 
-**Next Week:**
+**This Week (Anti-Squatting):**
+1. ✅ DNS verification implementation
+2. ✅ Challenge system completion
+3. End-to-end testing
+4. Security audit review
+
+**Next Week (Core FRW):**
 1. CLI tool completion
 2. Client prototype
 3. Security review
 4. Documentation improvements
 
-**Timeline to v1.0:** 8-10 weeks
+**Next Week (Anti-Squatting):**
+1. Performance optimization
+2. Browser UI integration (show metrics/challenges)
+3. Monitoring setup
+4. User documentation refinement
+
+**Timeline to v1.0 (Core FRW):** 8-10 weeks  
+**Timeline to Phase 2 (Anti-Squatting):** 6-12 months after v1.0
 
 ---
 

@@ -10,6 +10,7 @@ import { keysCommand } from './commands/keys.js';
 import { ipfsStatusCommand } from './commands/ipfs-status.js';
 import { domainAddCommand, domainVerifyCommand, domainListCommand, domainRemoveCommand, domainInfoCommand } from './commands/domain.js';
 import { configureCommand, configShowCommand } from './commands/configure.js';
+import { challengeCreateCommand, challengeRespondCommand, challengeStatusCommand, challengeListCommand, metricsShowCommand } from './commands/challenge.js';
 
 const program = new Command();
 
@@ -102,5 +103,43 @@ program
   .command('config [directory]')
   .description('Show site configuration')
   .action(configShowCommand);
+
+// Challenge system commands (Phase 1)
+const challenge = program
+  .command('challenge')
+  .description('Name challenge and dispute system');
+
+challenge
+  .command('create <name>')
+  .description('Challenge name ownership')
+  .option('-r, --reason <reason>', 'Challenge reason')
+  .option('-b, --bond <amount>', 'Bond amount')
+  .option('-e, --evidence <cid>', 'Evidence IPFS CID')
+  .action(challengeCreateCommand);
+
+challenge
+  .command('respond <challengeId>')
+  .description('Respond to challenge')
+  .option('-b, --counter-bond <amount>', 'Counter-bond amount')
+  .option('-e, --evidence <cid>', 'Evidence IPFS CID')
+  .action(challengeRespondCommand);
+
+challenge
+  .command('status <challengeId>')
+  .description('Check challenge status')
+  .action(challengeStatusCommand);
+
+challenge
+  .command('list')
+  .description('List challenges')
+  .option('--owner', 'Show challenges against your names')
+  .option('--challenger', 'Show challenges you created')
+  .action(challengeListCommand);
+
+// Metrics commands
+program
+  .command('metrics <name>')
+  .description('Show content metrics for name')
+  .action(metricsShowCommand);
 
 program.parse();
