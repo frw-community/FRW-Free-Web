@@ -2,7 +2,7 @@
 
 ## Phase 0: Foundation (Completed)
 
-**Status:** DONE  
+**Status:** ✅ DONE  
 **Duration:** 2 weeks
 
 ### Deliverables
@@ -12,11 +12,11 @@
 - [x] Document security requirements
 - [x] Create initial specification draft
 
-## Phase 1: Core Protocol (Current)
+## Phase 1: Core Protocol (Completed)
 
-**Status:** IN PROGRESS  
+**Status:** ✅ DONE  
 **Duration:** 6 weeks  
-**Target:** v0.1.0
+**Released:** v0.1.0-alpha.1
 
 ### Objectives
 - Define complete FRW protocol specification
@@ -25,22 +25,22 @@
 - Build URL resolution mechanism
 
 ### Deliverables
-- [ ] Complete protocol specification document
-- [ ] Ed25519 signing/verification library
-- [ ] IPFS content addressing module
-- [ ] URL parser and resolver
-- [ ] Basic CLI tool for publishing
+- [x] Complete protocol specification document
+- [x] Ed25519 signing/verification library
+- [x] IPFS content addressing module
+- [x] URL parser and resolver
+- [x] Basic CLI tool for publishing
 
 ### Milestones
-- Week 1-2: Protocol spec finalization
-- Week 3-4: Crypto implementation
-- Week 5-6: IPFS integration
+- ✅ Week 1-2: Protocol spec finalization
+- ✅ Week 3-4: Crypto implementation
+- ✅ Week 5-6: IPFS integration
 
-## Phase 2: Client Development
+## Phase 2: Client Development (Completed)
 
-**Status:** PLANNED  
-**Duration:** 8 weeks  
-**Target:** v0.2.0
+**Status:** ✅ DONE  
+**Duration:** 4 weeks  
+**Released:** v0.2.0-alpha.1
 
 ### Objectives
 - Build FRW client application
@@ -49,22 +49,27 @@
 - Add content verification system
 
 ### Deliverables
-- [ ] Electron/Tauri client application
-- [ ] JavaScript sandbox (vm2/Deno)
-- [ ] HTML/CSS renderer
-- [ ] Content cache system (SQLite)
-- [ ] Settings and configuration UI
-- [ ] History and bookmarks
+- [x] Electron client application
+- [x] frw:// protocol handler
+- [x] HTML/CSS renderer (iframe-based)
+- [x] React + TailwindCSS UI
+- [x] IPFS content fetching
+- [x] Signature verification display
+- [x] Name resolution system
+- [ ] JavaScript sandbox (vm2/Deno) - planned
+- [ ] Content cache system (SQLite) - planned
+- [ ] Settings and configuration UI - planned
+- [ ] History and bookmarks - planned
 
-### Milestones
-- Week 1-2: Client skeleton & UI mockups
-- Week 3-4: Sandbox implementation
-- Week 5-6: Renderer and cache
-- Week 7-8: Integration testing
+### Achievements
+- ✅ Electron browser fully functional
+- ✅ IPFS integration working
+- ✅ End-to-end workflow operational
+- ✅ Comprehensive documentation delivered
 
 ## Phase 3: Network Layer
 
-**Status:** PLANNED  
+**Status:** 🔄 PARTIAL - IPNS Working  
 **Duration:** 6 weeks  
 **Target:** v0.3.0
 
@@ -75,17 +80,19 @@
 - Build webring system
 
 ### Deliverables
-- [ ] IPNS name resolution
-- [ ] OrbitDB integration
-- [ ] DHT-based discovery
-- [ ] Webring protocol
-- [ ] Bootstrap node network
-- [ ] Peer management
+- [x] IPNS name resolution (basic via config)
+- [x] Name-to-CID mapping system
+- [ ] OrbitDB integration - planned
+- [ ] DHT-based discovery - planned
+- [ ] Webring protocol - planned
+- [ ] Bootstrap node network - planned
+- [ ] Peer management - planned
 
-### Milestones
-- Week 1-2: IPNS integration
-- Week 3-4: OrbitDB setup
-- Week 5-6: Discovery and webrings
+### Current Status
+- ✅ Basic name resolution functional
+- ✅ IPFS gateway integration
+- ⏳ Full IPNS publishing pending
+- ⏳ Distributed registry pending
 
 ## Phase 4: Alpha Release
 
