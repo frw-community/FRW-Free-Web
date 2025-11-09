@@ -1,5 +1,5 @@
 // Integration tests for full registration flow
-import { describe, it, expect, beforeEach, jest } from '@jest/globals';
+import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
 import { ProofOfWorkGenerator, verifyProof, getRequiredDifficulty } from '../../src/pow/generator';
 import { BondCalculator } from '../../src/bonds/calculator';
 import { RateLimiter } from '../../src/limits/rate-limiter';
@@ -14,11 +14,16 @@ describe('Registration Flow Integration', () => {
     let dnsVerifier: DNSVerifier;
 
     beforeEach(() => {
+        jest.useFakeTimers();
         powGenerator = new ProofOfWorkGenerator();
         bondCalculator = new BondCalculator();
         rateLimiter = new RateLimiter();
         nonceManager = new NonceManager();
         dnsVerifier = new DNSVerifier();
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
     });
 
     describe('Standard Name Registration', () => {
