@@ -50,12 +50,12 @@ export class SignatureManager {
   }
 
   static extractSignature(htmlContent: string): string | null {
-    const match = htmlContent.match(/<meta name="frw-signature" content="([^"]+)"/);
+    const match = htmlContent.match(/[ \t]*<meta name="frw-signature" content="([^"]+)"/);
     return match ? match[1] : null;
   }
 
   static removeSignature(htmlContent: string): string {
-    return htmlContent.replace(/<meta name="frw-signature" content="[^"]+">\s*/g, '');
+    return htmlContent.replace(/[ \t]*<meta name="frw-signature" content="[^"]+">\n?/g, '');
   }
 
   static signPage(htmlContent: string, privateKey: Uint8Array): string {
@@ -64,11 +64,11 @@ export class SignatureManager {
     
     const signatureMeta = `  <meta name="frw-signature" content="${signature}">\n`;
     
-    if (!htmlContent.includes('</head>')) {
+    if (!canonical.includes('</head>')) {
       throw new SignatureError('Invalid HTML: missing </head> tag');
     }
     
-    return htmlContent.replace('</head>', signatureMeta + '</head>');
+    return canonical.replace('</head>', signatureMeta + '</head>');
   }
 
   static verifyPage(htmlContent: string, publicKey: Uint8Array): boolean {
