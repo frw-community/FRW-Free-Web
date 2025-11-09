@@ -1,0 +1,45 @@
+module.exports = {
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+  roots: ['<rootDir>/packages'],
+  testPathIgnorePatterns: ['/node_modules/', '/dist/'],
+  modulePathIgnorePatterns: ['<rootDir>/packages/*/dist'],
+  moduleNameMapper: {
+    '^@frw/common$': '<rootDir>/packages/common/src/index.ts',
+    '^@frw/crypto$': '<rootDir>/packages/crypto/src/index.ts',
+    '^@frw/ipfs$': '<rootDir>/packages/ipfs/src/index.ts',
+    '^@frw/protocol$': '<rootDir>/packages/protocol/src/index.ts',
+    '^@frw/sandbox$': '<rootDir>/packages/sandbox/src/index.ts',
+    '^@frw/storage$': '<rootDir>/packages/storage/src/index.ts'
+  },
+  transform: {
+    '^.+\\.ts$': ['ts-jest', {
+      tsconfig: {
+        target: 'ES2020',
+        module: 'commonjs',
+        moduleResolution: 'node',
+        esModuleInterop: true,
+        allowSyntheticDefaultImports: true,
+        resolveJsonModule: true
+      }
+    }]
+  },
+  testMatch: [
+    '**/tests/**/*.test.ts',
+    '**/__tests__/**/*.test.ts'
+  ],
+  collectCoverageFrom: [
+    'packages/*/src/**/*.ts',
+    '!packages/*/src/**/*.d.ts',
+    '!packages/*/src/**/index.ts',
+    '!packages/*/dist/**'
+  ],
+  coverageThreshold: {
+    global: {
+      branches: 50,
+      functions: 50,
+      lines: 50,
+      statements: 50
+    }
+  }
+};

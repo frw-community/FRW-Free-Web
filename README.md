@@ -22,6 +22,21 @@ Decentralized web protocol - Liberté, sécurité, créativité
 - Design moderne et responsive
 - Interactions riches mais sécurisées (sandbox JS)
 
+### Caractéristiques Principales
+
+- **✨ Noms Lisibles** - `frw://alice/blog` au lieu de clés cryptographiques
+- **📛 Système de Nommage** - Utilisation de noms lisibles pour les sites et les utilisateurs
+- **🌐 Compatible WWW** - Hébergement dual HTTP + FRW via DNS
+- **🔐 Cryptographie Ed25519** - Signatures numériques robustes
+- **📦 IPFS/IPNS** - Stockage distribué et adressage content-addressable
+- **🔒 Sandbox JavaScript** - Exécution sécurisée avec VM isolée
+- **⚡ Protocole léger** - Métadonnées minimales dans les en-têtes HTML
+- **🌐 Client Electron** - Navigation décentralisée native
+- **📝 Auto-documentation** - Le contenu est son propre manifeste
+- **🔓 Open Source** - Licence MIT, communauté ouverte les utilisateurs
+- Réplication automatique P2P
+- Découverte via webrings et annuaires
+
 ### Sécurité intégrée
 - Signatures Ed25519 pour authentifier tout contenu
 - Sandbox JavaScript pour exécution sécurisée
@@ -57,17 +72,22 @@ npm run dev
 npm run dev:cli
 ```
 
-## Quick Start
+## Utilisation Rapide
 
-1. **Créer une page** (`index.frw`):
+### 1. Enregistrer un nom lisible
+```bash
+frw register mywebsite
+```
+
+### 2. Créer une page
 ```html
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
   <meta charset="UTF-8">
   <title>Ma Page FRW</title>
   <meta name="frw-version" content="1.0">
-  <meta name="frw-author" content="@your-public-key">
+  <meta name="frw-author" content="@mywebsite">
   <meta name="frw-date" content="2025-11-08T00:00:00Z">
 </head>
 <body>
@@ -76,12 +96,26 @@ npm run dev:cli
 </html>
 ```
 
-2. **Publier**:
+### 3. Publier
 ```bash
-npm run frw publish
+frw publish ./my-site
 ```
 
-3. **Naviguer**: `frw://your-public-key/index.frw`
+### 4. Naviguer
+```
+✨ Nom lisible: frw://mywebsite/index.frw
+🔑 Clé publique: frw://12D3KooWBc5T.../index.frw
+```
+
+### Compatibilité WWW
+```bash
+# Ajouter un enregistrement DNS TXT
+_frw.example.com TXT "frw-key=12D3KooW...;frw-name=mywebsite"
+
+# Votre site est maintenant accessible via:
+https://example.com          # Web traditionnel
+frw://mywebsite              # Protocole FRW
+```
 
 ## Documentation
 
