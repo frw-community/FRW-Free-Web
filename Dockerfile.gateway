@@ -1,0 +1,48 @@
+# FRW Gateway - HTTP gateway for accessing FRW content via standard browsers
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+COPY lerna.json ./
+COPY tsconfig.json ./
+
+# Copy workspace packages
+COPY packages/ ./packages/
+COPY apps/cli/ ./apps/cli/
+
+# Install and build
+RUN npm ci --workspace=packages --workspace=apps/cli && \
+    npm run build
+
+# Production stage
+FROM node:20-alpine
+
+RUN apk add --no-cache tini
+
+WORKDIR /app
+
+# Copy built artifacts
+COPY --from=builder /app/packages/ ./packages/
+COPY --from=builder /app/apps/cli/dist/ ./apps/cli/dist/
+COPY --from=builder /app/apps/cli/package*.json ./apps/cli/
+COPY --from=builder /app/package*.json ./
+
+# Install production dependencies
+RUN npm ci --workspace=packages --workspace=apps/cli --omit=dev
+
+# Copy gateway server script
+COPY docker/gateway-server.js ./
+
+# Expose port
+EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1
+
+ENTRYPOINT ["/sbin/tini", "--"]
+
+# Start gateway server
+CMD ["node", "gateway-server.js"]

@@ -8,6 +8,8 @@ import { verifyCommand } from './commands/verify.js';
 import { serveCommand } from './commands/serve.js';
 import { keysCommand } from './commands/keys.js';
 import { ipfsStatusCommand } from './commands/ipfs-status.js';
+import { domainAddCommand, domainVerifyCommand, domainListCommand, domainRemoveCommand, domainInfoCommand } from './commands/domain.js';
+import { configureCommand, configShowCommand } from './commands/configure.js';
 
 const program = new Command();
 
@@ -59,5 +61,46 @@ program
   .command('ipfs')
   .description('Check IPFS connection status')
   .action(ipfsStatusCommand);
+
+// Domain management commands
+const domain = program
+  .command('domain')
+  .description('Manage domain name mappings');
+
+domain
+  .command('add <domain> <frwName>')
+  .description('Link a domain to your FRW name')
+  .action(domainAddCommand);
+
+domain
+  .command('verify <domain>')
+  .description('Verify domain DNS configuration')
+  .action(domainVerifyCommand);
+
+domain
+  .command('list')
+  .description('List all domain mappings')
+  .action(domainListCommand);
+
+domain
+  .command('remove <domain>')
+  .description('Remove a domain mapping')
+  .action(domainRemoveCommand);
+
+domain
+  .command('info <domain>')
+  .description('Show domain information')
+  .action(domainInfoCommand);
+
+// Site configuration commands
+program
+  .command('configure [directory]')
+  .description('Configure a site with interactive prompts')
+  .action(configureCommand);
+
+program
+  .command('config [directory]')
+  .description('Show site configuration')
+  .action(configShowCommand);
 
 program.parse();

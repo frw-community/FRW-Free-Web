@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  # IPFS Node - Required for FRW protocol
+  ipfs:
+    image: ipfs/kubo:latest
+    container_name: frw-ipfs
+    environment:
+      - IPFS_PROFILE=server
+      - IPFS_PATH=/data/ipfs
+    volumes:
+      - ipfs_data:/data/ipfs
+      - ipfs_staging:/export
+    ports:
+      - "4001:4001"     # P2P swarm
+      - "4001:4001/udp" # P2P swarm UDP
+      - "5001:5001"     # API server
+      - "8080:8080"     # Gateway
+    networks:
+      - frw-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "ipfs", "version"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  # FRW CLI Service - For publishing and management
+  frw-cli:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: frw-cli
+    environment:
+      - FRW_IPFS_API=/dns/ipfs/tcp/5001
+      - NODE_ENV=production
+    volumes:
+      - frw_config:/root/.frw
+      # Default sites folder
+      - ./sites:/data/sites
+      # Add your custom folders here:
+      # - ./projects:/data/projects
+      # - ./clients:/data/clients
+      # - ~/work:/data/work
+      # - C:\MyWebsites:/data/websites
+      # Example: - ${CUSTOM_SITES_PATH:-./custom-sites}:/data/custom
+    networks:
+      - frw-network
+    depends_on:
+      ipfs:
+        condition: service_healthy
+    restart: unless-stopped
+    command: tail -f /dev/null  # Keep container running
+
+  # FRW Gateway - HTTP gateway for accessing FRW content
+  frw-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile.gateway
+    container_name: frw-gateway
+    environment:
+      - FRW_IPFS_API=/dns/ipfs/tcp/5001
+      - PORT=3000
+    ports:
+      - "3000:3000"
+    volumes:
+      - frw_config:/root/.frw:ro
+    networks:
+      - frw-network
+    depends_on:
+      - ipfs
+      - frw-cli
+    restart: unless-stopped
+
+volumes:
+  ipfs_data:
+    driver: local
+  ipfs_staging:
+    driver: local
+  frw_config:
+    driver: local
+
+networks:
+  frw-network:
+    driver: bridge
