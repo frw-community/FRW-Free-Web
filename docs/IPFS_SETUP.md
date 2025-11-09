@@ -98,7 +98,7 @@ frw ipfs
 
 Expected output:
 ```
-✓ Connected to IPFS
+[x] Connected to IPFS
 
 Node Info:
   ID: QmHash...
@@ -160,16 +160,16 @@ frw publish ./my-site
 
 Output:
 ```
-✓ Loading keypair
-✓ Found 5 files
-✓ Signed 2 HTML files
-✓ Connected to IPFS
-✓ Published to IPFS
-✓ Content pinned
-✓ Published to IPNS
+[x] Loading keypair
+[x] Found 5 files
+[x] Signed 2 HTML files
+[x] Connected to IPFS
+[x] Published to IPFS
+[x] Content pinned
+[x] Published to IPNS
 
 Publish Complete
-✓ Content published successfully!
+[x] Content published successfully!
 
 IPFS CID: QmYwAPJzv...
 IPNS Name: k51qzi5uqu5d...
@@ -426,11 +426,11 @@ For private content:
 
 ## Next Steps
 
-1. ✅ Install IPFS
-2. ✅ Start daemon
-3. ✅ Test connection: `frw ipfs`
-4. ✅ Publish site: `frw publish`
-5. 🚀 Build community sites
+1. [DONE] Install IPFS
+2. [DONE] Start daemon
+3. [DONE] Test connection: `frw ipfs`
+4. [DONE] Publish site: `frw publish`
+5. [LAUNCH] Build community sites
 
 ---
 

@@ -272,11 +272,11 @@ frw://tech-blog/2024/11/my-post.frw
 
 ### Valid Names
 ```
-✓ alice
-✓ my-website
-✓ blog2024
-✓ company-name
-✓ user123
+[x] alice
+[x] my-website
+[x] blog2024
+[x] company-name
+[x] user123
 ```
 
 ### Invalid Names
@@ -372,13 +372,13 @@ frw://alice/index.frw
 
 | Feature | FRW | ENS | Handshake | DNS |
 |---------|-----|-----|-----------|-----|
-| Decentralized | ✅ | ✅ | ✅ | ❌ |
-| Human names | ✅ | ✅ | ✅ | ✅ |
-| No blockchain | ✅ | ❌ | ❌ | ✅ |
-| Self-sovereign | ✅ | ✅ | ✅ | ❌ |
-| WWW compatible | ✅ | ⚠️ | ⚠️ | ✅ |
-| Registration fee | ❌* | ✅ | ✅ | ✅ |
-| Censorship-resistant | ✅ | ✅ | ✅ | ❌ |
+| Decentralized | [DONE] | [DONE] | [DONE] | [FAILED] |
+| Human names | [DONE] | [DONE] | [DONE] | [DONE] |
+| No blockchain | [DONE] | [FAILED] | [FAILED] | [DONE] |
+| Self-sovereign | [DONE] | [DONE] | [DONE] | [FAILED] |
+| WWW compatible | [DONE] | [!]️ | [!]️ | [DONE] |
+| Registration fee | [FAILED]* | [DONE] | [DONE] | [DONE] |
+| Censorship-resistant | [DONE] | [DONE] | [DONE] | [FAILED] |
 
 *Optional in future
 
@@ -391,22 +391,22 @@ frw://alice/index.frw
 **Address Bar:**
 ```
 ┌─────────────────────────────────────────┐
-│ frw://alice/blog ▼                  🔒  │
+│ frw://alice/blog ▼                  [SECURE]  │
 └─────────────────────────────────────────┘
 ```
 
 **First Visit:**
 ```
-⚠️  Resolving name "alice"...
-✓  Found: 12D3KooW... (verified)
-✓  Loading content...
+[!]️  Resolving name "alice"...
+[x]  Found: 12D3KooW... (verified)
+[x]  Loading content...
 ```
 
 **Name Info Button:**
 ```
-📋 Name: alice
+[PLANNED] Name: alice
 🔑 Owner: 12D3KooWBc5T... (Show full)
-✓  Signature verified
+[x]  Signature verified
 📅 Registered: 2024-11-08
 🌐 WWW: https://alice.com
 ```

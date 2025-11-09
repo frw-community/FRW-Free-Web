@@ -1,15 +1,21 @@
 # FRW Production Readiness Roadmap
 
-## Status: Phase 2 Complete - Browser Working ✅
+**Purpose:** Production deployment checklist and implementation tracking
+
+**Status:** Phase 2 Complete - Browser Working [DONE]  
+**Last Updated:** November 9, 2025
+
 CLI tool functional. Browser application operational with IPFS integration. End-to-end workflow verified.
 
+**For historical development phases, see:** [Development Roadmap](../ROADMAP.md)
+
 **Current Achievements:**
-- ✅ CLI tool with all commands (init, register, publish, verify, serve, keys, ipfs)
-- ✅ Electron browser with frw:// protocol handler
-- ✅ IPFS content fetching and display
-- ✅ Signature verification system
-- ✅ Name resolution (frw://alice/ → content)
-- ✅ Comprehensive documentation
+- [DONE] CLI tool with all commands (init, register, publish, verify, serve, keys, ipfs)
+- [DONE] Electron browser with frw:// protocol handler
+- [DONE] IPFS content fetching and display
+- [DONE] Signature verification system
+- [DONE] Name resolution (frw://alice/ → content)
+- [DONE] Comprehensive documentation
 
 **Next:** Testing coverage, performance optimization, distribution packaging
 
@@ -56,80 +62,80 @@ tests/e2e/
 
 ---
 
-## Phase 2: CLI Tool (Week 2) ✅ COMPLETE
+## Phase 2: CLI Tool (Week 2) [DONE] COMPLETE
 
 ### Implemented Command Structure
 ```typescript
 apps/cli/src/
-├── index.ts              // ✅ Entry point with Commander.js
+├── index.ts              // [DONE] Entry point with Commander.js
 ├── commands/
-│   ├── init.ts          // ✅ frw init
-│   ├── publish.ts       // ✅ frw publish
-│   ├── verify.ts        // ✅ frw verify <file>
-│   ├── serve.ts         // ✅ frw serve (local preview)
-│   ├── keys.ts          // ✅ frw keys (list/export/import)
-│   ├── register.ts      // ✅ frw register <name>
-│   └── ipfs-status.ts   // ✅ frw ipfs
+│   ├── init.ts          // [DONE] frw init
+│   ├── publish.ts       // [DONE] frw publish
+│   ├── verify.ts        // [DONE] frw verify <file>
+│   ├── serve.ts         // [DONE] frw serve (local preview)
+│   ├── keys.ts          // [DONE] frw keys (list/export/import)
+│   ├── register.ts      // [DONE] frw register <name>
+│   └── ipfs-status.ts   // [DONE] frw ipfs
 ├── utils/
-│   ├── config.ts        // ✅ ~/.frw/config.json
-│   ├── logger.ts        // ✅ Pretty console output
-│   └── (spinner via ora) // ✅ Progress indicators
+│   ├── config.ts        // [DONE] ~/.frw/config.json
+│   ├── logger.ts        // [DONE] Pretty console output
+│   └── (spinner via ora) // [DONE] Progress indicators
 ```
 
 **Features Implemented:**
-- ✅ Interactive prompts (inquirer)
-- ✅ Progress indicators (ora)
-- ✅ Colored output (chalk)
-- ✅ Config management
-- ✅ Key encryption with password
-- ✅ IPFS connection checking
-- ✅ Name registration system
+- [DONE] Interactive prompts (inquirer)
+- [DONE] Progress indicators (ora)
+- [DONE] Colored output (chalk)
+- [DONE] Config management
+- [DONE] Key encryption with password
+- [DONE] IPFS connection checking
+- [DONE] Name registration system
 
 **Status:** Fully functional, tested manually
 
 ---
 
-## Phase 3: Client Application (Week 3-4) ✅ COMPLETE
+## Phase 3: Client Application (Week 3-4) [DONE] COMPLETE
 
 ### Electron Browser Implementation
 ```typescript
 apps/browser/src/
 ├── main/
-│   ├── index.ts         // ✅ App lifecycle
-│   ├── protocol.ts      // ✅ frw:// handler with IPFS fetch
-│   ├── ipc.ts           // ✅ Main/renderer IPC
-│   └── (menu via Electron) // ⏳ Future enhancement
+│   ├── index.ts         // [DONE] App lifecycle
+│   ├── protocol.ts      // [DONE] frw:// handler with IPFS fetch
+│   ├── ipc.ts           // [DONE] Main/renderer IPC
+│   └── (menu via Electron) // [TODO] Future enhancement
 ├── renderer/
-│   ├── index.html       // ✅ Main UI
-│   ├── main.tsx         // ✅ React app entry
-│   ├── App.tsx          // ✅ Main component
+│   ├── index.html       // [DONE] Main UI
+│   ├── main.tsx         // [DONE] React app entry
+│   ├── App.tsx          // [DONE] Main component
 │   ├── components/
-│   │   ├── AddressBar.tsx       // ✅ URL input
-│   │   ├── Navigation.tsx       // ✅ Back/Forward/Reload
-│   │   ├── ContentViewer.tsx    // ✅ iframe viewer
-│   │   ├── VerificationBadge.tsx // ✅ Signature status
-│   │   └── StatusBar.tsx        // ✅ IPFS status
+│   │   ├── AddressBar.tsx       // [DONE] URL input
+│   │   ├── Navigation.tsx       // [DONE] Back/Forward/Reload
+│   │   ├── ContentViewer.tsx    // [DONE] iframe viewer
+│   │   ├── VerificationBadge.tsx // [DONE] Signature status
+│   │   └── StatusBar.tsx        // [DONE] IPFS status
 │   └── styles/
-│       └── global.css   // ✅ TailwindCSS
+│       └── global.css   // [DONE] TailwindCSS
 ├── preload/
-│   └── index.ts         // ✅ IPC bridge
-├── vite.config.ts       // ✅ Build configuration
-├── postcss.config.js    // ✅ PostCSS setup
-└── tailwind.config.js   // ✅ TailwindCSS config
+│   └── index.ts         // [DONE] IPC bridge
+├── vite.config.ts       // [DONE] Build configuration
+├── postcss.config.js    // [DONE] PostCSS setup
+└── tailwind.config.js   // [DONE] TailwindCSS config
 ```
 
 **Features Implemented:**
-- ✅ Address bar with frw:// protocol support
-- ✅ Navigation (back/forward/reload)
-- ✅ IPFS content fetching via Electron net.fetch
-- ✅ Signature verification display
-- ✅ Name resolution (frw://alice/ → CID)
-- ✅ Single browser instance launch
-- ✅ IPFS connection status indicator
-- ⏳ History management (planned)
-- ⏳ Bookmark system (planned)
-- ⏳ Settings panel (planned)
-- ⏳ Tab support (planned)
+- [DONE] Address bar with frw:// protocol support
+- [DONE] Navigation (back/forward/reload)
+- [DONE] IPFS content fetching via Electron net.fetch
+- [DONE] Signature verification display
+- [DONE] Name resolution (frw://alice/ → CID)
+- [DONE] Single browser instance launch
+- [DONE] IPFS connection status indicator
+- [TODO] History management (planned)
+- [TODO] Bookmark system (planned)
+- [TODO] Settings panel (planned)
+- [TODO] Tab support (planned)
 
 **Framework:** Electron + React + TailwindCSS + Vite
 
@@ -398,41 +404,53 @@ Each package needs:
 
 ## Anti-Squatting System Timeline (Parallel Track)
 
-### Phase 1: Name Registry Foundation ✅ COMPLETE
+### Phase 1: Name Registry Foundation COMPLETE
 
-**Status:** Production ready (November 2025)
+**Status:** Production Ready (November 9, 2025)
 
-**Implemented:**
-- ✅ Content metrics collection from IPFS
-- ✅ Challenge system (creation, response, resolution)
-- ✅ DNS verification for domain names
-- ✅ Reserved names protection (100+ brands)
-- ✅ Automatic dispute resolution
-- ✅ SQLite database storage
-- ✅ CLI commands (metrics, challenge, trust)
+**Components:**
 
 **Documentation:**
-- `docs/NAME_REGISTRY_SPEC.md` - Technical specification
-- `docs/PHASE_1A_COMPLETE.md` - Metrics implementation
-- `docs/PHASE_1B_COMPLETE.md` - Challenge system
-- `docs/DNS_VERIFICATION_COMPLETE.md` - DNS verification
+- `docs/NAME_REGISTRY_SPEC.md` - Technical specification (updated Phase 1 complete)
+- `docs/roadmap/PHASE_1A_COMPLETE.md` - Metrics implementation
+- `docs/roadmap/PHASE_1B_COMPLETE.md` - Challenge system
+- `docs/roadmap/DNS_VERIFICATION_COMPLETE.md` - DNS verification
+- `docs/roadmap/CRITICAL_SECURITY_IMPLEMENTATION.md` - Security features (NEW)
+- `docs/roadmap/SECURITY_FIRST_ROADMAP.md` - Comprehensive security strategy (NEW)
+- `docs/QUANTUM_RESISTANCE_PLAN.md` - Post-quantum cryptography plan (NEW)
+- `docs/SECURITY_THREAT_ANALYSIS.md` - Threat analysis and mitigations (updated)
 - `docs/USER_GUIDE_CHALLENGES.md` - User guide
 - `docs/SECURITY_AUDIT_CHECKLIST.md` - Security review
 
 **Commands Available:**
 ```bash
+# Registration (with security features)
+frw register <name>                 # With PoW, bonds, rate limits
+frw register <name> --verify-dns    # Optional DNS verification
+
+# DNS Verification
+frw verify-dns <name>               # Verify DNS ownership
+
+# Metrics
 frw metrics <name>                  # View usage metrics
-frw challenge create <name>         # Create challenge
+
+# Challenges
+frw challenge create <name>         # Create challenge (with spam limits)
 frw challenge respond <id>          # Respond to challenge
 frw challenge status <id>           # Check status
 frw challenge list                  # List challenges
 ```
 
-**Next Steps:**
-- [ ] End-to-end testing
-- [ ] Performance optimization
+**Next Steps (Critical for v1.0):**
+- [ ] DHT record caching with consensus verification (3 days)
+- [ ] Key rotation mechanism (1 week)
+- [ ] Hardware key support - YubiKey, Ledger (2 weeks)
+- [ ] Multi-signature support (2 weeks)
+- [ ] External security audit (contract required)
+- [ ] End-to-end testing with all security features
+- [ ] Performance optimization (PoW generation)
 - [ ] Production deployment monitoring
-- [ ] User feedback collection
+- [ ] Bug bounty program launch
 
 ---
 
@@ -483,24 +501,22 @@ frw challenge list                  # List challenges
 
 ---
 
-### Phase 3: Advanced Cryptography (Month 13-18)
+### Phase 3: Advanced Cryptography & Jury System (Months 13-18) [RESEARCH]
 
-**Trigger:** Network maturity, proven Phase 2 success
+**Status:** Research phase + Quantum resistance planning
 
-**Status:** Research phase
+**Components Planned:**
 
-**Planned Components:**
-- Cryptographic sortition for jury selection
-- Stake-weighted random sampling
-- Zero-knowledge proofs for usage verification
-- Privacy-preserving metrics
-- Multi-party computation
+#### 3.1 Quantum-Resistant Cryptography [LOCKED]
+- [ ] Hybrid Ed25519 + CRYSTALS-Dilithium signatures
+- [ ] Post-quantum key encapsulation (CRYSTALS-Kyber)
+- [ ] Migration strategy for existing signatures
+- [ ] Browser WASM implementation
 
-**Research Areas:**
-- zk-SNARKs integration
-- VRF (Verifiable Random Functions)
-- Distributed key generation
-- Privacy-preserving vote tallying
+**Timeline:** 
+- **Research:** Complete (NIST standards selected)
+- **Implementation:** Months 1-3 (parallel with Phase 1)
+- **Migration:** Months 6-12 (gradual rollout)
 
 **Dependencies:**
 - Mature cryptographic libraries
@@ -511,48 +527,61 @@ frw challenge list                  # List challenges
 
 ## Current Priority Order
 
-**This Week (Core FRW):**
-1. Complete unit tests (@frw/crypto, @frw/protocol)
-2. Implement CLI basic commands (init, publish)
-3. Set up Jest configuration
-4. Write integration tests
+**Updated:** November 9, 2025
 
-**This Week (Anti-Squatting):**
-1. ✅ DNS verification implementation
-2. ✅ Challenge system completion
-3. End-to-end testing
-4. Security audit review
+### Immediate (Week 1-2)
+1. **DHT Record Caching** - Implement consensus verification (3 days)
+2. **Key Rotation** - Enable users to replace compromised keys (1 week)
+3. **Hardware Key Support** - YubiKey, Ledger integration (2 weeks)
+4. **Testing Coverage** - Get to >80% test coverage for security modules
+5. **Integration Testing** - End-to-end anti-squatting workflow tests
 
-**Next Week (Core FRW):**
-1. CLI tool completion
-2. Client prototype
-3. Security review
-4. Documentation improvements
+### Short-term (Month 1)
+6. **Security Audit** - External review of Phase 1 implementations
+7. **Multi-Signature** - 2-of-3, 3-of-5 support for organizations
+8. **Front-Running Protection** - Commit-reveal registration scheme
+9. **Performance** - Optimize PoW generation and metrics collection
+10. **CI/CD** - Automated security checks in pipeline
 
-**Next Week (Anti-Squatting):**
-1. Performance optimization
-2. Browser UI integration (show metrics/challenges)
-3. Monitoring setup
-4. User documentation refinement
+### Medium-term (Months 2-3)
+11. **Quantum Crypto** - Begin hybrid Ed25519 + Dilithium implementation
+12. **npm Publishing** - Make packages installable via npm
+13. **Documentation Site** - GitBook or Docusaurus deployment
+14. **Community** - Discord/Matrix server setup
+15. **Bug Bounty** - Launch security researcher program
 
-**Timeline to v1.0 (Core FRW):** 8-10 weeks  
-**Timeline to Phase 2 (Anti-Squatting):** 6-12 months after v1.0
+**Phase 1 Anti-Squatting:** [DONE] COMPLETE (November 9, 2025)
+- [DONE] All core features implemented
+- [DONE] Bot prevention operational (PoW + bonds + rate limits)
+- [DONE] Security features deployed (nonces, spam prevention, cleanup)
+- [DONE] DNS verification system working
+- [DONE] Challenge system functional
+- [DONE] Documentation comprehensive
+
+**Critical Path to v1.0:**
+1. Week 1-2: DHT caching + Key rotation + Hardware keys
+2. Week 3-4: Multi-sig + Front-running protection + Security audit
+3. Month 2: Quantum crypto prep + Testing + Bug bounty
+4. Month 3: Production hardening + Community setup + Launch prep
+
+**Timeline to v1.0:** 3 months (Mid-January 2026)  
+**Timeline to Phase 2 (Trust Graph):** Triggered by 1000+ users (6-12 months after launch)
 
 ---
 
 ## Success Metrics
 
 **Technical:**
-- Build: ✅ Passing
-- Tests: ⏳ Target >80% coverage
-- Performance: ⏳ Benchmarks TBD
-- Security: ⏳ Audit pending
+- Build: [DONE] Passing
+- Tests: [TODO] Target >80% coverage
+- Performance: [TODO] Benchmarks TBD
+- Security: [TODO] Audit pending
 
 **Community:**
-- Stars: ⏳ Target 100+
-- Contributors: ⏳ Target 5+
-- Issues: ⏳ Active triage
-- Downloads: ⏳ 1000+/month
+- Stars: [TODO] Target 100+
+- Contributors: [TODO] Target 5+
+- Issues: [TODO] Active triage
+- Downloads: [TODO] 1000+/month
 
 ---
 

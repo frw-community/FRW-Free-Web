@@ -252,7 +252,7 @@ make dev
 ### Documentation
 - Read `docs/DOCKER_DEPLOYMENT.md` for full guide
 - Check `docs/SECURITY.md` for security setup
-- See `docs/PRODUCTION_ROADMAP.md` for features
+- See `docs/roadmap/PRODUCTION_ROADMAP.md` for features
 
 ### Deployment
 - Deploy to VPS/cloud server
@@ -392,6 +392,6 @@ docker-compose up -d
 
 ---
 
-**Docker deployment is now ready! 🚀**
+**Docker deployment is now ready! [LAUNCH]**
 
 The FRW protocol is now significantly easier to deploy, which will accelerate adoption and strengthen the peer-to-peer network.

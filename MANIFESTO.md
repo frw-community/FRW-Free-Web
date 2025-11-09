@@ -234,11 +234,11 @@ Then we made mistakes:
 
 ### What We Keep
 
-✅ **Familiar URLs** - Navigation works as you know it  
-✅ **Web technologies** - HTML, CSS, JavaScript - the same skills  
-✅ **Browser experience** - Address bar, links, navigation - unchanged  
-✅ **Open standards** - Anyone can implement, anyone can use  
-✅ **Human names** - Real names, not cryptographic hashes
+[DONE] **Familiar URLs** - Navigation works as you know it  
+[DONE] **Web technologies** - HTML, CSS, JavaScript - the same skills  
+[DONE] **Browser experience** - Address bar, links, navigation - unchanged  
+[DONE] **Open standards** - Anyone can implement, anyone can use  
+[DONE] **Human names** - Real names, not cryptographic hashes
 
 ### What We Fix
 

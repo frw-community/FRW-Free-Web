@@ -1,8 +1,17 @@
 # FRW Development Roadmap
 
+**Overview:** Historical development phases and feature milestones
+
+**Current Status:** Phase 2 Complete (Browser Working)  
+**Next:** Phase 3 Network Layer (in progress)
+
+**For production deployment checklist, see:** [Production Roadmap](roadmap/PRODUCTION_ROADMAP.md)
+
+---
+
 ## Phase 0: Foundation (Completed)
 
-**Status:** ✅ DONE  
+**Status:** [DONE] DONE  
 **Duration:** 2 weeks
 
 ### Deliverables
@@ -14,7 +23,7 @@
 
 ## Phase 1: Core Protocol (Completed)
 
-**Status:** ✅ DONE  
+**Status:** [DONE] DONE  
 **Duration:** 6 weeks  
 **Released:** v0.1.0-alpha.1
 
@@ -32,13 +41,13 @@
 - [x] Basic CLI tool for publishing
 
 ### Milestones
-- ✅ Week 1-2: Protocol spec finalization
-- ✅ Week 3-4: Crypto implementation
-- ✅ Week 5-6: IPFS integration
+- [DONE] Week 1-2: Protocol spec finalization
+- [DONE] Week 3-4: Crypto implementation
+- [DONE] Week 5-6: IPFS integration
 
 ## Phase 2: Client Development (Completed)
 
-**Status:** ✅ DONE  
+**Status:** [DONE] DONE  
 **Duration:** 4 weeks  
 **Released:** v0.2.0-alpha.1
 
@@ -62,14 +71,14 @@
 - [ ] History and bookmarks - planned
 
 ### Achievements
-- ✅ Electron browser fully functional
-- ✅ IPFS integration working
-- ✅ End-to-end workflow operational
-- ✅ Comprehensive documentation delivered
+- [DONE] Electron browser fully functional
+- [DONE] IPFS integration working
+- [DONE] End-to-end workflow operational
+- [DONE] Comprehensive documentation delivered
 
 ## Phase 3: Network Layer
 
-**Status:** 🔄 PARTIAL - IPNS Working  
+**Status:** [IN PROGRESS] PARTIAL - IPNS Working  
 **Duration:** 6 weeks  
 **Target:** v0.3.0
 
@@ -89,10 +98,10 @@
 - [ ] Peer management - planned
 
 ### Current Status
-- ✅ Basic name resolution functional
-- ✅ IPFS gateway integration
-- ⏳ Full IPNS publishing pending
-- ⏳ Distributed registry pending
+- [DONE] Basic name resolution functional
+- [DONE] IPFS gateway integration
+- [TODO] Full IPNS publishing pending
+- [TODO] Distributed registry pending
 
 ## Phase 4: Alpha Release
 

@@ -464,7 +464,7 @@ frw config sites/portfolio
 ### Directory Structure
 
 ```
-✓ Good:
+[x] Good:
 sites/my-blog/
 ├── frw.config.json
 ├── index.html
@@ -480,7 +480,7 @@ sites/
 ### Content Organization
 
 ```
-✓ Organized:
+[x] Organized:
 my-site/
 ├── css/
 ├── js/

@@ -38,7 +38,7 @@ DNS integration allowing traditional domain names to resolve to FRW content via 
 ### Deployment
 - [Docker Deployment](DOCKER_DEPLOYMENT.md) - Containerized deployment procedures
 - [Custom Folders](CUSTOM_FOLDERS.md) - Flexible filesystem organization
-- [Production Roadmap](PRODUCTION_ROADMAP.md) - Production deployment checklist
+- [Production Roadmap](roadmap/PRODUCTION_ROADMAP.md) - Production deployment checklist
 
 ### Domain Management
 - [Domain Management](DOMAIN_MANAGEMENT.md) - DNS bridge configuration

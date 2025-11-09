@@ -1,4 +1,4 @@
-# Phase 1A: Content Metrics - COMPLETE ✓
+# Phase 1A: Content Metrics - COMPLETE [x]
 
 ## Status: Production Ready
 
@@ -21,7 +21,7 @@
 - Calculates legitimacy and usage scores
 - Stores metrics in database
 
-**Status:** ✓ Fully Implemented & Tested
+**Status:** [x] Fully Implemented & Tested
 
 ### 2. SQLite Database
 **File:** `packages/name-registry/src/storage/database.ts`
@@ -33,7 +33,7 @@
 - JSON serialization for complex types
 - BigInt support for bonds
 
-**Status:** ✓ Fully Implemented & Tested
+**Status:** [x] Fully Implemented & Tested
 
 ### 3. CLI Command
 **File:** `apps/cli/src/commands/challenge.ts`
@@ -47,19 +47,19 @@
 - User-friendly error messages
 - Helpful suggestions for common issues
 
-**Status:** ✓ Fully Implemented & Tested
+**Status:** [x] Fully Implemented & Tested
 
 ---
 
 ## Test Results
 
 **All Tests Passed:**
-- ✓ IPFS daemon connectivity (158 peers)
-- ✓ Metrics collection (score: 795)
-- ✓ Database persistence
-- ✓ Error handling (graceful failures)
-- ✓ CLI integration
-- ✓ Score calculation accuracy
+- [x] IPFS daemon connectivity (158 peers)
+- [x] Metrics collection (score: 795)
+- [x] Database persistence
+- [x] Error handling (graceful failures)
+- [x] CLI integration
+- [x] Score calculation accuracy
 
 **Performance:**
 - Collection time: <2 seconds
@@ -226,7 +226,7 @@ Make sure IPFS is running:
 ### Name Not Published
 ```
 Could not resolve IPNS for <key>: ...
-⚠ No content found. Has this name been published?
+[!] No content found. Has this name been published?
 ```
 
 **Behavior:** Continues with partial metrics (peer stats only)
@@ -335,11 +335,11 @@ if (metrics.usageScore < threshold) {
 ## Success Metrics
 
 **Achieved:**
-- ✓ Sub-3s collection time
-- ✓ Zero crashes in testing
-- ✓ Graceful error handling
-- ✓ User-friendly output
-- ✓ Accurate score calculation
+- [x] Sub-3s collection time
+- [x] Zero crashes in testing
+- [x] Graceful error handling
+- [x] User-friendly output
+- [x] Accurate score calculation
 
 **Next:**
 - Challenge creation rate

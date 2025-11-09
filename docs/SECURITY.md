@@ -110,10 +110,10 @@ if (!valid) {
 │      Sandbox (Untrusted Code)      │
 ├─────────────────────────────────────┤
 │                                     │
-│  ✓ DOM manipulation (scoped)       │
-│  ✓ Event handlers                  │
-│  ✓ localStorage (origin-scoped)    │
-│  ✓ IPFS API (read-only, approved)  │
+│  [x] DOM manipulation (scoped)       │
+│  [x] Event handlers                  │
+│  [x] localStorage (origin-scoped)    │
+│  [x] IPFS API (read-only, approved)  │
 │                                     │
 │  ✗ Node APIs (fs, net, child_proc) │
 │  ✗ Eval / Function constructor      │

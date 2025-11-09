@@ -30,9 +30,9 @@ Before installing FRW, ensure you have the following:
 ### Operating System
 
 FRW supports:
-- ✅ Windows 10/11
-- ✅ macOS 10.15+
-- ✅ Linux (Ubuntu 20.04+, Fedora, Arch)
+- [DONE] Windows 10/11
+- [DONE] macOS 10.15+
+- [DONE] Linux (Ubuntu 20.04+, Fedora, Arch)
 
 ---
 
@@ -189,7 +189,7 @@ This compiles:
 
 **Expected output:**
 ```
-✓ All packages built successfully
+[x] All packages built successfully
 ```
 
 ### Step 4: Install CLI Globally
@@ -249,7 +249,7 @@ FRW Initialization
 
 Initialization Complete
 ───────────────────────
-✓ FRW has been initialized successfully!
+[x] FRW has been initialized successfully!
 
 Your public key: HwKdx6DgXwpEW43Px1Vos1BpWmQwEVYcp7S1DWD3VFcK
 Key file: C:\Users\YourName\.frw\keys\default.json
@@ -272,7 +272,7 @@ Replace `yourname` with your desired name (3-63 characters, lowercase, letters/n
 ```
 Registration Complete
 ─────────────────────
-✓ Name "yourname" registered successfully!
+[x] Name "yourname" registered successfully!
 
 Your site will be accessible at:
   frw://yourname/
@@ -419,7 +419,7 @@ Publish to FRW
 
 Publish Complete
 ────────────────
-✓ Content published successfully!
+[x] Content published successfully!
 
 IPFS CID: QmYwAPJzv...
 Your site is accessible at:
@@ -579,7 +579,7 @@ Edit `~/.frw/config.json`:
 
 ## Next Steps
 
-✅ **Installation complete!**
+[DONE] **Installation complete!**
 
 **What to do next:**
 1. Read the [User Guide](USER_GUIDE.md)

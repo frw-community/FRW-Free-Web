@@ -172,12 +172,14 @@ Complete documentation available in [docs/](docs/) directory.
 - [Security Model](docs/SECURITY.md) - Cryptographic primitives and threat analysis
 - [Access Methods](docs/ACCESS_METHODS.md) - Protocol comparison and usage guidelines
 - [Name Registry Specification](docs/NAME_REGISTRY_SPEC.md) - Anti-squatting system technical spec
+- [Security Roadmap](docs/roadmap/SECURITY_FIRST_ROADMAP.md) - Comprehensive security strategy
+- [Quantum Resistance Plan](docs/QUANTUM_RESISTANCE_PLAN.md) - Post-quantum cryptography roadmap
 
 ### Deployment Guides
 - [Docker Deployment](docs/DOCKER_DEPLOYMENT.md) - Containerized deployment procedures
 - [Installation Guide](docs/INSTALLATION_GUIDE.md) - Native installation instructions
 - [Custom Folders](docs/CUSTOM_FOLDERS.md) - Flexible filesystem configuration
-- [Production Roadmap](docs/PRODUCTION_ROADMAP.md) - Production deployment checklist
+- [Production Roadmap](docs/roadmap/PRODUCTION_ROADMAP.md) - Production deployment checklist
 
 ### Operational Guides
 - [User Guide](docs/USER_GUIDE.md) - End-user operations
@@ -192,6 +194,8 @@ Complete documentation available in [docs/](docs/) directory.
 - [Contributing](CONTRIBUTING.md) - Contribution procedures
 - [Project Structure](docs/PROJECT_STRUCTURE.md) - Codebase organization
 - [Roadmap](docs/ROADMAP.md) - Development phases
+- [Testing Guide](docs/TESTING_GUIDE.md) - Comprehensive testing procedures
+- [Implementation Status](docs/roadmap/) - Phase completion reports and implementation summaries
 
 ## Architecture
 
@@ -215,7 +219,8 @@ FRW Ecosystem
     ├── @frw/protocol  - URL parsing
     ├── @frw/ipfs      - IPFS client
     ├── @frw/sandbox   - VM execution
-    └── @frw/storage   - Caching layer
+    ├── @frw/storage   - Caching layer
+    └── @frw/name-registry  - Anti-squatting system
 ```
 
 ## Technology Stack
@@ -262,7 +267,7 @@ frw://charlie/about.html
 frw verify index.html
 
 # Output:
-# ✓ Signature verified successfully!
+# [x] Signature verified successfully!
 # Content is authentic and unmodified
 ```
 
@@ -331,30 +336,44 @@ Found a security issue? Email: security@frw.dev
 
 ## Development Status
 
-### Implemented
-- FRW protocol specification v1.0
-- CLI tooling (init, register, publish, verify, metrics, challenges)
-- Electron browser with frw:// protocol handler
-- IPFS integration via Kubo
-- Ed25519 cryptographic signing
-- Name resolution system
-- HTTP gateway bridge
-- DNS domain mapping
-- Docker deployment configuration
-- Site configuration system
-- Anti-squatting challenge system (Phase 1)
-- IPFS metrics collection and scoring
-- Automatic dispute resolution
+**Current Phase:** Production Beta  
+**Version:** 0.3.0-beta.1
 
-### In Development
-- Browser tab management
-- Bookmark system
-- History tracking
-- Browser extension for standard browsers
-- Bond management system (crypto integration)
-- DHT publication for challenges
-- Trust graph (Phase 2)
-- Community voting (Phase 2)
+### Implemented 
+- Core protocol (frw:// URLs)
+- Ed25519 cryptographic signatures with hybrid quantum-resistant planning
+- IPFS integration and content addressing
+- CLI tool with complete command set (`frw` command globally available)
+- Electron browser application with protocol handler
+- Name registration system with DNS verification
+- Content verification and signature checking
+- HTTP gateway bridge for legacy access
+- **Anti-Squatting System (Phase 1):**
+  - Proof of Work registration (CPU-intensive rate limiting)
+  - Economic bonds (10M units for 3-letter names)
+  - Rate limiting (1/min, 20/day, 100/month)
+  - Challenge system with automatic resolution
+  - Content metrics collection from IPFS
+  - DNS ownership verification (optional)
+  - Replay attack prevention (nonce system)
+  - Database cleanup and storage limits
+
+### In Development 
+- DHT record caching with consensus verification
+- Key rotation mechanism
+- Hardware key support (YubiKey, Ledger)
+- Multi-signature support (2-of-3, 3-of-5)
+- Trust graph system (Phase 2 preparation)
+- Front-running protection (commit-reveal)
+
+### Planned v1.0 
+- Phase 2: Trust Graph & Community Voting (6-12 months)
+- Quantum-resistant cryptography (hybrid Ed25519 + Dilithium)
+- Automated testing suite (>80% coverage)
+- Mobile clients (iOS, Android)
+- Browser extensions (Chrome, Firefox)
+- Performance optimizations
+- Example sites and templates
 
 ### Planned
 - Native installers for Windows/Mac/Linux
@@ -363,7 +382,7 @@ Found a security issue? Email: security@frw.dev
 - Distributed name registry with DHT
 - Enhanced gateway features
 
-Reference: [Production Roadmap](docs/PRODUCTION_ROADMAP.md)
+Reference: [Production Roadmap](docs/roadmap/PRODUCTION_ROADMAP.md)
 
 ## License
 

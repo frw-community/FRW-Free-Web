@@ -561,13 +561,13 @@ docker-compose exec frw-cli frw publish /data/sites/mysite
 
 **Added comprehensive domain and configuration management to FRW:**
 
-✅ **5 new CLI commands** for domain management  
-✅ **2 new CLI commands** for site configuration  
-✅ **Gateway domain resolution** with custom domain support  
-✅ **DNS verification** system  
-✅ **Site configuration** format (`frw.config.json`)  
-✅ **Docker integration** with Makefile shortcuts  
-✅ **Complete documentation** (1000+ lines)  
-✅ **Updated startup scripts** with new workflows  
+[DONE] **5 new CLI commands** for domain management  
+[DONE] **2 new CLI commands** for site configuration  
+[DONE] **Gateway domain resolution** with custom domain support  
+[DONE] **DNS verification** system  
+[DONE] **Site configuration** format (`frw.config.json`)  
+[DONE] **Docker integration** with Makefile shortcuts  
+[DONE] **Complete documentation** (1000+ lines)  
+[DONE] **Updated startup scripts** with new workflows  
 
 **Result:** FRW now has enterprise-grade domain management and site configuration, making it easy to bridge traditional domains with decentralized content. 🌐

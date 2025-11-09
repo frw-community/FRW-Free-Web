@@ -6,9 +6,9 @@ Get up and running with FRW in 5 minutes!
 
 ## Prerequisites
 
-- ✅ Node.js 20+ installed
-- ✅ IPFS running (Desktop or daemon)
-- ✅ FRW repository cloned
+- [DONE] Node.js 20+ installed
+- [DONE] IPFS running (Desktop or daemon)
+- [DONE] FRW repository cloned
 
 ---
 
@@ -112,9 +112,9 @@ npm run electron:dev
 ## Verify It Works
 
 Your page should display in the browser with:
-- ✅ Green verification badge
-- ✅ Your content visible
-- ✅ IPFS Connected status
+- [DONE] Green verification badge
+- [DONE] Your content visible
+- [DONE] IPFS Connected status
 
 ---
 
@@ -157,4 +157,4 @@ npm link
 
 ---
 
-**That's it! You're now using the decentralized web!** 🚀
+**That's it! You're now using the decentralized web!** [LAUNCH]

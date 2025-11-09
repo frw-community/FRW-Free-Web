@@ -2,15 +2,22 @@
 
 import { Command } from 'commander';
 import { initCommand } from './commands/init.js';
-import { registerCommand } from './commands/register.js';
 import { publishCommand } from './commands/publish.js';
 import { verifyCommand } from './commands/verify.js';
 import { serveCommand } from './commands/serve.js';
 import { keysCommand } from './commands/keys.js';
+import { registerCommand } from './commands/register.js';
+import { verifyDnsCommand } from './commands/verify-dns.js';
 import { ipfsStatusCommand } from './commands/ipfs-status.js';
-import { domainAddCommand, domainVerifyCommand, domainListCommand, domainRemoveCommand, domainInfoCommand } from './commands/domain.js';
+import { 
+  challengeCreateCommand,
+  challengeRespondCommand,
+  challengeStatusCommand,
+  challengeListCommand,
+  metricsShowCommand
+} from './commands/challenge.js';
 import { configureCommand, configShowCommand } from './commands/configure.js';
-import { challengeCreateCommand, challengeRespondCommand, challengeStatusCommand, challengeListCommand, metricsShowCommand } from './commands/challenge.js';
+import { domainAddCommand, domainVerifyCommand, domainListCommand, domainRemoveCommand, domainInfoCommand } from './commands/domain.js';
 
 const program = new Command();
 
@@ -29,6 +36,7 @@ program
   .command('register <name>')
   .description('Register a human-readable name')
   .option('-k, --key <path>', 'Path to private key')
+  .option('--verify-dns', 'Verify DNS ownership for official status')
   .action(registerCommand);
 
 program
@@ -62,6 +70,11 @@ program
   .command('ipfs')
   .description('Check IPFS connection status')
   .action(ipfsStatusCommand);
+
+program
+  .command('verify-dns <name>')
+  .description('Verify DNS ownership for official status')
+  .action(verifyDnsCommand);
 
 // Domain management commands
 const domain = program
