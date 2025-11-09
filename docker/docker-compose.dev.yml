@@ -1,0 +1,85 @@
+version: '3.8'
+
+# Development Docker Compose configuration
+# Features: hot reload, debugging, verbose logging
+
+services:
+  ipfs:
+    image: ipfs/kubo:latest
+    container_name: frw-ipfs-dev
+    environment:
+      - IPFS_PROFILE=test
+      - IPFS_PATH=/data/ipfs
+      - IPFS_LOGGING=debug
+    volumes:
+      - ipfs_data_dev:/data/ipfs
+    ports:
+      - "4001:4001"
+      - "4001:4001/udp"
+      - "5001:5001"
+      - "8080:8080"
+    networks:
+      - frw-network-dev
+    restart: unless-stopped
+
+  frw-cli:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+      target: builder
+    container_name: frw-cli-dev
+    environment:
+      - FRW_IPFS_API=/dns/ipfs/tcp/5001
+      - NODE_ENV=development
+      - DEBUG=frw:*
+      - LOG_LEVEL=debug
+    volumes:
+      - frw_config_dev:/root/.frw
+      - ../sites:/data/sites
+      # Mount source for hot reload
+      - ../packages:/app/packages
+      - ../apps/cli:/app/apps/cli
+    networks:
+      - frw-network-dev
+    depends_on:
+      - ipfs
+    restart: unless-stopped
+    command: tail -f /dev/null
+
+  frw-gateway:
+    build:
+      context: ..
+      dockerfile: Dockerfile.gateway
+      target: builder
+    container_name: frw-gateway-dev
+    environment:
+      - FRW_IPFS_API=/dns/ipfs/tcp/5001
+      - PORT=3000
+      - NODE_ENV=development
+      - DEBUG=frw:*
+      - GATEWAY_CORS_ENABLED=true
+      - GATEWAY_CORS_ORIGINS=*
+    volumes:
+      - frw_config_dev:/root/.frw:ro
+      # Mount source for hot reload
+      - ../docker/gateway-server.js:/app/gateway-server.js
+      - ../packages:/app/packages
+    ports:
+      - "3000:3000"
+      - "9229:9229"  # Debug port
+    networks:
+      - frw-network-dev
+    depends_on:
+      - ipfs
+    restart: unless-stopped
+    command: node --inspect=0.0.0.0:9229 gateway-server.js
+
+volumes:
+  ipfs_data_dev:
+    driver: local
+  frw_config_dev:
+    driver: local
+
+networks:
+  frw-network-dev:
+    driver: bridge

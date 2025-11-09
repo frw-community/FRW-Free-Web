@@ -31,30 +31,61 @@ No servers. No middlemen. Just the free web.
 
 ## Features
 
-### Complete System
+### Protocol Implementation
 
-- **CLI Tool** - Publish, verify, and manage content
-- **Browser App** - Navigate frw:// URLs
-- **IPFS Integration** - Distributed storage
-- **Cryptography** - Ed25519 signatures
-- **Naming System** - Human-readable URLs
-- **TypeScript** - Full type safety
+- **FRW Protocol** - Native frw:// URL scheme with cryptographic verification
+- **CLI Tool** - Command-line interface for publishing and management
+- **Browser Application** - Electron-based browser for FRW protocol
+- **IPFS Integration** - Distributed content storage and retrieval
+- **Ed25519 Signatures** - Cryptographic content authentication
+- **Naming System** - Human-readable name resolution via DHT
+- **HTTP Gateway** - Bridge layer for standard browser compatibility
+- **DNS Integration** - Custom domain mapping for traditional web access
 
-### Production Ready
+### Architecture
 
-- Monorepo architecture
+- TypeScript codebase with full type safety
+- Monorepo structure with Lerna
+- Modular package design
 - Comprehensive error handling
-- Detailed logging
-- Full documentation
-- Working end-to-end
+- Structured logging
+- Test coverage
 
 ## Quick Start
 
-### Installation
+### Docker Deployment (Recommended)
 
 ```bash
 # Clone repository
-git clone https://github.com/your-org/frw-free-web-modern.git
+git clone https://github.com/frw-community/frw-free-web-modern.git
+cd frw-free-web-modern
+
+# Start services
+docker-compose up -d
+
+# Initialize FRW
+docker-compose exec frw-cli frw init
+
+# Register name
+docker-compose exec frw-cli frw register myname
+
+# Configure site
+docker-compose exec frw-cli frw configure /data/sites/mysite
+
+# Publish content
+docker-compose exec frw-cli frw publish /data/sites/mysite
+
+# Access via FRW protocol: frw://myname/
+# Access via HTTP gateway: http://localhost:3000/frw/myname/
+```
+
+Complete guide: [Docker Deployment](docs/DOCKER_DEPLOYMENT.md)
+
+### Native Installation
+
+```bash
+# Clone repository
+git clone https://github.com/frw-community/frw-free-web-modern.git
 cd frw-free-web-modern
 
 # Install dependencies
@@ -63,65 +94,72 @@ npm install
 # Build packages
 npm run build
 
-# Install CLI
+# Install CLI globally
 cd apps/cli
 npm link
+
+# Verify installation
+frw --version
 ```
 
-### Create Your First Site
+## Access Methods
+
+### Primary: FRW Protocol
 
 ```bash
-# Initialize FRW
-frw init
-
-# Register your name
-frw register myname
-
-# Create content
-mkdir my-site && cd my-site
-echo '<html><body><h1>Hello FRW!</h1></body></html>' > index.html
-
-# Publish
-frw publish
-```
-
-### Launch Browser
-
-```bash
-# Navigate to browser
+# Launch FRW browser
 cd apps/browser
-
-# Start browser
 npm run electron:dev
 
-# Navigate to: frw://myname/
+# Navigate to published content
+# Address bar: frw://myname/
 ```
 
-See the full guide: [QUICK_START.md](QUICK_START.md)
+### Secondary: HTTP Gateway
 
-## Philosophy
+```bash
+# Access via standard browser
+http://localhost:3000/frw/myname/
+```
 
-**📜 [Read The FRW Manifesto](MANIFESTO.md)** - Our vision for a free, decentralized web
+### Tertiary: Custom Domain
+
+```bash
+# Configure domain mapping
+frw domain add example.com myname
+
+# Add DNS TXT record
+# Access via: https://example.com
+```
+
+Reference: [Access Methods Documentation](docs/ACCESS_METHODS.md)
 
 ## Documentation
 
-**📚 [Complete Documentation Index](docs/DOCUMENTATION_INDEX.md)** - All documentation organized by topic
+Complete documentation available in [docs/](docs/) directory.
 
-### Quick Access
+### Core Documentation
+- [Protocol Specification](docs/SPECIFICATION.md) - FRW Protocol v1.0 technical specification
+- [Architecture](docs/ARCHITECTURE.md) - System design and component interaction
+- [Security Model](docs/SECURITY.md) - Cryptographic primitives and threat analysis
+- [Access Methods](docs/ACCESS_METHODS.md) - Protocol comparison and usage guidelines
 
-**Getting Started:**
-- [Quick Start](QUICK_START.md) - Get running in 5 minutes
-- [Installation Guide](docs/INSTALLATION_GUIDE.md) - Complete setup instructions
-- [User Guide](docs/USER_GUIDE.md) - How to use the browser
+### Deployment Guides
+- [Docker Deployment](docs/DOCKER_DEPLOYMENT.md) - Containerized deployment procedures
+- [Installation Guide](docs/INSTALLATION_GUIDE.md) - Native installation instructions
+- [Custom Folders](docs/CUSTOM_FOLDERS.md) - Flexible filesystem configuration
+- [Production Roadmap](docs/PRODUCTION_ROADMAP.md) - Production deployment checklist
 
-**Technical:**
-- [Specification](docs/SPECIFICATION.md) - FRW Protocol v1.0
-- [Architecture](docs/ARCHITECTURE.md) - System design
-- [Security](docs/SECURITY.md) - Security model
-- [Developer Guide](docs/DEVELOPER_GUIDE.md) - API reference
+### Operational Guides
+- [User Guide](docs/USER_GUIDE.md) - End-user operations
+- [Domain Management](docs/DOMAIN_MANAGEMENT.md) - DNS bridge configuration
+- [Site Configuration](docs/SITE_CONFIGURATION.md) - Site structure and metadata
+- [IPFS Setup](docs/IPFS_SETUP.md) - IPFS node configuration
 
-**For Contributors:**
-- [Contributing Guide](CONTRIBUTING.md) - How to contribute
+### Development
+- [Developer Guide](docs/DEVELOPER_GUIDE.md) - API reference and extension development
+- [Contributing](CONTRIBUTING.md) - Contribution procedures
+- [Project Structure](docs/PROJECT_STRUCTURE.md) - Codebase organization
 - [Roadmap](docs/ROADMAP.md) - Development phases
 
 ## Architecture
@@ -260,58 +298,72 @@ FRW uses:
 
 Found a security issue? Email: security@frw.dev
 
-## Roadmap
+## Development Status
 
-### Phase 1: Core (Complete)
-- [x] CLI tool
-- [x] IPFS publishing
-- [x] Browser with frw:// protocol
-- [x] Signature verification
-- [x] Name resolution
+### Implemented
+- FRW protocol specification v1.0
+- CLI tooling (init, register, publish, verify)
+- Electron browser with frw:// protocol handler
+- IPFS integration via Kubo
+- Ed25519 cryptographic signing
+- Name resolution system
+- HTTP gateway bridge
+- DNS domain mapping
+- Docker deployment configuration
+- Site configuration system
 
-### Phase 2: Features (In Progress)
-- [x] Electron browser working
-- [x] IPFS content fetching
-- [ ] Tab support
-- [ ] Bookmarks
-- [ ] History
+### In Development
+- Browser tab management
+- Bookmark system
+- History tracking
+- DHT-based name registry
+- Browser extension for standard browsers
 
-### Phase 3: Distribution
-- [ ] Installers (Win/Mac/Linux)
-- [ ] Auto-updates
-- [ ] Public release
-- [ ] Documentation site
+### Planned
+- Native installers for Windows/Mac/Linux
+- Automatic update system
+- Mobile client applications
+- Distributed name registry with DHT
+- Enhanced gateway features
 
-See full roadmap: [PRODUCTION_ROADMAP.md](docs/PRODUCTION_ROADMAP.md)
+Reference: [Production Roadmap](docs/PRODUCTION_ROADMAP.md)
 
 ## License
 
 MIT License - see [LICENSE](LICENSE) for details
 
-## Community
+## Technology Stack
 
-- **GitHub:** https://github.com/frw-community/frw-free-web-modern
-- **Discord:** [Coming soon]
-- **Twitter:** [@FRWProtocol](https://twitter.com/FRWProtocol)
-- **Website:** [Coming soon]
+### Core
+- TypeScript 5.3 - Type-safe implementation
+- Node.js 20+ - Runtime environment
+- IPFS (Kubo) - Distributed storage layer
 
-## Acknowledgments
+### Cryptography
+- TweetNaCl - Ed25519 signature implementation
+- SHA-256 - Content hashing
 
-Built with:
-- [IPFS](https://ipfs.tech) - Distributed storage
-- [Electron](https://electronjs.org) - Cross-platform apps
-- [React](https://react.dev) - UI framework
-- [TweetNaCl](https://tweetnacl.js.org) - Cryptography
-- [TypeScript](https://typescriptlang.org) - Type safety
+### Browser
+- Electron 28 - Cross-platform application framework
+- React 18 - User interface components
+- Vite - Build tooling
 
-## Support
+### CLI
+- Commander - Command-line interface framework
+- Inquirer - Interactive prompts
 
-- **Documentation:** See `/docs` folder
-- **Issues:** [GitHub Issues](https://github.com/frw-community/frw-free-web-modern/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/frw-community/frw-free-web-modern/discussions)
+### Infrastructure
+- Docker - Containerization
+- Lerna - Monorepo management
+- Jest - Testing framework
 
----
+## Repository
 
-**Welcome to the Free Web**
+GitHub: https://github.com/frw-community/frw-free-web-modern
 
-Building a decentralized, censorship-resistant internet, one page at a time.
+Issues: Submit technical issues and bug reports  
+Discussions: Protocol discussion and feature proposals
+
+## License
+
+MIT License. See [LICENSE](LICENSE) file for complete terms.
