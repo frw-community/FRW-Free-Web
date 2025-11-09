@@ -54,7 +54,7 @@ npm run test:verbose --workspace=packages/name-registry
 
 These tests should work as-is!
 
-### ⚠️ NEEDS REVIEW (potential mismatches)
+### [WARNING] NEEDS REVIEW (potential mismatches)
 
 **ChallengeSpamPrevention:** Need to check:
 - `calculateBond()` or `calculateRequiredBond()`?

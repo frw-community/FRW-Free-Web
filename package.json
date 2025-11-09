@@ -12,7 +12,8 @@
     "packages/storage",
     "packages/name-registry",
     "apps/cli",
-    "apps/browser"
+    "apps/browser",
+    "apps/bootstrap-node"
   ],
   "scripts": {
     "bootstrap": "npm install && npm run build",

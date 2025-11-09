@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  bootstrap:
+    build: .
+    ports:
+      - "3030:3030"
+      - "4001:4001"  # IPFS swarm
+      - "5001:5001"  # IPFS API
+      - "8080:8080"  # IPFS Gateway
+    environment:
+      - NODE_ID=bootstrap-docker-1
+      - HTTP_PORT=3030
+      - IPFS_URL=http://localhost:5001
+    volumes:
+      - ipfs-data:/root/.ipfs
+    restart: unless-stopped
+
+volumes:
+  ipfs-data:

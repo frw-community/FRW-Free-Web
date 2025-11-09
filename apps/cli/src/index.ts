@@ -18,6 +18,7 @@ import {
 } from './commands/challenge.js';
 import { configureCommand, configShowCommand } from './commands/configure.js';
 import { domainAddCommand, domainVerifyCommand, domainListCommand, domainRemoveCommand, domainInfoCommand } from './commands/domain.js';
+import { bootstrapRegistryCommand } from './commands/bootstrap-registry.js';
 
 const program = new Command();
 
@@ -154,5 +155,13 @@ program
   .command('metrics <name>')
   .description('Show content metrics for name')
   .action(metricsShowCommand);
+
+// Admin commands
+program
+  .command('bootstrap-registry')
+  .description('[ADMIN] Bootstrap global FRW registry (run once)')
+  .option('--ipfs <url>', 'IPFS API URL', 'http://localhost:5001')
+  .option('--save', 'Save configuration to file')
+  .action(bootstrapRegistryCommand);
 
 program.parse();

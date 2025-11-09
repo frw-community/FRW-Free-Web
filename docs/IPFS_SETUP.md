@@ -450,4 +450,4 @@ ipfs daemon
 frw publish ./my-site
 ```
 
-Welcome to the distributed web! 🌐
+Welcome to the distributed web! [GLOBE]

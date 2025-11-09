@@ -5,7 +5,8 @@ import { FRWNamingSystem } from '@frw/protocol';
 import { config } from '../utils/config.js';
 import { logger } from '../utils/logger.js';
 import inquirer from 'inquirer';
-import { DNSVerifier, requiresDNSVerification } from '@frw/name-registry';
+import { DNSVerifier, requiresDNSVerification, ProofOfWorkGenerator, getRequiredDifficulty } from '@frw/name-registry';
+import { DistributedNameRegistry, createDistributedNameRecord } from '@frw/ipfs';
 
 interface RegisterOptions {
   key?: string;
@@ -156,31 +157,58 @@ export async function registerCommand(name: string, options: RegisterOptions): P
   }
 
   const publicKeyEncoded = SignatureManager.encodePublicKey(keyPair.publicKey);
-
-  // Create name record
-  spinner.start('Creating name record...');
-  const namingSystem = new FRWNamingSystem();
   const ipnsName = `/ipns/${publicKeyEncoded}`;
+
+  // Generate Proof of Work (anti-spam)
+  logger.info('');
+  logger.info('Generating Proof of Work (anti-spam protection)...');
+  const difficulty = getRequiredDifficulty(name);
+  logger.info(`Required difficulty: ${difficulty} leading zeros`);
+  logger.info('This may take 1-60 minutes depending on name length...');
+  logger.info('');
   
-  const record = namingSystem.createNameRecord(
+  const powGenerator = new ProofOfWorkGenerator();
+  const powSpinner = ora('Generating proof...').start();
+  const startTime = Date.now();
+  
+  const proof = await powGenerator.generate(name, publicKeyEncoded, difficulty);
+  const elapsed = Math.round((Date.now() - startTime) / 1000);
+  
+  powSpinner.succeed(`Proof of Work generated in ${elapsed} seconds`);
+  logger.info(`  Nonce: ${proof.nonce}`);
+  logger.info(`  Hash: ${proof.hash}`);
+  logger.info('');
+
+  // Create distributed name record
+  spinner.start('Creating distributed name record...');
+  const record = createDistributedNameRecord(
     name,
     publicKeyEncoded,
+    '', // Content CID (empty for now, will be set on first publish)
     ipnsName,
     keyPair.privateKey,
-    {
-      description: `FRW site for ${name}`,
-    }
+    proof,
+    365 * 24 * 60 * 60 * 1000 // 1 year expiration
   );
   spinner.succeed('Name record created');
 
-  // Publish to DHT (placeholder - requires IPFS)
-  spinner.start('Publishing to network...');
+  // Publish to distributed network (DHT + Pubsub + IPNS)
+  spinner.start('Publishing to global distributed network...');
   try {
-    await namingSystem.publishNameRecord(record);
-    spinner.succeed('Published to network');
+    const registry = new DistributedNameRegistry();
+    await registry.registerName(record);
+    spinner.succeed('✓ Published to global network!');
+    logger.info('');
+    logger.success('Your name is now globally resolvable!');
+    logger.info('Anyone in the world can now access frw://' + name);
+    logger.info('');
   } catch (error) {
-    spinner.warn('Network publish not yet implemented');
-    logger.debug('Name record created locally');
+    spinner.fail('Failed to publish to network');
+    logger.error(error instanceof Error ? error.message : String(error));
+    logger.warn('');
+    logger.warn('Name saved locally but not published globally.');
+    logger.warn('Make sure IPFS daemon is running: ipfs daemon');
+    logger.info('');
   }
 
   // Save to config

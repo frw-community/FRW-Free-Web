@@ -405,10 +405,10 @@ frw://alice/index.frw
 **Name Info Button:**
 ```
 [PLANNED] Name: alice
-🔑 Owner: 12D3KooWBc5T... (Show full)
+[KEY] Owner: 12D3KooWBc5T... (Show full)
 [x]  Signature verified
-📅 Registered: 2024-11-08
-🌐 WWW: https://alice.com
+[CALENDAR] Registered: 2024-11-08
+[GLOBE] WWW: https://alice.com
 ```
 
 ### Browser Extension (Chrome/Firefox)

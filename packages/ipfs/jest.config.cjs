@@ -16,6 +16,10 @@ module.exports = {
   moduleNameMapper: {
     '^@frw/common$': '<rootDir>/../common/src/index.ts',
     '^@frw/common/(.*)$': '<rootDir>/../common/src/$1.ts',
+    '^@frw/crypto$': '<rootDir>/../crypto/src/index.ts',
+    '^@frw/crypto/(.*)$': '<rootDir>/../crypto/src/$1.ts',
+    '^@frw/name-registry$': '<rootDir>/../name-registry/src/index.ts',
+    '^@frw/name-registry/(.*)$': '<rootDir>/../name-registry/src/$1.ts',
     '^(\\.{1,2}/.*)\\.js$': '$1'
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],

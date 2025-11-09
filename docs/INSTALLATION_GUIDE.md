@@ -625,6 +625,6 @@ ipfs pin ls             # List pinned content
 
 ---
 
-**Welcome to FRW!** 🎉
+**Welcome to FRW!** [SUCCESS]
 
 You're now part of the decentralized web revolution.
