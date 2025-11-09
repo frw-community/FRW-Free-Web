@@ -8,7 +8,7 @@
     "dev": "vite",
     "build": "vite build && electron-builder",
     "preview": "vite preview",
-    "electron:dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",
+    "electron:dev": "vite",
     "electron:build": "vite build && electron-builder"
   },
   "keywords": [

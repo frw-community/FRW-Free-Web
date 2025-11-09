@@ -27,9 +27,6 @@ export default defineConfig({
       },
       {
         entry: 'src/preload/index.ts',
-        onstart(options: any) {
-          options.reload();
-        },
         vite: {
           build: {
             outDir: 'dist/preload',
