@@ -23,6 +23,23 @@ export class ProofOfWorkGenerator {
     ): Promise<ProofOfWork> {
         const startTime = Date.now();
         let nonce = 0;
+        
+        // Difficulty 0 = no POW needed (long names)
+        if (difficulty === 0) {
+            const data = `${name}:${publicKey}:${nonce}:${startTime}`;
+            const hash = crypto
+                .createHash('sha256')
+                .update(data)
+                .digest('hex');
+            
+            return {
+                nonce,
+                hash,
+                difficulty,
+                timestamp: startTime
+            };
+        }
+        
         const target = '0'.repeat(difficulty);
         
         while (true) {
@@ -85,21 +102,76 @@ export class ProofOfWorkGenerator {
         
         return { seconds, description };
     }
+    
+    /**
+     * Verify proof of work is valid
+     */
+    verifyProof(
+        name: string,
+        publicKey: string,
+        proof: ProofOfWork
+    ): boolean {
+        // Reconstruct challenge
+        const data = `${name}:${publicKey}:${proof.nonce}:${proof.timestamp}`;
+        
+        // Calculate hash
+        const hash = crypto
+            .createHash('sha256')
+            .update(data)
+            .digest('hex');
+        
+        // Verify hash matches
+        if (hash !== proof.hash) {
+            return false;
+        }
+        
+        // Verify difficulty (skip for difficulty 0)
+        if (proof.difficulty > 0) {
+            const target = '0'.repeat(proof.difficulty);
+            if (!hash.startsWith(target)) {
+                return false;
+            }
+        }
+        
+        // Verify proof is recent (not older than 1 hour)
+        const age = Date.now() - proof.timestamp;
+        if (age > 3600000) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Get required difficulty based on name characteristics
+     * Goal: Prevent short name squatting, make long names easy
+     */
+    getRequiredDifficulty(name: string): number {
+        return getRequiredDifficulty(name);
+    }
 }
 
 /**
  * Get required difficulty based on name characteristics
+ * Goal: Prevent short name squatting, make long names easy
  */
 export function getRequiredDifficulty(name: string): number {
     const length = name.length;
     
-    // Shorter names = higher difficulty
+    // Very short names (premium) = expensive
     if (length === 3) return 6;  // ~10-15 minutes
     if (length === 4) return 5;  // ~5-8 minutes
     if (length === 5) return 4;  // ~2-3 minutes
     if (length === 6) return 3;  // ~30-60 seconds
     
-    return 2;  // 7+ chars: ~5-10 seconds
+    // Medium names = moderate
+    if (length === 7 || length === 8) return 2;  // ~5-10 seconds
+    
+    // Long names (9-15 chars) = very easy
+    if (length >= 9 && length <= 15) return 1;  // ~instant (<1 second)
+    
+    // Very long names (16+ chars) = no POW needed
+    return 0;  // 16+ chars: instant, no POW
 }
 
 /**
@@ -124,10 +196,12 @@ export function verifyProof(
         return false;
     }
     
-    // Verify difficulty
-    const target = '0'.repeat(proof.difficulty);
-    if (!hash.startsWith(target)) {
-        return false;
+    // Verify difficulty (skip for difficulty 0)
+    if (proof.difficulty > 0) {
+        const target = '0'.repeat(proof.difficulty);
+        if (!hash.startsWith(target)) {
+            return false;
+        }
     }
     
     // Verify proof is recent (not older than 1 hour)

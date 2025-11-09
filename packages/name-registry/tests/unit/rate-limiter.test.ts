@@ -1,5 +1,5 @@
 // Unit tests for Rate Limiter
-import { describe, it, expect, beforeEach, jest } from '@jest/globals';
+import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
 import { RateLimiter, AdaptiveRateLimiter } from '../../src/limits/rate-limiter';
 
 describe('RateLimiter', () => {
@@ -58,10 +58,12 @@ describe('RateLimiter', () => {
         });
 
         it('should enforce monthly limit', () => {
-            // Record 100 registrations
+            // Record 100 registrations over time
             for (let i = 0; i < 100; i++) {
+                if (i > 0) {
+                    jest.advanceTimersByTime(86500000); // Advance ~1 day BEFORE recording
+                }
                 limiter.recordRegistration(publicKey, `name${i}`);
-                jest.advanceTimersByTime(86500000); // Advance ~1 day
             }
             
             const result = limiter.checkLimit(publicKey);
@@ -70,10 +72,12 @@ describe('RateLimiter', () => {
         });
 
         it('should enforce lifetime limit', () => {
-            // Record 1000 registrations
+            // Record 1000 registrations over time
             for (let i = 0; i < 1000; i++) {
+                if (i > 0) {
+                    jest.advanceTimersByTime(31 * 86400000); // Advance 31 days BEFORE recording
+                }
                 limiter.recordRegistration(publicKey, `name${i}`);
-                jest.advanceTimersByTime(31 * 86400000); // Advance 31 days each
             }
             
             const result = limiter.checkLimit(publicKey);

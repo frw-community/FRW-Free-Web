@@ -1,5 +1,5 @@
 // Unit tests for Nonce Manager
-import { describe, it, expect, beforeEach, jest } from '@jest/globals';
+import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
 import { NonceManager } from '../../src/security/nonce-manager';
 import crypto from 'crypto';
 
