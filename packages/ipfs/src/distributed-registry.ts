@@ -70,8 +70,15 @@ interface NameUpdateMessage {
  * - Content routing optimization
  * - Byzantine fault tolerance
  */
+export interface RegistryConfig {
+  ipfsUrl?: string;
+  bootstrapNodes?: string[];
+  cacheTTL?: number;
+}
+
 export class DistributedNameRegistry {
   private ipfs: IPFSHTTPClient;
+  private bootstrapNodes?: string[];
   
   // Multi-layer cache
   private l1Cache: Map<string, { record: DistributedNameRecord; expires: number }>;
@@ -92,8 +99,10 @@ export class DistributedNameRegistry {
     avgLatency: 0
   };
 
-  constructor(ipfsUrl = 'http://localhost:5001') {
+  constructor(config?: RegistryConfig) {
+    const ipfsUrl = config?.ipfsUrl || 'http://localhost:5001';
     this.ipfs = createIPFSClient({ url: ipfsUrl });
+    this.bootstrapNodes = config?.bootstrapNodes;
     this.l1Cache = new Map();
     this.l2Cache = new Map();
     
@@ -326,23 +335,27 @@ export class DistributedNameRegistry {
   }
 
   /**
+   * Default bootstrap nodes - hardcoded like Bitcoin/IPFS
+   * Users can override via constructor options
+   */
+  private static readonly DEFAULT_BOOTSTRAP_NODES = [
+    // PRIMARY NODES (Swiss VPS - Production)
+    'http://83.228.214.189:3100',
+    'http://[2001:1600:18:102::165]:3100',
+    
+    // LOCAL DEV
+    'http://localhost:3100',
+    
+    // COMMUNITY NODES (Anyone can submit PR to add their node)
+  ];
+
+  /**
    * Query HTTP bootstrap nodes (fast, < 500ms)
    * 
    * Global distributed nodes for 99.9% uptime and < 100ms latency worldwide
    */
   private async queryHTTPBootstrap(name: string): Promise<DistributedNameRecord | null> {
-    const BOOTSTRAP_NODES = [
-      // PRIMARY NODES (Swiss VPS - Production)
-      'http://83.228.214.189:3100',                // Swiss VPS 1 (Debian Linux) - IPv4
-      'http://[2001:1600:18:102::165]:3100',       // Swiss VPS 1 (Debian Linux) - IPv6
-      // Windows VPS will be added after setup
-      
-      // LOCAL DEV
-      'http://localhost:3100',
-      
-      // COMMUNITY NODES (Anyone can add)
-      // Community members can submit PRs to add their bootstrap nodes here
-    ];
+    const BOOTSTRAP_NODES = this.bootstrapNodes || DistributedNameRegistry.DEFAULT_BOOTSTRAP_NODES;
 
     for (const node of BOOTSTRAP_NODES) {
       try {

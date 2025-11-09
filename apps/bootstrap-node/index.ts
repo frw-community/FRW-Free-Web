@@ -25,7 +25,7 @@ class BootstrapIndexNode {
   private lastPublished: number = 0;
   
   private readonly IPFS_URL = process.env.IPFS_URL || 'http://localhost:5001';
-  private readonly HTTP_PORT = parseInt(process.env.HTTP_PORT || '3030');
+  private readonly HTTP_PORT = parseInt(process.env.HTTP_PORT || '3100');
   private readonly PUBLISH_INTERVAL = 3600000; // 1 hour
   private readonly PUBSUB_TOPIC = 'frw/names/updates/v1';
 

@@ -6,11 +6,19 @@ module.exports = {
   modulePathIgnorePatterns: ['<rootDir>/packages/*/dist'],
   moduleNameMapper: {
     '^@frw/common$': '<rootDir>/packages/common/src/index.ts',
+    '^@frw/common/(.*)$': '<rootDir>/packages/common/src/$1',
     '^@frw/crypto$': '<rootDir>/packages/crypto/src/index.ts',
+    '^@frw/crypto/(.*)$': '<rootDir>/packages/crypto/src/$1',
     '^@frw/ipfs$': '<rootDir>/packages/ipfs/src/index.ts',
+    '^@frw/ipfs/(.*)$': '<rootDir>/packages/ipfs/src/$1',
     '^@frw/protocol$': '<rootDir>/packages/protocol/src/index.ts',
+    '^@frw/protocol/(.*)$': '<rootDir>/packages/protocol/src/$1',
     '^@frw/sandbox$': '<rootDir>/packages/sandbox/src/index.ts',
-    '^@frw/storage$': '<rootDir>/packages/storage/src/index.ts'
+    '^@frw/sandbox/(.*)$': '<rootDir>/packages/sandbox/src/$1',
+    '^@frw/storage$': '<rootDir>/packages/storage/src/index.ts',
+    '^@frw/storage/(.*)$': '<rootDir>/packages/storage/src/$1',
+    '^@frw/name-registry$': '<rootDir>/packages/name-registry/src/index.ts',
+    '^@frw/name-registry/(.*)$': '<rootDir>/packages/name-registry/src/$1'
   },
   transform: {
     '^.+\\.ts$': ['ts-jest', {
