@@ -16,7 +16,7 @@ export function extractMetadata(html: string, name: string): string | null {
 
 export function canonicalize(content: string): string {
   return content
-    .replace(/<meta name="frw-signature" content="[^"]+">\s*/g, '')
+    .replace(/[ \t]*<meta name="frw-signature" content="[^"]+">\n?/g, '')
     .trim();
 }
 
