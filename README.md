@@ -30,6 +30,25 @@ One terms of service changes, you lose everything.
 
 ---
 
+## Quick Start - Ready to Deploy
+
+**Status:** Production Ready | **Next:** VPS Deployment
+
+```bash
+# Everything is built and tested
+# Follow the deployment checklist:
+```
+
+1. **[DEPLOY_CHECKLIST.md](./DEPLOY_CHECKLIST.md)** - Step-by-step VPS deployment (40 min)
+2. **[QUICK_COMMANDS.md](./QUICK_COMMANDS.md)** - Command reference
+3. **[DEPLOYMENT_READY.md](./DEPLOYMENT_READY.md)** - Full status report
+
+**Target VPS:** 83.228.214.189 (Debian 13)  
+**Estimated Time:** 40 minutes  
+**Expected Result:** Working bootstrap node + name resolution
+
+---
+
 ## We Declare Independence
 
 **From centralized platforms that silence voices.**  
