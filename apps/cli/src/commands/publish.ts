@@ -3,7 +3,8 @@ import { join, relative, basename } from 'path';
 import ora from 'ora';
 import inquirer from 'inquirer';
 import { KeyManager, SignatureManager } from '@frw/crypto';
-import { IPFSClient } from '@frw/ipfs';
+import { IPFSClient, DistributedNameRegistry, createDistributedNameRecord } from '@frw/ipfs';
+import { ProofOfWorkGenerator, getRequiredDifficulty } from '@frw/name-registry';
 import { config } from '../utils/config.js';
 import { logger } from '../utils/logger.js';
 
@@ -132,6 +133,59 @@ export async function publishCommand(directory: string = '.', options: PublishOp
   } catch (error) {
     spinner.warn('IPNS publish failed');
     logger.debug('You can still access via CID');
+  }
+
+  // Update distributed registry if name specified
+  if (options.name) {
+    spinner.start('Updating name registry...');
+    try {
+      // Get registered name info from config
+      const registeredNames = config.get('registeredNames') || {};
+      if (!registeredNames[options.name]) {
+        spinner.warn(`Name "${options.name}" not registered. Run: frw register ${options.name}`);
+      } else {
+        // Create updated record with new contentCID
+        const ipnsKey = `/ipns/${publicKeyEncoded}`;
+        const record = createDistributedNameRecord(
+          options.name,
+          publicKeyEncoded,
+          rootCID, // NEW contentCID
+          ipnsKey,
+          keyPair.privateKey,
+          { nonce: 0, hash: '', difficulty: 0, timestamp: Date.now() }, // Dummy PoW for update
+          365 * 24 * 60 * 60 * 1000
+        );
+        
+        // Submit to bootstrap nodes
+        const registry = new DistributedNameRegistry({
+          bootstrapNodes: [
+            'http://83.228.214.189:3100',
+            'http://localhost:3100'
+          ]
+        });
+        
+        // Use direct submission (simpler than updateContent which needs resolution)
+        const nodes = ['http://83.228.214.189:3100'];
+        for (const node of nodes) {
+          try {
+            const response = await fetch(`${node}/api/submit`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(record)
+            });
+            if (response.ok) {
+              spinner.succeed('Name registry updated');
+              break;
+            }
+          } catch (err) {
+            // Continue to next node
+          }
+        }
+      }
+    } catch (error) {
+      spinner.warn('Registry update failed');
+      logger.debug(error instanceof Error ? error.message : String(error));
+    }
   }
 
   // Display results
