@@ -30,32 +30,50 @@ One terms of service changes, you lose everything.
 
 ---
 
-## Quick Start - DEPLOYED & OPERATIONAL
+## Quick Start - PRODUCTION READY
 
-**Status:** PRODUCTION (1/2 nodes live) | **Next:** Windows VPS
+**Status:** OPERATIONAL | **Time:** 10 minutes to first site
+
+### Try It Now
+
+```bash
+# 1. Initialize
+frw init
+
+# 2. Register name
+frw register myname
+
+# 3. Publish content
+frw publish ./my-site --name myname
+
+# 4. Browse
+frw://myname/  # Works globally!
+```
 
 ### Live Bootstrap Node
 - **URL:** http://83.228.214.189:3100
-- **Status:** ✓ Operational (Debian, Switzerland)
+- **Status:** ✓ Operational (Switzerland)
 - **Deployed:** November 11, 2025
+- **Names Registered:** Live on distributed registry
 
-```bash
-# Test it now:
-curl http://83.228.214.189:3100/health
-
-# Or from PowerShell:
+```powershell
+# Test it:
+Invoke-RestMethod http://83.228.214.189:3100/health
 Invoke-RestMethod http://83.228.214.189:3100/api/stats
 ```
 
-### Deploy Your Own Node
+### Documentation
 
-1. **[docs/deployment/DEPLOY_NOW_VPS.md](./docs/deployment/DEPLOY_NOW_VPS.md)** - Complete VPS guide (TESTED)
-2. **[docs/deployment/DEPLOYMENT_CHANGELOG.md](./docs/deployment/DEPLOYMENT_CHANGELOG.md)** - What was fixed
-3. **[QUICK_COMMANDS.md](./QUICK_COMMANDS.md)** - Command reference
+1. **[QUICK_START.md](./QUICK_START.md)** - 10-minute guide (VALIDATED)
+2. **[QUICK_COMMANDS.md](./QUICK_COMMANDS.md)** - Command reference
+3. **[docs/deployment/DEPLOY_NOW_VPS.md](./docs/deployment/DEPLOY_NOW_VPS.md)** - Deploy your own node
 
-**Deployment Time:** 30-40 minutes  
-**Cost:** $0/month (use existing VPS)  
-**Validated On:** Debian 13, Node.js 20.x, IPFS 0.24.0
+**What Works:**
+- ✓ Global name registration with Proof of Work
+- ✓ Content publishing to IPFS
+- ✓ Distributed name resolution via bootstrap nodes
+- ✓ Electron browser with frw:// protocol
+- ✓ End-to-end decentralized flow
 
 ---
 
