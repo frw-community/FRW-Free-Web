@@ -195,7 +195,12 @@ export async function registerCommand(name: string, options: RegisterOptions): P
   // Publish to distributed network (DHT + Pubsub + IPNS)
   spinner.start('Publishing to global distributed network...');
   try {
-    const registry = new DistributedNameRegistry();
+    const registry = new DistributedNameRegistry({
+      bootstrapNodes: [
+        'http://83.228.214.189:3100',  // Swiss VPS (Production)
+        'http://localhost:3100'         // Local dev
+      ]
+    });
     await registry.registerName(record);
     spinner.succeed('✓ Published to global network!');
     logger.info('');

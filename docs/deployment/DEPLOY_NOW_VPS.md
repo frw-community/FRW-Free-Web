@@ -23,21 +23,22 @@
 
 ## [OK] DEPLOYMENT CHECKLIST
 
-### ☐ 1. Linux VPS Setup (15-20 min)
+### ☐ 1. Linux VPS Setup (Debian) - TESTED & WORKING
 
 **Prerequisites:**
-- [ ] SSH access to your Linux VPS
+- [ ] SSH access to your Debian VPS
 - [ ] Root or sudo privileges
-- [ ] Public IP address
+- [ ] Public IP address (e.g., 83.228.214.189)
 
 **Steps:**
 ```bash
-# 1. Connect
-ssh user@your-linux-vps.com
+# 1. SSH to VPS
+ssh -i ~/.ssh/YOUR_KEY debian@YOUR_VPS_IP
 
 # 2. Install Node.js 20
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt-get install -y nodejs git
+node --version  # Should be v20.x
 
 # 3. Install IPFS
 cd /tmp
@@ -46,33 +47,259 @@ tar -xzf kubo_v0.24.0_linux-amd64.tar.gz
 cd kubo && sudo bash install.sh
 ipfs init
 
-# 4. Clone & Build
+# 4. Enable IPFS Pubsub (REQUIRED)
+ipfs config --json Experimental.Libp2pStreamMounting true
+ipfs config --json Experimental.Pubsub true
+
+# 5. Clone Repository
 cd ~
-git clone https://github.com/YOUR-USERNAME/FRW-Free-Web-Modern.git
-cd FRW-Free-Web-Modern
-npm install && npm run build
-cd apps/bootstrap-node
-npm install && npm run build
+git clone https://github.com/frw-community/FRW-Free-Web.git
+cd FRW-Free-Web
 
-# 5. Setup PM2
-sudo npm install -g pm2
-pm2 start ipfs --name "ipfs-daemon" -- daemon
-sleep 10
-pm2 start npm --name "frw-bootstrap" -- start
-pm2 save
-pm2 startup  # Run the command it outputs
+# 6. Build Project
+# Note: Packages must be built sequentially due to TypeScript project references
+npm install
+npm run build
+# If build fails, see troubleshooting below
 
-# 6. Open Firewall
-sudo ufw allow 3030/tcp
-sudo ufw allow 4001/tcp
-sudo ufw allow 5001/tcp
-sudo ufw enable
+# 7. Start IPFS Daemon
+nohup ipfs daemon --enable-pubsub-experiment > ~/ipfs.log 2>&1 &
+sleep 5
 
-# 7. Test
-curl http://localhost:3030/health
+# 8. Test Bootstrap Node
+cd ~/FRW-Free-Web/apps/bootstrap-node
+HTTP_PORT=3100 IPFS_URL=http://localhost:5001 node dist/index.js
+# Should see: [Bootstrap] ✓ Bootstrap node ready!
+# Press Ctrl+C to stop
+
+# 9. Create Systemd Service
+sudo nano /etc/systemd/system/frw-bootstrap.service
 ```
 
-**Your Linux Node URL:** `http://YOUR-LINUX-IP:3030`
+**Paste this in the service file:**
+```ini
+[Unit]
+Description=FRW Bootstrap Node
+After=network.target
+
+[Service]
+Type=simple
+User=debian
+WorkingDirectory=/home/debian/FRW-Free-Web/apps/bootstrap-node
+ExecStart=/usr/bin/node dist/index.js
+Restart=always
+RestartSec=10
+Environment=HTTP_PORT=3100
+Environment=IPFS_URL=http://localhost:5001
+
+[Install]
+WantedBy=multi-user.target
+```
+
+**Continue:**
+```bash
+# 10. Create IPFS Service (Make It Permanent)
+sudo nano /etc/systemd/system/ipfs.service
+```
+
+**Paste this in the IPFS service file:**
+```ini
+[Unit]
+Description=IPFS Daemon
+After=network.target
+
+[Service]
+Type=simple
+User=debian
+ExecStart=/usr/local/bin/ipfs daemon --enable-pubsub-experiment
+Restart=always
+RestartSec=10
+Environment=IPFS_PATH=/home/debian/.ipfs
+
+[Install]
+WantedBy=multi-user.target
+```
+
+**Continue:**
+```bash
+# 11. Enable and Start Services
+# First kill the nohup IPFS process
+killall ipfs
+
+# Enable both services
+sudo systemctl daemon-reload
+sudo systemctl enable ipfs
+sudo systemctl enable frw-bootstrap
+
+# Start IPFS first, then bootstrap
+sudo systemctl start ipfs
+sleep 5
+sudo systemctl start frw-bootstrap
+
+# Check status
+sudo systemctl status ipfs
+sudo systemctl status frw-bootstrap
+# Both should show "active (running)"
+
+# 12. Configure Firewall
+# If using UFW:
+sudo apt install ufw
+sudo ufw allow 3100/tcp  # Bootstrap API
+sudo ufw allow 4001/tcp  # IPFS Swarm
+sudo ufw allow 22/tcp    # SSH - IMPORTANT!
+sudo ufw enable
+
+# If using VPS provider firewall (e.g., Infomaniak):
+# Create firewall rules file
+cat > ~/frw-firewall-infomaniak.csv << 'EOF'
+"port_selection","ip_type","port_type","port_selection_type","port_selection_list",port_selection_range_start,port_selection_range_stop,"source_specific_ip_type","specific_ip","specific_ip_range_start","specific_ip_range_stop","specific_ip_subnetwork",enabled,"description"
+"manual","all","TCP","select","3100",0,0,"all","","","","",1,"FRW Bootstrap HTTP API"
+"manual","all","TCP","select","4001",0,0,"all","","","","",1,"IPFS Swarm TCP"
+"manual","all","UDP","select","4001",0,0,"all","","","","",1,"IPFS Swarm UDP"
+"manual","all","TCP","select","22",0,0,"all","","","","",1,"SSH Access"
+EOF
+# Download and import into VPS provider panel
+
+# 12. Test Locally
+curl http://localhost:3100/health
+# Should return: {"status":"ok",...}
+
+# 13. Test from Windows
+Invoke-RestMethod http://YOUR_VPS_IP:3100/health
+# Should return: {"status":"ok",...}
+
+Invoke-RestMethod http://YOUR_VPS_IP:3100/api/stats
+# Should return: {"nodeId":"...","totalNames":0,...}
+```
+
+---
+
+## [TESTED] Verification & Testing
+
+### Test Name Registration (Windows → VPS)
+
+```powershell
+# On Windows - register a name
+frw register myname
+
+# Should see:
+# [DistributedRegistry] ✓ Submitted to bootstrap: http://YOUR_VPS_IP:3100
+# ✓ Published to global network!
+
+# Verify on VPS
+Invoke-RestMethod http://YOUR_VPS_IP:3100/api/resolve/myname
+# Should return name details
+
+Invoke-RestMethod http://YOUR_VPS_IP:3100/api/stats
+# Should show totalNames: 1
+```
+
+### Monitor VPS Services
+
+```bash
+# On VPS
+sudo systemctl status ipfs
+sudo systemctl status frw-bootstrap
+
+# View logs
+sudo journalctl -u frw-bootstrap -f
+sudo journalctl -u ipfs -f
+
+# Restart if needed
+sudo systemctl restart frw-bootstrap
+sudo systemctl restart ipfs
+```
+
+---
+
+## [IMPORTANT] Troubleshooting
+
+### Build Issues
+
+If `npm run build` fails with TypeScript declaration errors:
+
+```bash
+cd ~/FRW-Free-Web
+
+# Clean everything
+rm -rf packages/*/dist apps/*/dist node_modules
+
+# Reinstall
+npm install
+
+# Build packages individually (ensures proper order)
+npx tsc -b packages/common --force
+npx tsc -b packages/crypto --force
+npx tsc -b packages/ipfs --force
+npx tsc -b packages/protocol --force
+npx tsc -b packages/name-registry --force
+npx tsc -b apps/bootstrap-node --force
+npx tsc -b apps/cli --force
+
+# Verify builds
+ls packages/common/dist/index.d.ts  # Should exist
+ls apps/bootstrap-node/dist/index.js  # Should exist
+```
+
+**Why individual package builds needed:**
+- TypeScript project references (`"composite": true`) require proper build order
+- Root `npm run build` may not generate `.d.ts` declaration files correctly
+- Individual builds with `--force` ensure each package's declarations are created
+- This is a known TypeScript monorepo limitation with workspaces
+
+### Bootstrap Node Not Receiving Names
+
+**Problem:** Names registered on Windows don't appear on VPS.
+
+**Solution:** Ensure Windows CLI uses VPS bootstrap nodes:
+
+Check `apps/cli/src/commands/register.ts` line ~198:
+```typescript
+const registry = new DistributedNameRegistry({
+  bootstrapNodes: [
+    'http://YOUR_VPS_IP:3100',
+    'http://localhost:3100'
+  ]
+});
+```
+
+Rebuild CLI after changes:
+```powershell
+npx tsc -b apps/cli
+```
+
+### IPFS Pubsub Errors
+
+**Error:** `experimental pubsub feature not enabled`
+
+**Non-critical** - HTTP bootstrap fallback works. To fix:
+
+```bash
+# On VPS
+killall ipfs
+ipfs config --json Experimental.Pubsub true
+nohup ipfs daemon --enable-pubsub-experiment > ~/ipfs.log 2>&1 &
+
+# On Windows (optional)
+Stop-Process -Name "ipfs" -Force
+ipfs config --json Experimental.Pubsub true
+Start-Process powershell -ArgumentList "ipfs daemon --enable-pubsub-experiment"
+```
+
+### Firewall Issues
+
+**Problem:** Can't reach VPS from Windows.
+
+**Check:**
+1. VPS provider firewall (Infomaniak panel)
+2. Local firewall: `sudo iptables -L -n`
+3. Port is listening: `sudo netstat -tulpn | grep 3100`
+
+**Fix:** Import firewall rules (see step 11 above)
+
+**Your Linux Node URL:** `http://YOUR-VPS-IP:3100`
+
+**Example (Swiss VPS):** `http://83.228.214.189:3100`
 
 **Save this:** `________________________________`
 
@@ -324,6 +551,58 @@ sudo kill -9 PID
 netstat -ano | findstr :3030
 taskkill /PID <PID> /F
 ```
+
+---
+
+## [VALIDATED] Successful Deployment Example
+
+**Tested and working on November 11, 2025:**
+
+### Configuration
+- **VPS:** Debian (Infomaniak Switzerland)
+- **IP:** 83.228.214.189
+- **Bootstrap Port:** 3100
+- **IPFS Version:** 0.24.0
+- **Node.js Version:** 20.x
+
+### Results
+```bash
+# VPS Status
+$ curl http://83.228.214.189:3100/health
+{"status":"ok","nodeId":"bootstrap-1762894170648",...}
+
+# Name Registration (Windows → VPS)
+PS> frw register vpstest7
+[DistributedRegistry] ✓ Submitted to bootstrap: http://83.228.214.189:3100
+✓ Published to global network!
+
+# Name Resolution
+PS> Invoke-RestMethod http://83.228.214.189:3100/api/resolve/vpstest7
+{
+  "name": "vpstest7",
+  "publicKey": "GMZjnckbhcdPxnZWhAbuRWRpsELbR6fZLbgQacUdErSb",
+  "contentCID": "",
+  "ipnsKey": "/ipns/GMZjnckbhcdPxnZWhAbuRWRpsELbR6fZLbgQacUdErSb",
+  "timestamp": 1762895009767,
+  "signature": "X6B3ADoWUFlJFp7WT9LXY7M0kyRyCV+fMFCeoblFuMee0MokBA4JYyAIvN7WyUjglJFhYo9Zh6jz9w/bAPNFCw==",
+  "resolvedBy": "bootstrap-1762894170648"
+}
+
+# Stats
+PS> Invoke-RestMethod http://83.228.214.189:3100/api/stats
+{"nodeId":"bootstrap-1762894170648","totalNames":1,"uptime":891.366,...}
+```
+
+### Key Learnings
+1. **TypeScript Build:** Packages must be built individually with `--force` on fresh VPS
+2. **IPFS Pubsub:** Must enable with `--enable-pubsub-experiment` flag
+3. **HTTP Fallback:** Bootstrap node HTTP submission works when pubsub fails
+4. **Firewall:** VPS provider panel (Infomaniak) requires CSV import for rules
+5. **Systemd:** Both IPFS and bootstrap need separate services
+
+### Total Deployment Time
+- **Initial:** 90 minutes (with troubleshooting)
+- **Repeat:** 30 minutes (with documented steps)
 
 ---
 

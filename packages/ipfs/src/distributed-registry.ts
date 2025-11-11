@@ -136,7 +136,10 @@ export class DistributedNameRegistry {
       // 5. Broadcast via pubsub (real-time propagation)
       await this.broadcastUpdate('name-register', record);
       
-      // 6. Cache locally
+      // 6. Submit to HTTP bootstrap nodes (fallback if pubsub fails)
+      await this.submitToBootstrapNodes(record);
+      
+      // 7. Cache locally
       this.cacheRecord(record);
       
       const latency = Date.now() - startTime;
@@ -527,6 +530,36 @@ export class DistributedNameRegistry {
   }
 
   /**
+   * Submit name to HTTP bootstrap nodes (fallback for pubsub)
+   */
+  private async submitToBootstrapNodes(record: DistributedNameRecord): Promise<void> {
+    const nodes = (this.bootstrapNodes || []).filter(node => node.startsWith('http'));
+    
+    if (nodes.length === 0) {
+      console.log('[DistributedRegistry] No HTTP bootstrap nodes configured');
+      return;
+    }
+    
+    for (const node of nodes) {
+      try {
+        const response = await fetch(`${node}/api/submit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(record)
+        });
+        
+        if (response.ok) {
+          console.log(`[DistributedRegistry] ✓ Submitted to bootstrap: ${node}`);
+        } else {
+          console.warn(`[DistributedRegistry] Bootstrap submit failed (${response.status}): ${node}`);
+        }
+      } catch (error) {
+        console.warn(`[DistributedRegistry] Failed to submit to ${node}:`, error);
+      }
+    }
+  }
+
+  /**
    * Handle incoming pubsub message
    */
   private handlePubsubMessage(msg: any): void {
@@ -614,9 +647,12 @@ export class DistributedNameRegistry {
       throw new Error('Invalid name format');
     }
     
-    if (!record.publicKey || !record.contentCID) {
+    if (!record.publicKey) {
       throw new Error('Missing required fields');
     }
+    
+    // contentCID can be empty during initial registration
+    // It will be set on first publish
     
     if (record.expires < Date.now()) {
       throw new Error('Record expired');
