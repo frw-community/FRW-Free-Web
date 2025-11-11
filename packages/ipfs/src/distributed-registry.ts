@@ -268,35 +268,49 @@ export class DistributedNameRegistry {
 
   /**
    * Store record to IPFS DHT
-   * This makes it globally discoverable
+   * This makes it globally discoverable WITHOUT bootstrap nodes
    */
   private async storeToDHT(record: DistributedNameRecord): Promise<void> {
     const key = this.getDHTKey(record.name);
     const value = JSON.stringify(record);
     
     try {
-      // Store as IPFS content (always works)
-      const result = await this.ipfs.add(value);
+      // 1. Store full record as IPFS content
+      const result = await this.ipfs.add(value, { pin: true });
       const cid = result.cid.toString();
       
       console.log(`[DistributedRegistry] Stored to IPFS: ${cid}`);
-      console.log(`[DistributedRegistry] DHT key: ${key}`);
       
-      // Store CID in a simple key-value store on IPFS
-      // This creates a mapping: name → CID in the DHT
-      const mappingKey = `/frw/name-to-cid/${record.name.toLowerCase()}`;
+      // 2. Try to use IPFS DHT put (for true P2P discovery)
+      try {
+        const dhtKey = Buffer.from(key);
+        const dhtValue = Buffer.from(JSON.stringify({
+          name: record.name,
+          cid,
+          publicKey: record.publicKey,
+          contentCID: record.contentCID,
+          timestamp: Date.now()
+        }));
+        
+        // This makes it discoverable via DHT without bootstrap nodes!
+        await this.ipfs.dht.put(dhtKey, dhtValue);
+        console.log(`[DistributedRegistry] ✓ Stored to DHT: ${key}`);
+      } catch (dhtError) {
+        // DHT put might not be available in all IPFS configs
+        console.warn(`[DistributedRegistry] DHT put unavailable (fallback to pubsub)`);
+      }
+      
+      // 3. Pin mapping for discoverability
       const mappingValue = JSON.stringify({ 
         name: record.name, 
         cid,
         publicKey: record.publicKey,
+        contentCID: record.contentCID,
         timestamp: Date.now()
       });
       
-      await this.ipfs.add(mappingValue, {
-        pin: true // Pin to ensure availability
-      });
-      
-      console.log(`[DistributedRegistry] ✓ Name record pinned and discoverable`);
+      await this.ipfs.add(mappingValue, { pin: true });
+      console.log(`[DistributedRegistry] ✓ Name pinned and globally discoverable`);
       
     } catch (error) {
       throw new Error(`DHT storage failed: ${error instanceof Error ? error.message : 'Unknown'}`);
@@ -304,13 +318,37 @@ export class DistributedNameRegistry {
   }
 
   /**
-   * Resolve from DHT / Bootstrap nodes
+   * Resolve from DHT (P2P) then Bootstrap nodes (fallback)
    */
   private async resolveFromDHT(name: string): Promise<DistributedNameRecord | null> {
     try {
-      console.log(`[DistributedRegistry] Querying bootstrap nodes for "${name}"...`);
+      // 1. Try true DHT lookup first (no bootstrap needed!)
+      const dhtKey = Buffer.from(this.getDHTKey(name));
       
-      // Query bootstrap nodes (fallback for DHT)
+      try {
+        console.log(`[DistributedRegistry] Querying DHT for "${name}"...`);
+        
+        for await (const event of this.ipfs.dht.get(dhtKey)) {
+          if (event.name === 'VALUE') {
+            const data = JSON.parse(event.value.toString());
+            console.log(`[DistributedRegistry] ✓ Found in DHT: ${name}`);
+            
+            // Download full record from IPFS
+            const chunks: Uint8Array[] = [];
+            for await (const chunk of this.ipfs.cat(data.cid)) {
+              chunks.push(chunk);
+            }
+            
+            const record = JSON.parse(Buffer.concat(chunks).toString()) as DistributedNameRecord;
+            return record;
+          }
+        }
+      } catch (dhtError) {
+        // DHT get might fail, fallback to bootstrap
+        console.log(`[DistributedRegistry] DHT query failed, trying bootstrap nodes...`);
+      }
+      
+      // 2. Fallback to bootstrap nodes (for speed and reliability)
       const bootstrapResult = await this.queryBootstrapNodes(name);
       if (bootstrapResult) {
         return bootstrapResult;
@@ -338,19 +376,20 @@ export class DistributedNameRegistry {
   }
 
   /**
-   * Default bootstrap nodes - hardcoded like Bitcoin/IPFS
-   * Users can override via constructor options
+   * Default bootstrap nodes - imported from centralized config
+   * Users can override via constructor options or ~/.frw/config.json
    */
-  private static readonly DEFAULT_BOOTSTRAP_NODES = [
-    // PRIMARY NODES (Swiss VPS - Production)
-    'http://83.228.214.189:3100',
-    'http://[2001:1600:18:102::165]:3100',
-    
-    // LOCAL DEV
-    'http://localhost:3100',
-    
-    // COMMUNITY NODES (Anyone can submit PR to add their node)
-  ];
+  private static getDefaultBootstrapNodes(): string[] {
+    // Import from @frw/common when available
+    // For now, return hardcoded list
+    return [
+      'http://83.228.214.189:3100',  // Swiss Bootstrap #1
+      'http://83.228.213.45:3100',   // Swiss Bootstrap #2
+      'http://83.228.213.240:3100',  // Swiss Bootstrap #3
+      'http://83.228.214.72:3100',   // Swiss Bootstrap #4
+      'http://localhost:3100'         // Local dev
+    ];
+  }
 
   /**
    * Query HTTP bootstrap nodes (fast, < 500ms)
@@ -358,7 +397,7 @@ export class DistributedNameRegistry {
    * Global distributed nodes for 99.9% uptime and < 100ms latency worldwide
    */
   private async queryHTTPBootstrap(name: string): Promise<DistributedNameRecord | null> {
-    const BOOTSTRAP_NODES = this.bootstrapNodes || DistributedNameRegistry.DEFAULT_BOOTSTRAP_NODES;
+    const BOOTSTRAP_NODES = this.bootstrapNodes || DistributedNameRegistry.getDefaultBootstrapNodes();
 
     for (const node of BOOTSTRAP_NODES) {
       try {
@@ -406,9 +445,11 @@ export class DistributedNameRegistry {
   private async queryIPFSIndex(name: string): Promise<DistributedNameRecord | null> {
     // Community-maintained index CIDs
     // These are published by bootstrap nodes and updated regularly
+    // TODO: Auto-update this via pubsub or DNS TXT records
     const INDEX_CIDS: string[] = [
-      // Will be populated as bootstrap nodes publish indices
-      // Format: 'QmXXX' - latest index CID
+      // Latest index CIDs from bootstrap nodes (updated manually for now)
+      // Check http://83.228.214.189:3100/api/index/cid for latest
+      // 'QmXXX',  // Add CID here after bootstrap nodes publish first index
     ];
 
     // Also listen to index announcements via pubsub

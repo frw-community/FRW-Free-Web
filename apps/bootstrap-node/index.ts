@@ -28,6 +28,16 @@ class BootstrapIndexNode {
   private readonly HTTP_PORT = parseInt(process.env.HTTP_PORT || '3100');
   private readonly PUBLISH_INTERVAL = 3600000; // 1 hour
   private readonly PUBSUB_TOPIC = 'frw/names/updates/v1';
+  private readonly SYNC_TOPIC = 'frw/sync/requests/v1';
+  
+  // BOOTSTRAP NODES - Foundation seed nodes for the network
+  private readonly BOOTSTRAP_NODES = [
+    'http://83.228.214.189:3100',   // Swiss Bootstrap #1
+    'http://83.228.213.45:3100',    // Swiss Bootstrap #2
+    'http://83.228.213.240:3100',   // Swiss Bootstrap #3
+    'http://83.228.214.72:3100',    // Swiss Bootstrap #4
+    'http://localhost:3100'          // Local dev
+  ];
 
   constructor(nodeId: string) {
     this.nodeId = nodeId;
@@ -57,6 +67,9 @@ class BootstrapIndexNode {
 
     // Subscribe to pubsub
     await this.subscribeToPubsub();
+    
+    // Sync with other nodes on startup
+    await this.syncWithNetwork();
 
     // Start HTTP server
     this.app.listen(this.HTTP_PORT, () => {
@@ -224,6 +237,22 @@ class BootstrapIndexNode {
         this.addToIndex(record);
         console.log(`[Bootstrap] 📥 Received name via pubsub: ${record.name}`);
       }
+      
+      if (data.type === 'name-update' && data.record) {
+        const record: DistributedNameRecord = data.record;
+        this.addToIndex(record); // addToIndex handles updates too
+        console.log(`[Bootstrap] 📥 Received update via pubsub: ${record.name}`);
+      }
+      
+      if (data.type === 'sync-request' && data.requesterId !== this.nodeId) {
+        // Another node wants our index
+        this.sendIndexSnapshot(data.requesterId);
+      }
+      
+      if (data.type === 'index-snapshot' && data.nodeId !== this.nodeId) {
+        // Received index from another node
+        this.mergeIndex(data.names);
+      }
 
     } catch (error) {
       console.warn('[Bootstrap] Failed to parse pubsub message:', error);
@@ -231,20 +260,26 @@ class BootstrapIndexNode {
   }
 
   /**
-   * Add name to index
+   * Add name to index (or update if exists)
    */
   private addToIndex(record: DistributedNameRecord): void {
-    const entry: IndexEntry = {
-      name: record.name,
-      publicKey: record.publicKey,
-      contentCID: record.contentCID,
-      ipnsKey: record.ipnsKey,
-      timestamp: record.registered,
-      signature: record.signature
-    };
+    const key = record.name.toLowerCase();
+    const existing = this.index.get(key);
+    
+    // Only update if timestamp is newer or doesn't exist
+    if (!existing || record.registered >= existing.timestamp) {
+      const entry: IndexEntry = {
+        name: record.name,
+        publicKey: record.publicKey,
+        contentCID: record.contentCID,
+        ipnsKey: record.ipnsKey,
+        timestamp: record.registered,
+        signature: record.signature
+      };
 
-    this.index.set(record.name.toLowerCase(), entry);
-    console.log(`[Bootstrap] ✓ Added to index: ${record.name} (${this.index.size} total)`);
+      this.index.set(key, entry);
+      console.log(`[Bootstrap] ✓ ${existing ? 'Updated' : 'Added'} index: ${record.name} (${this.index.size} total)`);
+    }
   }
 
   /**
@@ -285,6 +320,108 @@ class BootstrapIndexNode {
 
     } catch (error) {
       console.error('[Bootstrap] ✗ Failed to publish index:', error);
+    }
+  }
+  
+  /**
+   * Sync with other nodes on startup
+   */
+  private async syncWithNetwork(): Promise<void> {
+    console.log('[Bootstrap] 🔄 Requesting sync from network...');
+    
+    try {
+      // Subscribe to sync responses
+      await this.ipfs.pubsub.subscribe(this.SYNC_TOPIC, (msg: any) => {
+        this.handlePubsubMessage(msg);
+      });
+      
+      // Request index from other nodes
+      await this.ipfs.pubsub.publish(
+        this.SYNC_TOPIC,
+        Buffer.from(JSON.stringify({
+          type: 'sync-request',
+          requesterId: this.nodeId,
+          timestamp: Date.now()
+        }))
+      );
+      
+      // Also try HTTP sync with known bootstrap nodes
+      for (const nodeUrl of this.BOOTSTRAP_NODES) {
+        if (nodeUrl.includes('localhost')) continue; // Skip self
+        
+        try {
+          const response = await fetch(`${nodeUrl}/api/names`);
+          if (response.ok) {
+            const data = await response.json() as { count: number; names: { name: string; publicKey: string; contentCID: string; timestamp: number }[] };
+            console.log(`[Bootstrap] 📥 Synced ${data.names.length} names from ${nodeUrl}`);
+            // Merge into our index
+            for (const name of data.names) {
+              this.index.set(name.name.toLowerCase(), {
+                name: name.name,
+                publicKey: name.publicKey,
+                contentCID: name.contentCID,
+                ipnsKey: '', // Will be filled from full record if available
+                timestamp: name.timestamp,
+                signature: ''
+              });
+            }
+          }
+        } catch (error) {
+          // Node might be offline, continue
+        }
+      }
+      
+    } catch (error) {
+      console.warn('[Bootstrap] Sync failed (will operate independently):', error);
+    }
+  }
+  
+  /**
+   * Send our index to a requesting node
+   */
+  private async sendIndexSnapshot(requesterId: string): Promise<void> {
+    try {
+      const snapshot = {
+        type: 'index-snapshot',
+        nodeId: this.nodeId,
+        requesterId,
+        timestamp: Date.now(),
+        nameCount: this.index.size,
+        names: Object.fromEntries(this.index)
+      };
+      
+      await this.ipfs.pubsub.publish(
+        this.SYNC_TOPIC,
+        Buffer.from(JSON.stringify(snapshot))
+      );
+      
+      console.log(`[Bootstrap] 📤 Sent index snapshot to ${requesterId} (${this.index.size} names)`);
+    } catch (error) {
+      console.warn('[Bootstrap] Failed to send index snapshot:', error);
+    }
+  }
+  
+  /**
+   * Merge received index into ours
+   */
+  private mergeIndex(names: Record<string, IndexEntry>): void {
+    let newCount = 0;
+    let updatedCount = 0;
+    
+    for (const [key, entry] of Object.entries(names)) {
+      const existing = this.index.get(key);
+      
+      if (!existing) {
+        this.index.set(key, entry);
+        newCount++;
+      } else if (entry.timestamp > existing.timestamp) {
+        this.index.set(key, entry);
+        updatedCount++;
+      }
+    }
+    
+    if (newCount > 0 || updatedCount > 0) {
+      console.log(`[Bootstrap] 📥 Merged index: +${newCount} new, ${updatedCount} updated (${this.index.size} total)`);
     }
   }
 }
