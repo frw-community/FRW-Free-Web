@@ -10,7 +10,7 @@ export type { SharedRegistry, NameEntry } from './shared-registry.js';
 
 // PRIMARY: Distributed Registry (Production-ready)
 export { DistributedNameRegistry, createDistributedNameRecord } from './distributed-registry.js';
-export type { DistributedNameRecord, ResolvedName } from './distributed-registry.js';
+export type { DistributedNameRecord, ResolvedName, RegistryConfig } from './distributed-registry.js';
 
 // PRODUCTION: Global IPNS Registry
 export { GlobalRegistryManager, recordToEntry, createEmptyRegistry, bootstrapRegistry, getOfficialRegistryIPNS } from './global-registry.js';

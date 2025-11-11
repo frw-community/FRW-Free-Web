@@ -17,8 +17,10 @@
   ],
   "scripts": {
     "bootstrap": "npm install && npm run build",
-    "build": "npx tsc -b packages/common && npx tsc -b packages/crypto packages/ipfs packages/protocol packages/sandbox packages/storage && npm run build:cli",
+    "build": "npx tsc -b packages/common && npx tsc -b packages/crypto packages/ipfs packages/protocol packages/sandbox packages/storage packages/name-registry && npm run build:cli && npm run build:bootstrap",
     "build:cli": "npx tsc -b apps/cli",
+    "build:bootstrap": "cd apps/bootstrap-node && npm run build",
+    "start:bootstrap": "cd apps/bootstrap-node && npm start",
     "install:cli": "npm link apps/cli",
     "type-check": "tsc --noEmit",
     "test": "jest",
