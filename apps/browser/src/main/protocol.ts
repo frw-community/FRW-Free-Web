@@ -11,8 +11,15 @@ let registry: DistributedNameRegistry | null = null;
 function getRegistry(): DistributedNameRegistry {
   if (!registry) {
     console.log('[FRW] Initializing distributed name registry...');
-    registry = new DistributedNameRegistry('http://localhost:5001');
-    console.log('[FRW] ✓ Registry initialized (listening for updates via pubsub)');
+    registry = new DistributedNameRegistry({
+      ipfsUrl: 'http://localhost:5001',
+      bootstrapNodes: [
+        'http://83.228.214.189:3100',  // Swiss Bootstrap #1
+        'http://83.228.213.240:3100',  // Swiss Bootstrap #3
+        'http://localhost:3100'         // Local dev (if running)
+      ]
+    });
+    console.log('[FRW] ✓ Registry initialized (with bootstrap nodes)');
   }
   return registry;
 }
@@ -91,34 +98,50 @@ export function registerFRWProtocol() {
         return callback({ data: errorHtml, mimeType: 'text/html' });
       }
       
-      // Try to fetch from IPFS using Electron's net module
-      const ipfsUrl = `http://localhost:8080/ipfs/${cid}${path || '/index.html'}`;
+      // Try to fetch from IPFS - try local first, then public gateways
+      const gateways = [
+        'http://localhost:8080',           // Local IPFS gateway (fastest)
+        'https://ipfs.io',                  // Public gateway #1
+        'https://cloudflare-ipfs.com',     // Public gateway #2 (fast CDN)
+        'https://dweb.link'                // Public gateway #3
+      ];
       
       console.log('[FRW Protocol] ========================================');
       console.log('[FRW Protocol] Attempting IPFS fetch');
       console.log('[FRW Protocol] CID:', cid);
-      console.log('[FRW Protocol] URL:', ipfsUrl);
       
-      try {
-        const response = await net.fetch(ipfsUrl);
+      for (const gateway of gateways) {
+        const ipfsUrl = `${gateway}/ipfs/${cid}${path || '/index.html'}`;
+        console.log('[FRW Protocol] Trying gateway:', ipfsUrl);
         
-        console.log('[FRW Protocol] Response status:', response.status);
-        console.log('[FRW Protocol] Response OK:', response.ok);
-        
-        if (response.ok) {
-          const content = await response.text();
-          console.log('[FRW Protocol] ✅ SUCCESS! Content fetched:', content.length, 'bytes');
-          callback({
-            data: content,
-            mimeType: 'text/html'
+        try {
+          const response = await net.fetch(ipfsUrl, { 
+            method: 'GET',
+            // Timeout after 5 seconds per gateway
+            signal: AbortSignal.timeout(5000)
           });
-          return;
-        } else {
-          console.error('[FRW Protocol] ❌ IPFS returned error:', response.status, response.statusText);
+          
+          console.log('[FRW Protocol] Response status:', response.status);
+          console.log('[FRW Protocol] Response OK:', response.ok);
+          
+          if (response.ok) {
+            const content = await response.text();
+            console.log('[FRW Protocol] ✅ SUCCESS! Content fetched from', gateway, ':', content.length, 'bytes');
+            callback({
+              data: content,
+              mimeType: 'text/html'
+            });
+            return;
+          } else {
+            console.warn('[FRW Protocol] Gateway returned error:', response.status, 'trying next...');
+          }
+        } catch (ipfsError) {
+          console.warn('[FRW Protocol] Gateway failed:', gateway, 'trying next...');
+          continue; // Try next gateway
         }
-      } catch (ipfsError) {
-        console.error('[FRW Protocol] ❌ IPFS fetch exception:', ipfsError);
       }
+      
+      console.error('[FRW Protocol] ❌ All gateways failed');
       
       // Fallback: Show test page with real data
       const html = `

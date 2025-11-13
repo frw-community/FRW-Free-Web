@@ -21,6 +21,7 @@
     "build:cli": "npx tsc -b apps/cli",
     "build:bootstrap": "cd apps/bootstrap-node && npm run build",
     "start:bootstrap": "cd apps/bootstrap-node && npm start",
+    "browser": "cd apps/browser && npm start",
     "install:cli": "npm link apps/cli",
     "type-check": "tsc --noEmit",
     "test": "jest",

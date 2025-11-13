@@ -8,8 +8,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "tsx watch index.ts",
-    "test": "jest",
-    "postinstall": "npm run build"
+    "test": "jest"
   },
   "keywords": ["frw", "bootstrap", "ipfs", "distributed"],
   "author": "FRW Community",
