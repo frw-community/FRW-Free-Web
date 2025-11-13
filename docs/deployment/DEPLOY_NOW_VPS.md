@@ -57,10 +57,16 @@ git clone https://github.com/frw-community/FRW-Free-Web.git
 cd FRW-Free-Web
 
 # 6. Build Project
-# Note: Packages must be built sequentially due to TypeScript project references
-npm install
-npm run build
-# If build fails, see troubleshooting below
+# IMPORTANT: Use --ignore-scripts to prevent build order issues
+npm install --ignore-scripts
+
+# Build packages in correct order (MUST include name-registry!)
+npx tsc -b packages/common
+npx tsc -b packages/crypto
+npx tsc -b packages/protocol
+npx tsc -b packages/name-registry
+npx tsc -b packages/ipfs
+npx tsc -b apps/bootstrap-node
 
 # 7. Start IPFS Daemon
 nohup ipfs daemon --enable-pubsub-experiment > ~/ipfs.log 2>&1 &
@@ -216,36 +222,42 @@ sudo systemctl restart ipfs
 
 ### Build Issues
 
-If `npm run build` fails with TypeScript declaration errors:
+**Problem:** `npm install` fails with "Cannot find module '@frw/ipfs'" or missing `.d.ts` files
+
+**Root Cause:** The `postinstall` script in `apps/bootstrap-node` tries to build before dependencies are ready.
+
+**Solution:**
 
 ```bash
 cd ~/FRW-Free-Web
 
 # Clean everything
 rm -rf packages/*/dist apps/*/dist node_modules
+find . -name "*.tsbuildinfo" -delete
 
-# Reinstall
-npm install
+# Reinstall WITHOUT running postinstall scripts
+npm install --ignore-scripts
 
-# Build packages individually (ensures proper order)
-npx tsc -b packages/common --force
-npx tsc -b packages/crypto --force
-npx tsc -b packages/ipfs --force
-npx tsc -b packages/protocol --force
-npx tsc -b packages/name-registry --force
-npx tsc -b apps/bootstrap-node --force
-npx tsc -b apps/cli --force
+# Build packages in CORRECT order (name-registry is critical!)
+npx tsc -b packages/common
+npx tsc -b packages/crypto
+npx tsc -b packages/protocol
+npx tsc -b packages/name-registry  # MUST come before ipfs!
+npx tsc -b packages/ipfs
+npx tsc -b apps/bootstrap-node
 
-# Verify builds
-ls packages/common/dist/index.d.ts  # Should exist
-ls apps/bootstrap-node/dist/index.js  # Should exist
+# Verify .d.ts files were created
+ls packages/common/dist/index.d.ts     # Should exist
+ls packages/ipfs/dist/index.d.ts       # Should exist
+ls apps/bootstrap-node/dist/index.js   # Should exist
 ```
 
-**Why individual package builds needed:**
-- TypeScript project references (`"composite": true`) require proper build order
-- Root `npm run build` may not generate `.d.ts` declaration files correctly
-- Individual builds with `--force` ensure each package's declarations are created
-- This is a known TypeScript monorepo limitation with workspaces
+**Why this is needed:**
+- TypeScript monorepos require dependencies built first
+- `packages/ipfs` depends on `packages/name-registry` 
+- `apps/bootstrap-node` depends on `packages/ipfs`
+- `--ignore-scripts` prevents premature builds
+- Each package MUST generate `.d.ts` declaration files for dependents
 
 ### Bootstrap Node Not Receiving Names
 
