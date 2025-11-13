@@ -7,6 +7,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && electron-builder",
+    "build:vite": "vite build",
+    "build:dist": "electron-builder",
     "preview": "vite preview",
     "electron:dev": "vite",
     "electron:build": "vite build && electron-builder"
@@ -36,7 +38,7 @@
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.16",
     "concurrently": "^8.2.2",
-    "electron": "^28.0.0",
+    "electron": "28.0.0",
     "electron-builder": "^24.9.1",
     "postcss": "^8.4.32",
     "tailwindcss": "^3.4.0",
@@ -57,8 +59,16 @@
     ],
     "win": {
       "target": [
-        "nsis"
-      ]
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "sign": null
     },
     "mac": {
       "target": [
