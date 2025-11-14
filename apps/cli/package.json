@@ -1,22 +1,51 @@
 {
-  "name": "@frw/cli",
+  "name": "frw-cli",
   "version": "1.0.0",
-  "description": "FRW CLI tool",
+  "description": "CLI for FRW (Free Resilient Web) - A decentralized web browser and publishing platform",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
     "frw": "./dist/index.js"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frw-community/FRW-Free-Web.git"
+  },
+  "homepage": "https://github.com/frw-community/FRW-Free-Web#readme",
+  "bugs": {
+    "url": "https://github.com/frw-community/FRW-Free-Web/issues"
+  },
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
     "start": "node dist/index.js",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run build",
+    "postinstall": "node scripts/postinstall.js || exit 0",
+    "test": "echo \"No tests yet\" && exit 0",
+    "package:win": "npm run build && node scripts/package-windows.js",
+    "package:all": "npm run build && node scripts/package-all.js",
+    "build:exe": "npm run build && node scripts/build-exe.js"
   },
   "keywords": [
     "frw",
     "cli",
-    "decentralized"
+    "decentralized",
+    "ipfs",
+    "web3",
+    "publishing",
+    "distributed",
+    "p2p",
+    "censorship-resistant",
+    "free-web"
   ],
   "author": "FRW Community",
   "license": "MIT",
@@ -34,6 +63,9 @@
   },
   "devDependencies": {
     "@types/inquirer": "^9.0.7",
+    "@types/node": "^20.10.0",
+    "esbuild": "^0.19.8",
+    "nexe": "^4.0.0-rc.6",
     "typescript": "^5.3.3"
   }
 }
