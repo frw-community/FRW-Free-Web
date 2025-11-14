@@ -3,6 +3,7 @@ import { readFileSync } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';
 import { DistributedNameRegistry } from '@frw/ipfs';
+import { getBootstrapUrls } from '../config/bootstrap';
 
 // Global registry instance (listens to pubsub for updates)
 let registry: DistributedNameRegistry | null = null;
@@ -11,15 +12,16 @@ let registry: DistributedNameRegistry | null = null;
 function getRegistry(): DistributedNameRegistry {
   if (!registry) {
     console.log('[FRW] Initializing distributed name registry...');
+    const bootstrapNodes = [
+      ...getBootstrapUrls(),           // All 4 Swiss bootstrap nodes
+      'http://localhost:3100'          // Local dev (if running)
+    ];
     registry = new DistributedNameRegistry({
       ipfsUrl: 'http://localhost:5001',
-      bootstrapNodes: [
-        'http://83.228.214.189:3100',  // Swiss Bootstrap #1
-        'http://83.228.213.240:3100',  // Swiss Bootstrap #3
-        'http://localhost:3100'         // Local dev (if running)
-      ]
+      bootstrapNodes
     });
-    console.log('[FRW] ✓ Registry initialized (with bootstrap nodes)');
+    console.log('[FRW] ✓ Registry initialized with', bootstrapNodes.length, 'bootstrap nodes');
+    console.log('[FRW] Bootstrap nodes:', bootstrapNodes);
   }
   return registry;
 }

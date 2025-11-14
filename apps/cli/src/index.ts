@@ -19,6 +19,7 @@ import {
 import { configureCommand, configShowCommand } from './commands/configure.js';
 import { domainAddCommand, domainVerifyCommand, domainListCommand, domainRemoveCommand, domainInfoCommand } from './commands/domain.js';
 import { bootstrapRegistryCommand } from './commands/bootstrap-registry.js';
+import { lookupCommand, listNamesCommand, infoCommand } from './commands/lookup.js';
 
 const program = new Command();
 
@@ -163,5 +164,21 @@ program
   .option('--ipfs <url>', 'IPFS API URL', 'http://localhost:5001')
   .option('--save', 'Save configuration to file')
   .action(bootstrapRegistryCommand);
+
+// Name lookup and inspection commands
+program
+  .command('lookup <name>')
+  .description('Look up a name in the registry')
+  .action(lookupCommand);
+
+program
+  .command('list')
+  .description('List all registered names')
+  .action(listNamesCommand);
+
+program
+  .command('info <name>')
+  .description('Show detailed information about a name')
+  .action(infoCommand);
 
 program.parse();
