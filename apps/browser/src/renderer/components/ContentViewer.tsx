@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import VerificationBadge from './VerificationBadge';
+import { queryName } from '../../config/bootstrap';
 
 interface ContentViewerProps {
   url: string;
@@ -27,20 +28,32 @@ export default function ContentViewer({ url }: ContentViewerProps) {
     setError(null);
     
     try {
-      // The content will be loaded via the frw:// protocol handler
-      // Here we just need to update the iframe src
+      // Parse frw:// URL to extract name
+      const match = url.match(/^frw:\/\/([^\/]+)/);
+      const name = match ? match[1] : null;
       
-      // For now, show loading state
-      setTimeout(() => {
-        setLoading(false);
-        // Mock metadata for demo
-        setMetadata({
-          version: '1.0',
-          author: '@alice',
-          date: new Date().toISOString()
-        });
-        setVerified(true);
-      }, 500);
+      if (name) {
+        try {
+          // Query bootstrap nodes for actual registration data (with automatic failover)
+          const data = await queryName(name);
+          setMetadata({
+            version: '1.0',
+            author: data.publicKey ? `@${data.publicKey.substring(0, 8)}...` : undefined,
+            date: data.timestamp ? new Date(data.timestamp).toISOString() : undefined
+          });
+          setVerified(!!data.publicKey);
+          setLoading(false);
+          return;
+        } catch (err) {
+          console.error('Failed to fetch name metadata:', err);
+          // Fall through to default metadata
+        }
+      }
+      
+      // Fallback: show without metadata if bootstrap query fails
+      setMetadata(null);
+      setVerified(false);
+      setLoading(false);
       
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load content');
