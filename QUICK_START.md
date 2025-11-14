@@ -18,7 +18,7 @@ Get your site on the decentralized web with global name resolution!
 
 ```bash
 # 1. Install dependencies
-cd "C:\Projects\FRW - Free Web Modern"
+cd "C:\Projects\FRW - Free Resilient Web"
 npm install
 
 # 2. Build all packages
@@ -125,7 +125,7 @@ frw publish . --name myname
 
 ```bash
 # Navigate to browser
-cd "C:\Projects\FRW - Free Web Modern\apps\browser"
+cd "C:\Projects\FRW - Free Resilient Web\apps\browser"
 
 # Install dependencies (first time)
 npm install
@@ -226,7 +226,7 @@ frw publish my-site --name myname
 ### CLI Not Found
 ```bash
 # Re-link CLI
-cd "C:\Projects\FRW - Free Web Modern\apps\cli"
+cd "C:\Projects\FRW - Free Resilient Web\apps\cli"
 npm link
 ```
 

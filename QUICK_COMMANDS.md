@@ -55,7 +55,7 @@ npm run dev
 
 ```bash
 # Full build
-cd "C:\Projects\FRW - Free Web Modern"
+cd "C:\Projects\FRW - Free Resilient Web"
 npm install
 npm run build
 
@@ -207,7 +207,7 @@ killall ipfs
 ipfs daemon &
 
 # Rebuild project
-cd "C:\Projects\FRW - Free Web Modern"
+cd "C:\Projects\FRW - Free Resilient Web"
 npm run build
 
 # Relink CLI
@@ -288,7 +288,7 @@ Logs:           sudo journalctl -u frw-bootstrap
 
 ### Windows (Local Dev)
 ```
-Project:        C:\Projects\FRW - Free Web Modern\
+Project:        C:\Projects\FRW - Free Resilient Web\
 CLI:            apps\cli\dist\
 Bootstrap:      apps\bootstrap-node\dist\
 Browser:        apps\browser\
