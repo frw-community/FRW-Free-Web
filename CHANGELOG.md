@@ -66,14 +66,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.0-alpha.1] - 2025-11-09
 
-Working browser with IPFS integration.
+Browser with IPFS integration.
 
-### Highlights
-- FRW Browser successfully loads content from IPFS
-- CLI tool fully functional for publishing and verification
-- End-to-end workflow operational: create → publish → browse
-- Complete documentation for installation and usage
+### Changes
+- Browser loads content from IPFS
+- CLI publishing and verification working
+- End-to-end workflow functional
 
 ## [0.1.0-alpha.1] - 2025-11-08
 
-Initial monorepo setup and core packages.
+Initial monorepo setup.
