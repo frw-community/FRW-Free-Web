@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
+import chalk from 'chalk';
 import { initCommand } from './commands/init.js';
 import { publishCommand } from './commands/publish.js';
 import { verifyCommand } from './commands/verify.js';
@@ -23,10 +24,27 @@ import { lookupCommand, listNamesCommand, infoCommand } from './commands/lookup.
 
 const program = new Command();
 
+// Version info
+const VERSION = '1.0.0';
+
 program
   .name('frw')
-  .description('FRW - Free Web Modern CLI')
-  .version('1.0.0');
+  .description(chalk.bold('FRW - Free Resilient Web CLI') + '\n' +
+    'Publish and browse a censorship-resistant, cryptographically-verified web.\n\n' +
+    chalk.dim('Examples:') + '\n' +
+    '  $ frw init                         # Initialize FRW configuration\n' +
+    '  $ frw register myname              # Register a human-readable name\n' +
+    '  $ frw publish ./my-site --name myname  # Publish your site\n' +
+    '  $ frw lookup myname                # Look up a name in the registry\n' +
+    '  $ frw list                         # List all registered names\n\n' +
+    chalk.dim('Learn more:') + ' https://github.com/frw-community/FRW-Free-Web'
+  )
+  .version(VERSION, '-v, --version', 'Output the current version')
+  .helpOption('-h, --help', 'Display help for command')
+  .addHelpText('after', '\n' + 
+    chalk.dim('Need help? Report issues at:') + '\n' +
+    chalk.cyan('https://github.com/frw-community/FRW-Free-Web/issues')
+  );
 
 program
   .command('init')
@@ -181,4 +199,32 @@ program
   .description('Show detailed information about a name')
   .action(infoCommand);
 
+// Global error handling
+process.on('uncaughtException', (error) => {
+  console.error(chalk.red('\n✗ Fatal error:'), error.message);
+  if (process.env.DEBUG) {
+    console.error(error.stack);
+  } else {
+    console.error(chalk.dim('\nRun with DEBUG=1 for full error details'));
+  }
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason: any) => {
+  console.error(chalk.red('\n✗ Unhandled promise rejection:'), reason?.message || reason);
+  if (process.env.DEBUG) {
+    console.error(reason?.stack || reason);
+  } else {
+    console.error(chalk.dim('\nRun with DEBUG=1 for full error details'));
+  }
+  process.exit(1);
+});
+
+// Handle SIGINT (Ctrl+C)
+process.on('SIGINT', () => {
+  console.log(chalk.yellow('\n\nInterrupted by user'));
+  process.exit(0);
+});
+
+// Parse arguments
 program.parse();
