@@ -26,9 +26,9 @@
   "author": "FRW Community",
   "license": "MIT",
   "dependencies": {
-    "@frw/common": "1.0.0",
-    "@frw/crypto": "1.0.0",
-    "@frw/ipfs": "1.0.0",
+    "@frw/common": "1.0.1",
+    "@frw/crypto": "1.0.1",
+    "@frw/ipfs": "1.0.1",
     "better-sqlite3": "^12.4.1",
     "ipfs-http-client": "^60.0.1"
   },
