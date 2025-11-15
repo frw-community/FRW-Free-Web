@@ -15,7 +15,10 @@ describe('DistributedNameRegistry', () => {
     testPublicKeyEncoded = SignatureManager.encodePublicKey(testKeyPair.publicKey);
     
     // Create registry instance
-    registry = new DistributedNameRegistry('http://localhost:5001');
+    registry = new DistributedNameRegistry({
+      ipfsUrl: 'http://localhost:5001',
+      bootstrapNodes: []
+    });
   });
 
   describe('createDistributedNameRecord', () => {
