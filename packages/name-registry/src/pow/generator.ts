@@ -69,8 +69,9 @@ export class ProofOfWorkGenerator {
                 onProgress(nonce);
             }
             
-            // Safety: prevent infinite loop
-            if (nonce > 100_000_000) {
+            // Safety: prevent infinite loop (only for low difficulty)
+            // High difficulty names (9+ zeros) are intentionally hard
+            if (difficulty < 9 && nonce > 100_000_000) {
                 throw new Error('PoW generation timeout - difficulty too high');
             }
         }
