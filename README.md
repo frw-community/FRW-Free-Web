@@ -59,9 +59,15 @@ npm run browser
 ### Name Registration
 
 Names are registered using proof-of-work to prevent squatting:
-- 3-letter names: 2^24 operations (~10 minutes)
-- 4-letter names: 2^20 operations (~1 minute)
-- 5+ letter names: 2^16 operations (~1 second)
+- 3-char names: 12 leading zeros (~8.9 years) - effectively reserved
+- 4-char names: 10 leading zeros (~13 days)
+- 5-char names: 9 leading zeros (~19 hours)
+- 6-char names: 8 leading zeros (~72 minutes)
+- 7-char names: 7 leading zeros (~4.5 minutes)
+- 8-char names: 6 leading zeros (~17 seconds)
+- 9-10 char names: 5 leading zeros (~1 second)
+- 11-15 char names: 4 leading zeros (~0.06 seconds)
+- 16+ char names: No POW required
 
 ### Content Publishing
 
@@ -74,9 +80,10 @@ Names are registered using proof-of-work to prevent squatting:
 
 1. Browser parses `frw://name/path` URL
 2. Query bootstrap nodes for name-to-CID mapping
-3. Fetch content from IPFS using CID
+3. Fetch content from IPFS gateway using CID
 4. Verify signature matches registered public key
-5. Render content in sandboxed environment
+5. Browser loads content via iframe from IPFS gateway
+6. Assets (images, CSS, JS) load via relative URLs through `frw://` protocol
 
 ## Docker
 
@@ -110,7 +117,11 @@ Bootstrap nodes are configured in `packages/ipfs/src/distributed-registry.ts`:
 
 ```typescript
 private readonly bootstrapNodes = [
-  'http://83.228.214.189:3100'
+  'http://83.228.214.189:3100',
+  'http://83.228.213.45:3100',
+  'http://83.228.213.240:3100',
+  'http://83.228.214.72:3100',
+  'http://localhost:3100'  // Local development
 ];
 ```
 
