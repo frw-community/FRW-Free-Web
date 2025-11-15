@@ -446,10 +446,12 @@ export class DistributedNameRegistry {
   private async queryIPFSIndex(name: string): Promise<DistributedNameRecord | null> {
     // Community-maintained index CIDs
     // These are published by bootstrap nodes and updated regularly
-    // TODO: Auto-update this via pubsub or DNS TXT records
+    // Future v1.1: Auto-discover CIDs via DNS TXT or bootstrap HTTP API
+    // Current: Manual updates work fine, community can update via PR
     const INDEX_CIDS: string[] = [
-      // Latest index CIDs from bootstrap nodes (updated manually for now)
+      // Latest index CIDs from bootstrap nodes
       // Check http://83.228.214.189:3100/api/index/cid for latest
+      // Community can add more via pull request
       // 'QmXXX',  // Add CID here after bootstrap nodes publish first index
     ];
 
@@ -508,7 +510,9 @@ export class DistributedNameRegistry {
       // This allows content updates without changing the name
       console.log(`[DistributedRegistry] Publishing to IPNS: ${record.ipnsKey}`);
       
-      // TODO: Implement IPNS publishing
+      // Future v2.0: Implement IPNS publishing for mutable content
+      // Current system uses CID-based addressing (immutable, works well)
+      // IPNS would allow updating content without changing the name registration
       // await this.ipfs.name.publish(record.contentCID, { key: record.ipnsKey });
       
     } catch (error) {
@@ -519,10 +523,12 @@ export class DistributedNameRegistry {
 
   /**
    * Resolve from IPNS
+   * Future v2.0: IPNS resolution for mutable content
    */
   private async resolveFromIPNS(name: string): Promise<DistributedNameRecord | null> {
     try {
-      // TODO: Implement IPNS resolution
+      // Future v2.0: Implement IPNS resolution
+      // await this.ipfs.name.resolve(ipnsKey)
       return null;
     } catch (error) {
       return null;

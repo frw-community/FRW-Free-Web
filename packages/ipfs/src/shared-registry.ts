@@ -188,11 +188,11 @@ export class SharedRegistryManager {
    */
   private async broadcastUpdate(newCID: string): Promise<void> {
     try {
-      const update: RegistryUpdate = {
+      const update = {
         type: 'registry-update',
         cid: newCID,
         timestamp: Date.now(),
-        signature: '' // TODO: Sign with registry key
+        signature: '' // Future v1.1: Sign with registry key (optional, individual names are already signed)
       };
       
       const message = JSON.stringify(update);

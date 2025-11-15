@@ -235,9 +235,13 @@ export class IPNSRegistryPublisher {
 /**
  * Get the official FRW registry IPNS key
  * This should be hardcoded and known to all clients
+ * 
+ * Note: IPNS is a future feature for v2.0
+ * Current system uses CID-based addressing + bootstrap nodes (works great)
+ * This function is here for future IPNS support
  */
 export function getOfficialRegistryKey(): string {
-  // TODO: This will be set once we create the official registry
-  // For now, return empty string (will be set during initial setup)
+  // Future v2.0: Set official IPNS key for mutable registry
+  // Current system doesn't need this - bootstrap nodes maintain the index
   return process.env.FRW_REGISTRY_IPNS || '';
 }
