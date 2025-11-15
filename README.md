@@ -11,7 +11,7 @@
 [![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](CHANGELOG.md)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-[Download for Windows](apps/browser/release) • [Documentation](docs/) • [Community](https://github.com/frw-community/frw-free-web-modern/discussions) • [Roadmap](#roadmap)
+[📦 Download Distribution](DISTRIBUTION.md) • [Documentation](docs/) • [Community](https://github.com/frw-community/frw-free-web-modern/discussions) • [Roadmap](#roadmap)
 
 </div>
 
