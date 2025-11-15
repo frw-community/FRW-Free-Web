@@ -18,6 +18,7 @@ export default function ContentViewer({ url }: ContentViewerProps) {
   const [error, setError] = useState<string | null>(null);
   const [metadata, setMetadata] = useState<PageMetadata | null>(null);
   const [verified, setVerified] = useState<boolean>(false);
+  const [cid, setCid] = useState<string>('');
 
   useEffect(() => {
     loadContent();
@@ -28,13 +29,11 @@ export default function ContentViewer({ url }: ContentViewerProps) {
     setError(null);
     
     try {
-      // Parse frw:// URL to extract name
       const match = url.match(/^frw:\/\/([^\/]+)/);
       const name = match ? match[1] : null;
       
       if (name) {
         try {
-          // Query bootstrap nodes for actual registration data (with automatic failover)
           const data = await queryName(name);
           setMetadata({
             version: '1.0',
@@ -42,15 +41,15 @@ export default function ContentViewer({ url }: ContentViewerProps) {
             date: data.timestamp ? new Date(data.timestamp).toISOString() : undefined
           });
           setVerified(!!data.publicKey);
+          setCid(data.contentCID);
+
           setLoading(false);
           return;
         } catch (err) {
           console.error('Failed to fetch name metadata:', err);
-          // Fall through to default metadata
         }
       }
       
-      // Fallback: show without metadata if bootstrap query fails
       setMetadata(null);
       setVerified(false);
       setLoading(false);
@@ -90,6 +89,9 @@ export default function ContentViewer({ url }: ContentViewerProps) {
     );
   }
 
+  // Use IPFS gateway URL if we have CID
+  const displayUrl = cid ? `http://localhost:8080/ipfs/${cid}/` : url;
+
   return (
     <div className="h-full flex flex-col">
       {metadata && (
@@ -100,7 +102,7 @@ export default function ContentViewer({ url }: ContentViewerProps) {
         />
       )}
       <iframe
-        src={url}
+        src={displayUrl}
         className="flex-1 w-full border-0"
         sandbox="allow-scripts allow-same-origin"
         title="FRW Content"
