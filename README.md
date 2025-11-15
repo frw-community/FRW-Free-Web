@@ -162,4 +162,4 @@ MIT License - see [LICENSE](LICENSE) file
 ## Links
 
 Repository: https://github.com/frw-community/frw-free-web-modern  
-Security: security@frw.dev
+Security: frw-community@proton.me
