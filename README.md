@@ -419,7 +419,8 @@ See [docs/DEVELOPMENT_WORKFLOW.md](docs/DEVELOPMENT_WORKFLOW.md) for detailed de
 
 - **[CLI Usage](apps/cli/README.md)** - Publishing and managing content
 - **[Bootstrap Node Deployment](apps/bootstrap-node/DEPLOY_SUCCESS.md)** - Running a network node
-- **[Security Overview](docs/security/POW_VERIFICATION.md)** - Threat model and guarantees
+- **[Security Model](docs/SECURITY.md)** - Complete security documentation, fork protection, attack scenarios
+- **[Version Synchronization](apps/bootstrap-node/VERSION_SYNC.md)** - Keeping bootstrap nodes in sync
 - **[Development Workflow](docs/DEVELOPMENT_WORKFLOW.md)** - Building new features
 
 ## Community & Support
