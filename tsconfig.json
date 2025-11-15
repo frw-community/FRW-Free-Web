@@ -26,7 +26,8 @@
       "@frw/ipfs": ["./packages/ipfs/dist/index.d.ts"],
       "@frw/protocol": ["./packages/protocol/dist/index.d.ts"],
       "@frw/sandbox": ["./packages/sandbox/dist/index.d.ts"],
-      "@frw/storage": ["./packages/storage/dist/index.d.ts"]
+      "@frw/storage": ["./packages/storage/dist/index.d.ts"],
+      "@frw/name-registry": ["./packages/name-registry/dist/index.d.ts"]
     }
   },
   "references": [
@@ -35,7 +36,8 @@
     { "path": "./packages/ipfs" },
     { "path": "./packages/protocol" },
     { "path": "./packages/sandbox" },
-    { "path": "./packages/storage" }
+    { "path": "./packages/storage" },
+    { "path": "./packages/name-registry" }
   ],
   "exclude": ["node_modules", "dist", "**/*.test.ts"]
 }

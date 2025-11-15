@@ -3,12 +3,15 @@
   "compilerOptions": {
     "composite": true,
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "declaration": true,
+    "declarationMap": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.ts"],
   "references": [
     { "path": "../common" },
-    { "path": "../crypto" }
+    { "path": "../crypto" },
+    { "path": "../name-registry" }
   ]
 }
