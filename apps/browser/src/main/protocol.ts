@@ -40,8 +40,83 @@ function getConfigFallback(): { names: Record<string, string>; sites: Record<str
   }
 }
 
+// Helper to download image and convert to data URL
+async function imageToDataUrl(imageUrl: string): Promise<string | null> {
+  try {
+    const response = await net.fetch(imageUrl, {
+      method: 'GET',
+      signal: AbortSignal.timeout(10000)
+    });
+    
+    if (response.ok) {
+      const buffer = await response.arrayBuffer();
+      const base64 = Buffer.from(buffer).toString('base64');
+      
+      // Detect mime type from URL
+      const ext = imageUrl.split('.').pop()?.toLowerCase();
+      let mimeType = 'image/png';
+      if (ext === 'jpg' || ext === 'jpeg') mimeType = 'image/jpeg';
+      else if (ext === 'gif') mimeType = 'image/gif';
+      else if (ext === 'svg') mimeType = 'image/svg+xml';
+      else if (ext === 'webp') mimeType = 'image/webp';
+      
+      return `data:${mimeType};base64,${base64}`;
+    }
+  } catch (error) {
+    console.warn('[FRW Protocol] Failed to load image:', imageUrl, error);
+  }
+  return null;
+}
+
+// Helper to preload all images in HTML and convert to data URLs
+async function preloadImagesInHtml(html: string, cid: string, gateways: string[]): Promise<string> {
+  console.log('[FRW Protocol] Preloading images...');
+  
+  // Find all img src attributes
+  const imgRegex = /<img[^>]+src=["']([^"']+)["']/gi;
+  const matches = [...html.matchAll(imgRegex)];
+  
+  if (matches.length === 0) {
+    console.log('[FRW Protocol] No images found');
+    return html;
+  }
+  
+  console.log('[FRW Protocol] Found', matches.length, 'images to preload');
+  
+  for (const match of matches) {
+    const originalSrc = match[1];
+    
+    // Skip if already data URL or absolute URL
+    if (originalSrc.startsWith('data:') || originalSrc.startsWith('http')) {
+      continue;
+    }
+    
+    // Try each gateway to fetch the image
+    let dataUrl: string | null = null;
+    for (const gateway of gateways) {
+      const imageUrl = `${gateway}/ipfs/${cid}/${originalSrc}`;
+      console.log('[FRW Protocol] Trying to load image:', imageUrl);
+      dataUrl = await imageToDataUrl(imageUrl);
+      if (dataUrl) {
+        console.log('[FRW Protocol] ✓ Loaded image:', originalSrc);
+        break;
+      }
+    }
+    
+    // Replace src with data URL
+    if (dataUrl) {
+      html = html.replace(match[0], match[0].replace(originalSrc, dataUrl));
+    }
+  }
+  
+  console.log('[FRW Protocol] ✓ All images preloaded');
+  return html;
+}
+
 export function registerFRWProtocol() {
-  protocol.registerStringProtocol('frw', async (request, callback) => {
+  protocol.registerBufferProtocol('frw', async (request, callback) => {
+    let identifier = ''; // Declare outside try block for error handler access
+    
     try {
       console.log('[FRW Protocol] Loading:', request.url);
       
@@ -49,12 +124,13 @@ export function registerFRWProtocol() {
       const urlMatch = request.url.match(/^frw:\/\/([^\/]+)(\/.*)?$/);
       if (!urlMatch) {
         return callback({
-          data: '<h1>Invalid FRW URL</h1>',
+          data: Buffer.from('<h1>Invalid FRW URL</h1>'),
           mimeType: 'text/html'
         });
       }
 
-      const [, identifier, path] = urlMatch;
+      const [, parsedIdentifier, path] = urlMatch;
+      identifier = parsedIdentifier;
       
       console.log('[FRW Protocol] Identifier:', identifier);
       
@@ -97,7 +173,7 @@ export function registerFRWProtocol() {
 </body>
 </html>
         `;
-        return callback({ data: errorHtml, mimeType: 'text/html' });
+        return callback({ data: Buffer.from(errorHtml), mimeType: 'text/html' });
       }
       
       // Try to fetch from IPFS - try local first, then public gateways
@@ -113,7 +189,9 @@ export function registerFRWProtocol() {
       console.log('[FRW Protocol] CID:', cid);
       
       for (const gateway of gateways) {
-        const ipfsUrl = `${gateway}/ipfs/${cid}${path || '/index.html'}`;
+        // Default to /index.html if no path specified, otherwise use the path as-is
+        const resourcePath = path || '/index.html';
+        const ipfsUrl = `${gateway}/ipfs/${cid}${resourcePath}`;
         console.log('[FRW Protocol] Trying gateway:', ipfsUrl);
         
         try {
@@ -127,12 +205,31 @@ export function registerFRWProtocol() {
           console.log('[FRW Protocol] Response OK:', response.ok);
           
           if (response.ok) {
-            const content = await response.text();
-            console.log('[FRW Protocol] ✅ SUCCESS! Content fetched from', gateway, ':', content.length, 'bytes');
-            callback({
-              data: content,
-              mimeType: 'text/html'
-            });
+            // Detect content type from path
+            const mimeType = getMimeType(resourcePath);
+            
+            // For images and binary, use arrayBuffer, for text use text()
+            if (mimeType.startsWith('image/')) {
+              const buffer = await response.arrayBuffer();
+              console.log('[FRW Protocol] ✅ SUCCESS! Image fetched from', gateway, ':', buffer.byteLength, 'bytes');
+              callback({
+                data: Buffer.from(buffer),
+                mimeType: mimeType
+              });
+            } else {
+              let content = await response.text();
+              console.log('[FRW Protocol] ✅ SUCCESS! Content fetched from', gateway, ':', content.length, 'bytes');
+              
+              // For HTML files, preload all images and convert to data URLs
+              if (mimeType === 'text/html') {
+                content = await preloadImagesInHtml(content, cid, gateways);
+              }
+              
+              callback({
+                data: Buffer.from(content),
+                mimeType: mimeType
+              });
+            }
             return;
           } else {
             console.warn('[FRW Protocol] Gateway returned error:', response.status, 'trying next...');
@@ -146,7 +243,7 @@ export function registerFRWProtocol() {
       console.error('[FRW Protocol] ❌ All gateways failed');
       
       // Fallback: Show test page with real data
-      const html = `
+      let html = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -224,14 +321,14 @@ export function registerFRWProtocol() {
       `;
 
       callback({
-        data: html,
+        data: Buffer.from(html),
         mimeType: 'text/html'
       });
       
     } catch (error) {
       console.error('[FRW Protocol] Error:', error);
       
-      const errorHtml = `
+      let errorHtml = `
 <!DOCTYPE html>
 <html>
 <head><title>FRW Error</title></head>
@@ -243,7 +340,7 @@ export function registerFRWProtocol() {
       `;
       
       callback({
-        data: errorHtml,
+        data: Buffer.from(errorHtml),
         mimeType: 'text/html'
       });
     }

@@ -1,10 +1,25 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, protocol } from 'electron';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { registerFRWProtocol } from './protocol.js';
 import { setupIPC } from './ipc.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// CRITICAL: Register frw:// as privileged BEFORE app is ready
+// This allows sub-resources (images, CSS, JS) to load properly
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: 'frw',
+    privileges: {
+      standard: true,
+      secure: true,
+      supportFetchAPI: true,
+      corsEnabled: true,
+      bypassCSP: false
+    }
+  }
+]);
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -40,7 +55,9 @@ function createWindow() {
 
 app.whenReady().then(async () => {
   // Register frw:// protocol
+  console.log('[Main] Registering frw:// protocol...');
   registerFRWProtocol();
+  console.log('[Main] ✓ frw:// protocol registered');
   
   // Setup IPC handlers
   setupIPC();
