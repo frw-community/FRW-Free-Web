@@ -5,6 +5,7 @@
 import { create as createIPFSClient, IPFSHTTPClient } from 'ipfs-http-client';
 import { SignatureManager } from '@frw/crypto';
 import type { ProofOfWork } from '@frw/name-registry';
+import { verifyProof, getRequiredDifficulty } from '@frw/name-registry';
 import { CID } from 'multiformats/cid';
 
 /**
@@ -607,13 +608,32 @@ export class DistributedNameRegistry {
     try {
       const update: NameUpdateMessage = JSON.parse(msg.data.toString());
       
+      // CRITICAL: Verify POW first (prevents spam from forked clients)
+      if (!update.record.proof) {
+        console.warn('[DistributedRegistry] Rejected pubsub message: missing POW');
+        return;
+      }
+      
+      const powValid = verifyProof(update.record.name, update.record.publicKey, update.record.proof);
+      if (!powValid) {
+        console.warn('[DistributedRegistry] Rejected pubsub message: invalid POW');
+        return;
+      }
+      
+      // Verify POW difficulty
+      const requiredDifficulty = getRequiredDifficulty(update.record.name);
+      if (update.record.proof.difficulty < requiredDifficulty) {
+        console.warn(`[DistributedRegistry] Rejected pubsub message: insufficient POW difficulty (${update.record.proof.difficulty} < ${requiredDifficulty})`);
+        return;
+      }
+      
       // Verify signature
       if (!this.verifySignature(update.record)) {
         console.warn('[DistributedRegistry] Invalid pubsub message signature');
         return;
       }
       
-      // Update cache
+      // Update cache (only after full validation)
       this.cacheRecord(update.record);
       this.stats.pubsubUpdates++;
       
@@ -697,6 +717,22 @@ export class DistributedNameRegistry {
     
     if (record.expires < Date.now()) {
       throw new Error('Record expired');
+    }
+    
+    // CRITICAL: Verify Proof of Work to prevent spam
+    if (!record.proof) {
+      throw new Error('Missing proof of work');
+    }
+    
+    const powValid = verifyProof(record.name, record.publicKey, record.proof);
+    if (!powValid) {
+      throw new Error('Invalid proof of work');
+    }
+    
+    // Verify POW difficulty matches name requirements
+    const requiredDifficulty = getRequiredDifficulty(record.name);
+    if (record.proof.difficulty < requiredDifficulty) {
+      throw new Error(`Insufficient POW difficulty: expected ${requiredDifficulty}, got ${record.proof.difficulty}`);
     }
   }
 
