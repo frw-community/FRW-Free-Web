@@ -7,6 +7,8 @@ import { create as createIPFSClient } from 'ipfs-http-client';
 import express from 'express';
 import cors from 'cors';
 import type { DistributedNameRecord } from '@frw/ipfs';
+import { verifyProof, getRequiredDifficulty } from '@frw/name-registry';
+import { SignatureManager } from '@frw/crypto';
 
 interface IndexEntry {
   name: string;
@@ -150,16 +152,55 @@ class BootstrapIndexNode {
         const record: DistributedNameRecord = req.body;
 
         // Validate record
-        if (!record.name || !record.publicKey || !record.signature) {
+        if (!record.name || !record.publicKey || !record.signature || !record.proof) {
           res.status(400).json({
             error: 'Invalid record: missing required fields'
           });
           return;
         }
 
-        // TODO: Verify signature here
+        // CRITICAL: Verify Proof of Work
+        const powValid = verifyProof(record.name, record.publicKey, record.proof);
+        if (!powValid) {
+          res.status(400).json({
+            error: 'Invalid proof of work',
+            name: record.name
+          });
+          return;
+        }
+        
+        // Verify POW difficulty matches name requirements
+        const requiredDifficulty = getRequiredDifficulty(record.name);
+        if (record.proof.difficulty < requiredDifficulty) {
+          res.status(400).json({
+            error: `Insufficient POW difficulty: expected ${requiredDifficulty}, got ${record.proof.difficulty}`,
+            name: record.name
+          });
+          return;
+        }
 
-        // Add to index
+        // CRITICAL: Verify cryptographic signature
+        try {
+          const message = `${record.name}:${record.publicKey}:${record.contentCID}:${record.version}:${record.registered}`;
+          const publicKeyBytes = SignatureManager.decodePublicKey(record.publicKey);
+          const signatureValid = SignatureManager.verify(message, record.signature, publicKeyBytes);
+          
+          if (!signatureValid) {
+            res.status(400).json({
+              error: 'Invalid signature',
+              name: record.name
+            });
+            return;
+          }
+        } catch (error) {
+          res.status(400).json({
+            error: 'Signature verification failed',
+            details: error instanceof Error ? error.message : 'Unknown'
+          });
+          return;
+        }
+
+        // Add to index (now that it's fully validated)
         this.addToIndex(record);
 
         // Broadcast via pubsub
@@ -234,12 +275,26 @@ class BootstrapIndexNode {
 
       if (data.type === 'name-register' && data.record) {
         const record: DistributedNameRecord = data.record;
+        
+        // CRITICAL: Verify POW before accepting from pubsub
+        if (!this.validateRecord(record)) {
+          console.warn(`[Bootstrap] ⚠ Invalid record rejected from pubsub: ${record.name}`);
+          return;
+        }
+        
         this.addToIndex(record);
         console.log(`[Bootstrap] 📥 Received name via pubsub: ${record.name}`);
       }
       
       if (data.type === 'name-update' && data.record) {
         const record: DistributedNameRecord = data.record;
+        
+        // CRITICAL: Verify POW before accepting update
+        if (!this.validateRecord(record)) {
+          console.warn(`[Bootstrap] ⚠ Invalid update rejected from pubsub: ${record.name}`);
+          return;
+        }
+        
         this.addToIndex(record); // addToIndex handles updates too
         console.log(`[Bootstrap] 📥 Received update via pubsub: ${record.name}`);
       }
@@ -259,6 +314,37 @@ class BootstrapIndexNode {
     }
   }
 
+  /**
+   * Validate record (POW + signature)
+   */
+  private validateRecord(record: DistributedNameRecord): boolean {
+    // Check required fields
+    if (!record.name || !record.publicKey || !record.signature || !record.proof) {
+      return false;
+    }
+    
+    // Verify Proof of Work
+    const powValid = verifyProof(record.name, record.publicKey, record.proof);
+    if (!powValid) {
+      return false;
+    }
+    
+    // Verify POW difficulty
+    const requiredDifficulty = getRequiredDifficulty(record.name);
+    if (record.proof.difficulty < requiredDifficulty) {
+      return false;
+    }
+    
+    // Verify signature
+    try {
+      const message = `${record.name}:${record.publicKey}:${record.contentCID}:${record.version}:${record.registered}`;
+      const publicKeyBytes = SignatureManager.decodePublicKey(record.publicKey);
+      return SignatureManager.verify(message, record.signature, publicKeyBytes);
+    } catch {
+      return false;
+    }
+  }
+  
   /**
    * Add name to index (or update if exists)
    */
