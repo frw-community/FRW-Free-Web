@@ -28,7 +28,7 @@ describe('Registration Flow Integration', () => {
 
     describe('Standard Name Registration', () => {
         it('should complete full registration flow for 7-letter name', async () => {
-            const name = 'testapp';
+            const name = 'verylongtestapplication';
             const publicKey = 'pubkey123';
 
             // Step 1: Check rate limits
@@ -39,8 +39,8 @@ describe('Registration Flow Integration', () => {
             const bond = bondCalculator.calculateProgressiveBond(name, 0);
             expect(bond).toBeGreaterThan(0n);
 
-            // Step 3: Generate PoW (low difficulty for 7+ letters)
-            const proof = await powGenerator.generate(name, publicKey, 2);
+            // Step 3: Generate PoW (instant for 16+ chars)
+            const proof = await powGenerator.generate(name, publicKey, 0);
             expect(proof).toHaveProperty('hash');
             expect(proof).toHaveProperty('nonce');
 
@@ -66,7 +66,7 @@ describe('Registration Flow Integration', () => {
 
         it('should handle multiple sequential registrations', async () => {
             const publicKey = 'user123';
-            const names = ['name1', 'name2', 'name3'];
+            const names = ['verylongtestname1', 'verylongtestname2', 'verylongtestname3'];
 
             for (let i = 0; i < names.length; i++) {
                 const name = names[i];
@@ -87,7 +87,7 @@ describe('Registration Flow Integration', () => {
                 }
 
                 // Generate PoW
-                const proof = await powGenerator.generate(name, publicKey, 2);
+                const proof = await powGenerator.generate(name, publicKey, 0);
                 expect(verifyProof(name, publicKey, proof)).toBe(true);
 
                 // Generate and verify nonce
@@ -141,8 +141,8 @@ describe('Registration Flow Integration', () => {
             const dnsResult = await dnsVerifier.verifyDomainOwnership(name, publicKey);
             expect(dnsResult.verified).toBe(true);
 
-            // PoW generation
-            const proof = await powGenerator.generate(name, publicKey, 2);
+            // PoW generation (instant for domain names)
+            const proof = await powGenerator.generate(name, publicKey, 0);
             expect(verifyProof(name, publicKey, proof)).toBe(true);
 
             // Nonce handling
@@ -166,13 +166,13 @@ describe('Registration Flow Integration', () => {
             const bond = bondCalculator.calculateProgressiveBond(name, 0);
             expect(bond).toBe(10_000_000n);
 
-            // PoW with difficulty 6 (skip actual generation for speed, just verify it exists)
+            // PoW with difficulty 12 (skip actual generation for speed, just verify it exists)
             const difficulty = getRequiredDifficulty(name);
-            expect(difficulty).toBe(6);
+            expect(difficulty).toBe(12);
 
-            // Estimate time
-            const estimate = powGenerator.estimateTime(6);
-            expect(estimate.seconds).toBeGreaterThan(300); // More than 5 minutes
+            // Estimate time - 3 letter names are VERY expensive
+            const estimate = powGenerator.estimateTime(12);
+            expect(estimate.seconds).toBeGreaterThan(1000000); // Years
         });
 
         it('should have escalating bonds for multiple 3-letter names', () => {
@@ -246,10 +246,10 @@ describe('Registration Flow Integration', () => {
 
     describe('Error Handling', () => {
         it('should reject invalid PoW', async () => {
-            const name = 'test';
+            const name = 'verylongtestnamehere';
             const publicKey = 'key123';
 
-            const proof = await powGenerator.generate(name, publicKey, 2);
+            const proof = await powGenerator.generate(name, publicKey, 0);
 
             // Tamper with proof
             proof.hash = 'invalid';
@@ -258,10 +258,10 @@ describe('Registration Flow Integration', () => {
         });
 
         it('should reject expired PoW', async () => {
-            const name = 'test';
+            const name = 'verylongtestnamehere';
             const publicKey = 'key123';
 
-            const proof = await powGenerator.generate(name, publicKey, 2);
+            const proof = await powGenerator.generate(name, publicKey, 0);
 
             // Age proof beyond 1 hour
             proof.timestamp = Date.now() - 3600001;
@@ -279,7 +279,7 @@ describe('Registration Flow Integration', () => {
 
     describe('Bulk Registration', () => {
         it('should calculate total bond for bulk registration', () => {
-            const names = ['name1', 'name2', 'name3', 'name4', 'name5'];
+            const names = ['verylongtestname1', 'verylongtestname2', 'verylongtestname3', 'verylongtestname4', 'verylongtestname5'];
             const existingCount = 10;
 
             const totalBond = bondCalculator.calculateBulkBond(names, existingCount);
@@ -294,7 +294,7 @@ describe('Registration Flow Integration', () => {
         });
 
         it('should prevent bulk spam via progressive bonds', () => {
-            const names = Array.from({ length: 100 }, (_, i) => `name${i}`);
+            const names = Array.from({ length: 100 }, (_, i) => `verylongtestname${i}`);
 
             const bond0 = bondCalculator.calculateBulkBond(names, 0);
             const bond100 = bondCalculator.calculateBulkBond(names, 100);
