@@ -32,7 +32,9 @@
     "postinstall": "node scripts/postinstall.js || exit 0",
     "test": "echo \"No tests yet\" && exit 0",
     "package:win": "npm run build && node scripts/package-windows.js",
-    "package:all": "npm run build && node scripts/package-all.js",
+    "package:mac": "npm run build && node scripts/package-mac.js",
+    "package:linux": "npm run build && node scripts/package-linux.js",
+    "package:all": "npm run package:win && npm run package:mac && npm run package:linux",
     "build:exe": "npm run build && node scripts/build-exe.js"
   },
   "keywords": [
