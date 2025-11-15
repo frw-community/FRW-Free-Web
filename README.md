@@ -25,7 +25,9 @@
 - [Use Cases](#-use-cases)
 - [FRW vs Alternatives](#-frw-vs-alternatives)
 - [Installation](#-installation)
-- [Quick Start](#5-minute-tutorial)
+  - [Windows Installation](#-windows-installation)
+  - [Linux Installation](#-linux-installation)
+- [Quick Start Guide](#-quick-start-guide)
 - [DNS Domain Linking](#dns-domain-linking)
 - [Performance](#-performance-benchmarks)
 - [Documentation](#documentation)
@@ -126,26 +128,68 @@ Ensure business continuity with censorship-resistant infrastructure. If traditio
 
 ## 💻 Installation
 
-### Option 1: Windows Installer (Recommended)
+Choose your platform:
 
-**Download pre-built Windows applications:**
+### 🪟 Windows Installation
 
-1. **FRW Browser** - [Download FRW Browser Setup 1.0.0.exe](apps/browser/release/FRW%20Browser%20Setup%201.0.0.exe)
+#### Option 1: Pre-built Installer (Recommended)
+
+**Download ready-to-use Windows applications:**
+
+1. **FRW Browser** 
+   - [Download FRW Browser Setup 1.0.0.exe](apps/browser/release/FRW%20Browser%20Setup%201.0.0.exe) (Installer)
+   - [Download FRW Browser 1.0.0.exe](apps/browser/release/FRW%20Browser%201.0.0.exe) (Portable)
    - One-click installer with Start Menu integration
    - Browse frw:// websites instantly
 
-2. **FRW CLI** - [Download frw-cli-windows.zip](apps/cli/release/)
+2. **FRW CLI**
+   - [Download frw-cli-windows.zip](apps/cli/release/)
    - Portable package, no installation needed
+   - Just unzip and run `frw.bat`
    - Publish websites from command line
 
-### Option 2: Build from Source
+**Quick Test (Windows):**
+```batch
+REM Unzip frw-cli-windows.zip
+cd frw-cli-windows
+frw.bat --help
+```
+
+#### Option 2: Build from Source (Windows)
+
+**Prerequisites:**
+- **Node.js** >= 20.0.0 - [Download](https://nodejs.org)
+- **IPFS Desktop** - [Download](https://docs.ipfs.tech/install/ipfs-desktop/)
+
+**Installation:**
+```powershell
+# Clone repository
+git clone https://github.com/frw-community/frw-free-web-modern.git
+cd frw-free-web-modern
+
+# Install dependencies
+npm install
+
+# Build all packages
+npm run build
+
+# Build Windows packages
+cd apps/cli
+npm run package:win
+
+cd ..\browser
+npm run build
+```
+
+### 🐧 Linux Installation
+
+#### Build from Source (Linux/macOS)
 
 **Prerequisites:**
 - **Node.js** >= 20.0.0
-- **IPFS** ([Download](https://docs.ipfs.tech/install/))
+- **IPFS** - [Install Guide](https://docs.ipfs.tech/install/)
 
 **Installation:**
-
 ```bash
 # Clone repository
 git clone https://github.com/frw-community/frw-free-web-modern.git
@@ -157,43 +201,125 @@ npm install
 # Build all packages
 npm run build
 
-# Link CLI globally
+# Link CLI globally (makes 'frw' command available)
 cd apps/cli
 npm link
+
+# Verify installation
+frw --version
 ```
 
-### 5-Minute Tutorial
+---
+
+## 🚀 Quick Start Guide
+
+### 5-Minute Tutorial (All Platforms)
+
+**Step 1: Start IPFS**
+
+<details>
+<summary><b>Windows (IPFS Desktop)</b></summary>
+
+- Launch IPFS Desktop application
+- Wait for "Ready" status in system tray
+- Or via command line:
+```powershell
+ipfs daemon --enable-pubsub-experiment
+```
+</details>
+
+<details>
+<summary><b>Linux/macOS</b></summary>
 
 ```bash
-# 1. Start IPFS daemon (required)
+# Start IPFS daemon with pubsub enabled
 ipfs daemon --enable-pubsub-experiment
+```
+</details>
 
-# 2. Initialize FRW
+**Step 2: Initialize FRW**
+
+```bash
+# Works on all platforms
 frw init
+```
 
-# 3. Register your name (includes proof-of-work, may take 1-60 mins)
+**Step 3: Register Your Name**
+
+```bash
+# Includes proof-of-work (may take 1-60 mins depending on name length)
 frw register myname
+```
 
-# 4. Create a simple website
+**Step 4: Create a Simple Website**
+
+<details>
+<summary><b>Windows (PowerShell)</b></summary>
+
+```powershell
+# Create site directory
 mkdir mysite
-echo "<h1>Hello FRW!</h1>" > mysite/index.html
+cd mysite
 
-# 5. Publish to the network
+# Create homepage
+echo "<h1>Hello FRW!</h1><p>My first decentralized website!</p>" > index.html
+
+cd ..
+```
+</details>
+
+<details>
+<summary><b>Linux/macOS (Bash)</b></summary>
+
+```bash
+# Create site directory
+mkdir mysite
+cd mysite
+
+# Create homepage
+echo "<h1>Hello FRW!</h1><p>My first decentralized website!</p>" > index.html
+
+cd ..
+```
+</details>
+
+**Step 5: Publish to the Network**
+
+```bash
+# Publish your site (works on all platforms)
 frw publish ./mysite --name myname
 
 # Done! Your site is now at frw://myname/
 ```
 
-### Using the Browser
+### 🌐 Browse FRW Sites
+
+<details>
+<summary><b>Windows</b></summary>
+
+**Option A: Use FRW Browser (Recommended)**
+- Launch "FRW Browser" from Start Menu
+- Navigate to `frw://myname/`
+
+**Option B: Development Mode**
+```powershell
+cd apps\browser
+npm run dev
+```
+</details>
+
+<details>
+<summary><b>Linux/macOS</b></summary>
 
 ```bash
-# Start FRW browser
+# Start FRW browser in development mode
 cd apps/browser
 npm run dev
 
 # Navigate to any frw:// URL
-frw://myname/
+# Example: frw://myname/
 ```
+</details>
 
 ## DNS Domain Linking
 
