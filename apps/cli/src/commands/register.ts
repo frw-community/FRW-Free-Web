@@ -219,10 +219,21 @@ export async function registerCommand(name: string, options: RegisterOptions): P
     logger.info('');
   }
 
-  // Save to config
+  // Save to config (legacy format for backwards compatibility)
   const registeredNames = config.get('registeredNames') || {};
   registeredNames[name] = publicKeyEncoded;
   config.set('registeredNames', registeredNames);
+  
+  // Save to new registrations format with full metadata
+  const registrations = config.get('registrations') || {};
+  registrations[name] = {
+    publicKey: publicKeyEncoded,
+    registered: Date.now(),
+    dnsVerified: dnsVerified,
+    dnsVerifiedAt: dnsVerified ? Date.now() : undefined,
+    domain: isDomainLike ? name : undefined
+  };
+  config.set('registrations', registrations);
 
   logger.section('Registration Complete');
   logger.success(`Name "${name}" registered successfully!`);

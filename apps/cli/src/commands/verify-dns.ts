@@ -11,8 +11,17 @@ import { config } from '../utils/config.js';
 export async function verifyDnsCommand(name: string): Promise<void> {
   logger.section(`Verify DNS Ownership: ${name}`);
 
-  // TODO: Load registration from database to check if exists
-  // For now, we'll load the keypair and verify
+  // Check if name is registered locally
+  const registrations = config.get('registrations') || {};
+  const registration = registrations[name];
+  
+  if (!registration) {
+    logger.error(`Name '${name}' not found in local registrations.`);
+    logger.info('');
+    logger.info('You can only verify names you have registered.');
+    logger.info(`Run ${logger.code(`frw register ${name}`)} first.`);
+    process.exit(1);
+  }
   
   // Get key path
   const keyPath = config.get('defaultKeyPath');
@@ -61,17 +70,27 @@ export async function verifyDnsCommand(name: string): Promise<void> {
     
     if (result.verified) {
       verifySpinner.succeed('DNS verification successful!');
+      
+      // Save verification status to config
+      const registrations = config.get('registrations') || {};
+      registrations[name] = {
+        ...registrations[name],
+        dnsVerified: true,
+        dnsVerifiedAt: Date.now(),
+        domain: name
+      };
+      config.set('registrations', registrations);
+      
       logger.info('');
       logger.success('✓ Domain ownership confirmed');
       logger.success('✓ Official status granted');
+      logger.success('✓ Verification saved locally');
       logger.info('');
       logger.info('Your site will now show as verified:');
       logger.info('  frw://' + name + '/ ✓ Verified');
       logger.info('');
-      
-      // TODO: Save verification status to database
-      logger.info('Note: Verification status saved locally.');
-      logger.info('Publish your site to propagate the verification.');
+      logger.info('Next step: Publish your site to propagate the verification.');
+      logger.info(`  ${logger.code(`frw publish ./your-site --name ${name}`)}`);
       
     } else {
       verifySpinner.fail('DNS verification failed');

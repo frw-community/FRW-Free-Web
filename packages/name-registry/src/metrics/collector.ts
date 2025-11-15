@@ -93,7 +93,8 @@ export class MetricsCollector {
     
     private async countIPNSUpdates(publicKey: string): Promise<number> {
         // For now, return 1 (at least one update to be resolvable)
-        // TODO: Implement IPNS update history tracking
+        // Future v2.0: Implement IPNS update history tracking (requires IPNS implementation)
+        // Current system uses CID-based content, so update count isn't applicable yet
         return 1;
     }
     
