@@ -2,7 +2,7 @@
 
 <div align="center">
 
-> **A truly decentralized web protocol - censorship-resistant, ownerless, and unstoppable.**
+**A decentralized web protocol built on IPFS with human-readable names, proof-of-work registration, and DNS integration.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen.svg)](https://nodejs.org)
@@ -11,56 +11,55 @@
 [![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](CHANGELOG.md)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-[**Download for Windows**](apps/browser/release) • [**Documentation**](docs/) • [**Community**](https://github.com/frw-community/frw-free-web-modern/discussions) • [**Roadmap**](#roadmap)
+[Download for Windows](apps/browser/release) • [Documentation](docs/) • [Community](https://github.com/frw-community/frw-free-web-modern/discussions) • [Roadmap](#roadmap)
 
 </div>
 
 ---
 
-## 📚 Table of Contents
+## Table of Contents
 
 - [What is FRW?](#what-is-frw)
 - [Why FRW?](#why-frw)
 - [Key Features](#key-features)
-- [Use Cases](#-use-cases)
-- [FRW vs Alternatives](#-frw-vs-alternatives)
-- [Installation](#-installation)
-  - [Windows Installation](#-windows-installation)
-  - [Linux Installation](#-linux-installation)
-- [Quick Start Guide](#-quick-start-guide)
+- [Use Cases](#use-cases)
+- [Comparison with Alternatives](#comparison-with-alternatives)
+- [Installation](#installation)
+  - [Windows](#windows)
+  - [Linux / macOS](#linux--macos)
+- [Quick Start](#quick-start)
 - [DNS Domain Linking](#dns-domain-linking)
-- [Performance](#-performance-benchmarks)
+- [Performance](#performance)
 - [Documentation](#documentation)
-- [Contributing](#-get-involved)
+- [Contributing](#contributing)
 
 ---
 
 ## What is FRW?
 
-FRW is a **fully decentralized web platform** where content is stored on IPFS, names are registered via distributed consensus with proof-of-work anti-spam protection, and everything is cryptographically verified. 
+FRW is a decentralized web platform where content is stored on IPFS, names are registered via distributed consensus with proof-of-work anti-spam protection, and everything is cryptographically verified.
 
-**No central servers. No gatekeepers. No censorship. Just pure peer-to-peer freedom.**
+The system operates without central servers or gatekeepers. Content distribution is handled through IPFS, name resolution uses a multi-layer approach (bootstrap nodes + DHT + pubsub), and all operations are verified using Ed25519 signatures.
 
-### ⚡ Quick Numbers
+### Key Metrics
 
-- **0** central servers required
-- **95** protected brand names
-- **<100ms** name resolution (with bootstrap nodes)
-- **2-5s** pure P2P fallback (DHT only)
-- **100%** uptime (distributed network)
-- **$0** registration fees (proof-of-work instead)
+- Zero central servers required
+- 95 protected brand names
+- <100ms name resolution (with bootstrap nodes)
+- 2-5s resolution via DHT fallback (pure P2P)
+- No registration fees (proof-of-work based)
+- Distributed network architecture
 
-### 🎯 Why Choose FRW?
+### Design Goals
 
-**If you value:**
-- 🔒 **Privacy** - No tracking, no data collection, no surveillance
-- 🌐 **Freedom** - Publish without permission or platform approval
-- 💰 **Cost** - Zero hosting fees, zero domain renewals
-- 🚀 **Speed** - Sub-second updates, instant propagation
-- 🛡️ **Resilience** - Content survives network failures and attacks
-- 🔑 **Ownership** - Your keys, your content, forever
+FRW addresses several limitations of traditional web infrastructure:
 
-**Then FRW is for you.**
+- **Decentralization** - No single point of failure or control
+- **Censorship Resistance** - Content remains accessible via IPFS
+- **Cost Efficiency** - No hosting fees or domain renewals
+- **Performance** - Sub-second updates through IPFS pubsub
+- **Resilience** - Content survives network failures
+- **True Ownership** - Cryptographic key-based control
 
 ## Why FRW?
 
@@ -98,21 +97,21 @@ FRW is a **fully decentralized web platform** where content is stored on IPFS, n
 - **Real-time updates** via IPFS pubsub (sub-second propagation)
 - **Content-addressed storage** ensures integrity and deduplication
 
-## 🚀 Use Cases
+## Use Cases
 
-### For Activists & Journalists
-Publish uncensorable content that can't be taken down by governments or corporations. Even if your domain is seized, content remains accessible via frw://.
+### Journalists and Activists
+Content published on FRW remains accessible even if traditional domains are seized. The frw:// protocol provides an alternative access method that bypasses DNS-based censorship.
 
-### For Developers
-Build truly decentralized applications without vendor lock-in. Own your infrastructure, control your data, deploy globally in seconds.
+### Application Developers
+Build decentralized applications without depending on centralized hosting providers. The platform provides infrastructure ownership and data control without vendor lock-in.
 
-### For Content Creators
-Publish websites without hosting fees, domain renewals, or platform restrictions. Your content, your keys, forever.
+### Content Publishers
+Publish websites without recurring hosting fees or domain renewals. Content is stored on IPFS and accessible through cryptographic identifiers.
 
-### For Organizations
-Ensure business continuity with censorship-resistant infrastructure. If traditional web fails, your content remains online through IPFS.
+### Organizations
+Implement censorship-resistant infrastructure for business continuity. Content remains accessible through the distributed network even if traditional web infrastructure fails.
 
-## 📊 FRW vs Alternatives
+## Comparison with Alternatives
 
 | Feature | FRW | Traditional Web | IPFS Only | Blockchain DNS |
 |---------|-----|----------------|-----------|----------------|
@@ -126,36 +125,26 @@ Ensure business continuity with censorship-resistant infrastructure. If traditio
 | **No Mining/Staking** | ✅ | N/A | ✅ | ❌ |
 | **Offline Access** | ✅ | ❌ | ✅ | ❌ |
 
-## 💻 Installation
+## Installation
 
-Choose your platform:
+### Windows
 
-### 🪟 Windows Installation
+#### Pre-built Binaries (Recommended)
 
-#### Option 1: Pre-built Installer (Recommended)
+**FRW Browser**
+- [FRW Browser Setup 1.0.0.exe](apps/browser/release/FRW%20Browser%20Setup%201.0.0.exe) - Installer with Start Menu integration
+- [FRW Browser 1.0.0.exe](apps/browser/release/FRW%20Browser%201.0.0.exe) - Portable executable
 
-**Download ready-to-use Windows applications:**
+**FRW CLI**
+- [frw-cli-windows.zip](apps/cli/release/) - Portable command-line tools
 
-1. **FRW Browser** 
-   - [Download FRW Browser Setup 1.0.0.exe](apps/browser/release/FRW%20Browser%20Setup%201.0.0.exe) (Installer)
-   - [Download FRW Browser 1.0.0.exe](apps/browser/release/FRW%20Browser%201.0.0.exe) (Portable)
-   - One-click installer with Start Menu integration
-   - Browse frw:// websites instantly
-
-2. **FRW CLI**
-   - [Download frw-cli-windows.zip](apps/cli/release/)
-   - Portable package, no installation needed
-   - Just unzip and run `frw.bat`
-   - Publish websites from command line
-
-**Quick Test (Windows):**
+Extract and test the CLI:
 ```batch
-REM Unzip frw-cli-windows.zip
 cd frw-cli-windows
 frw.bat --help
 ```
 
-#### Option 2: Build from Source (Windows)
+#### Build from Source (Windows)
 
 **Prerequisites:**
 - **Node.js** >= 20.0.0 - [Download](https://nodejs.org)
@@ -181,9 +170,9 @@ cd ..\browser
 npm run build
 ```
 
-### 🐧 Linux Installation
+### Linux / macOS
 
-#### Build from Source (Linux/macOS)
+#### Build from Source
 
 **Prerequisites:**
 - **Node.js** >= 20.0.0
@@ -209,11 +198,9 @@ npm link
 frw --version
 ```
 
----
+## Quick Start
 
-## 🚀 Quick Start Guide
-
-### 5-Minute Tutorial (All Platforms)
+### Getting Started
 
 **Step 1: Start IPFS**
 
@@ -292,7 +279,7 @@ frw publish ./mysite --name myname
 # Done! Your site is now at frw://myname/
 ```
 
-### 🌐 Browse FRW Sites
+### Browsing FRW Sites
 
 <details>
 <summary><b>Windows</b></summary>
@@ -581,9 +568,9 @@ ipfs config --json Experimental.Pubsub true
 ipfs daemon --enable-pubsub-experiment
 ```
 
-## ⚡ Performance Benchmarks
+## Performance
 
-FRW is designed for speed and efficiency:
+### Benchmarks
 
 | Operation | Time | Notes |
 |-----------|------|-------|
@@ -592,15 +579,15 @@ FRW is designed for speed and efficiency:
 | **Name Resolution** (Bootstrap) | 50-100ms | HTTP API query |
 | **Name Resolution** (DHT only) | 2-5s | Pure P2P fallback |
 | **Content Publishing** | 5-15s | IPFS upload + signing |
-| **Real-time Updates** (pubsub) | < 1s | Instant propagation |
+| **Real-time Updates** (pubsub) | < 1s | Network propagation |
 | **POW Registration** (8 chars) | ~17s | One-time per name |
 | **DNS Verification** | 5-10 min | DNS propagation time |
 
-**Key Insights:**
-- Multi-layer caching ensures most lookups are near-instant
-- Even without bootstrap nodes, P2P resolution works (2-5s)
-- Proof-of-work is one-time cost, not per-transaction
-- Real-time updates via pubsub faster than traditional DNS (48h TTL)
+**Notes:**
+- Multi-layer caching provides sub-millisecond lookups for frequently accessed names
+- DHT fallback ensures functionality without bootstrap nodes
+- Proof-of-work is computed once per name registration
+- Pubsub updates are significantly faster than traditional DNS TTL (typically 48 hours)
 
 ## Testing
 
@@ -758,44 +745,28 @@ If you use FRW in academic work, please cite:
 
 ---
 
-## ⭐ Show Your Support
+## Contributing
 
-If FRW helps you build a freer, more decentralized web, please:
+FRW is an open source project. Contributions are welcome:
 
-- **Star this repository** to help others discover the project
-- **Share** FRW with developers, activists, and content creators
-- **Contribute** code, documentation, or ideas
-- **Run a bootstrap node** to help decentralize the network
-- **Spread the word** on social media and tech communities
+- **Bug reports** - Submit issues for bugs or unexpected behavior
+- **Feature requests** - Propose new features or improvements
+- **Documentation** - Help improve guides and tutorials
+- **Code contributions** - Submit pull requests for new features or fixes
+- **Bootstrap nodes** - Run a bootstrap node in your region
+- **Community support** - Help answer questions in GitHub Discussions
 
-## 🤝 Get Involved
+See [GitHub Discussions](https://github.com/frw-community/frw-free-web-modern/discussions) for community discussion.
 
-FRW is built by the community, for the community. We welcome:
+## Project Status
 
-- 🐛 **Bug reports** - Help us improve reliability
-- 💡 **Feature requests** - Share your ideas
-- 📝 **Documentation** - Improve guides and tutorials
-- 🔧 **Code contributions** - Submit PRs for new features
-- 🌐 **Bootstrap nodes** - Run a node in your region
-- 💬 **Community support** - Help others on GitHub Discussions
-
-**Join the movement:** [GitHub Discussions](https://github.com/frw-community/frw-free-web-modern/discussions)
-
-## 📈 Project Stats
-
+- **Version:** 1.0.0
 - **Released:** November 2025
-- **Current Version:** 1.0.0
-- **Total Lines of Code:** 5,000+ (production) + 3,500+ (documentation)
-- **Test Coverage:** 40/40 tests passing
+- **Codebase:** ~5,000 lines (core) + ~3,500 lines (documentation)
+- **Tests:** 40/40 passing
 - **Bootstrap Nodes:** 4 active (Switzerland)
 - **Protected Names:** 95 brands
-- **Supported Platforms:** Windows (macOS, Linux coming soon)
-
-## 🌍 Built for Freedom
-
-In an era of increasing censorship, platform de-platforming, and centralized control, FRW provides an alternative: a web that can't be shut down, content that can't be censored, and names that can't be seized.
-
-**The future of the web is decentralized. The future is FRW.**
+- **Platforms:** Windows (Linux/macOS builds coming soon)
 
 ---
 
