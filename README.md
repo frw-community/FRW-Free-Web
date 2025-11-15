@@ -23,6 +23,7 @@ FRW is a fully decentralized web platform where content is stored on IPFS, names
 
 ### For Users
 - **Human-readable names** - `frw://myname/` instead of long hashes
+- **DNS domain linking** - Link traditional domains for dual HTTPS + frw:// access
 - **Instant publishing** - Deploy sites in seconds with one command
 - **True ownership** - Your keys, your content, forever
 - **Censorship-resistant** - No one can take down your content
@@ -38,6 +39,7 @@ FRW is a fully decentralized web platform where content is stored on IPFS, names
 ### Technical Highlights
 - **Ed25519 cryptographic signatures** for all content verification
 - **Proof-of-work name registration** prevents spam and squatting
+- **DNS domain linking** with cryptographic verification via TXT records
 - **Multi-layer resolution**: HTTP bootstrap → IPFS DHT → Pubsub
 - **Works without bootstrap nodes** - Pure P2P fallback via IPFS DHT
 - **Real-time updates** via IPFS pubsub (sub-second propagation)
@@ -100,6 +102,58 @@ npm run dev
 # Navigate to any frw:// URL
 frw://myname/
 ```
+
+## DNS Domain Linking
+
+FRW supports linking traditional DNS domains to your FRW names, enabling dual access via both HTTPS and the frw:// protocol.
+
+### Quick Domain Setup
+
+```bash
+# 1. Link your domain to your FRW name
+frw domain add example.com myname
+
+# 2. Add the DNS TXT record shown in the output to your domain
+# Record Type: TXT
+# Name: _frw (or @)
+# Value: frw-key=<your-public-key>;frw-name=myname
+# TTL: 3600
+
+# 3. Wait 5-10 minutes for DNS propagation
+
+# 4. Verify the DNS configuration
+frw domain verify example.com
+```
+
+### Benefits
+
+- **Dual Access** - Content accessible via both `https://yourdomain.com` and `frw://yourname/`
+- **SEO Friendly** - Traditional domains provide discoverability
+- **Censorship Resistant** - If your domain gets blocked, users can still access via frw://
+- **Official Badge** - Verified domains show as "Official" in the FRW browser
+- **Ownership Proof** - Cryptographically prove you own both the domain and FRW name
+
+### Available Commands
+
+```bash
+# List all domain mappings
+frw domain list
+
+# Show detailed domain information
+frw domain info example.com
+
+# Remove a domain mapping
+frw domain remove example.com
+```
+
+### Protected Names
+
+FRW protects 100+ brand names (google, microsoft, apple, bitcoin, etc.) from squatting. To register a protected name, you must:
+1. Own the corresponding domain (e.g., `google.com` for name `google`)
+2. Add DNS TXT record proving ownership
+3. Verify with `frw verify-dns <name>` before registration
+
+See [packages/name-registry/README.md](packages/name-registry/README.md) for complete DNS documentation.
 
 ## Architecture
 
@@ -418,6 +472,7 @@ See [docs/DEVELOPMENT_WORKFLOW.md](docs/DEVELOPMENT_WORKFLOW.md) for detailed de
 ## Documentation
 
 - **[CLI Usage](apps/cli/README.md)** - Publishing and managing content
+- **[DNS Domain Linking](packages/name-registry/README.md#dns-domain-linking)** - Link traditional domains to FRW names
 - **[Bootstrap Node Deployment](apps/bootstrap-node/DEPLOY_SUCCESS.md)** - Running a network node
 - **[Security Model](docs/SECURITY.md)** - Complete security documentation, fork protection, attack scenarios
 - **[Version Synchronization](apps/bootstrap-node/VERSION_SYNC.md)** - Keeping bootstrap nodes in sync
@@ -437,6 +492,7 @@ See [docs/DEVELOPMENT_WORKFLOW.md](docs/DEVELOPMENT_WORKFLOW.md) for detailed de
 - [x] CLI publishing tool
 - [x] Electron browser
 - [x] Multi-layer name resolution
+- [x] DNS domain linking and verification
 - [ ] Browser extensions (Chrome, Firefox)
 - [ ] Mobile apps (iOS, Android)
 - [ ] Content moderation tools
