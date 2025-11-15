@@ -9,7 +9,7 @@ export async function ipfsStatusCommand(): Promise<void> {
   const spinner = ora('Checking IPFS connection...').start();
   
   const ipfsClient = new IPFSClient({
-    host: config.get('ipfsHost') || 'localhost',
+    host: config.get('ipfsHost') || '127.0.0.1',
     port: config.get('ipfsPort') || 5001,
     protocol: 'http'
   });
