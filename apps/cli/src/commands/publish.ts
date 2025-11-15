@@ -86,18 +86,32 @@ export async function publishCommand(directory: string = '.', options: PublishOp
   spinner.succeed(`Signed ${signedCount} HTML files`);
 
   // Connect to IPFS
-  spinner.start('Connecting to IPFS...');
+  const ipfsHost = config.get('ipfsHost') || '127.0.0.1';
+  const ipfsPort = config.get('ipfsPort') || 5001;
+  const ipfsUrl = `http://${ipfsHost}:${ipfsPort}`;
+  
+  spinner.start(`Connecting to IPFS at ${ipfsUrl}...`);
   const ipfsClient = new IPFSClient({
-    host: config.get('ipfsHost') || 'localhost',
-    port: config.get('ipfsPort') || 5001,
+    host: ipfsHost,
+    port: ipfsPort,
     protocol: 'http'
   });
 
   try {
     await ipfsClient.init();
-    spinner.succeed('Connected to IPFS');
+    spinner.succeed(`Connected to IPFS at ${ipfsUrl}`);
   } catch (error) {
     spinner.fail('Failed to connect to IPFS');
+    logger.error('Connection details:');
+    logger.error('  URL: ' + ipfsUrl);
+    logger.error('  Error: ' + (error instanceof Error ? error.message : String(error)));
+    if (error && typeof error === 'object' && 'details' in error) {
+      logger.error('  Details: ' + JSON.stringify(error.details, null, 2));
+    }
+    if (error instanceof Error && error.stack) {
+      logger.debug('Stack: ' + error.stack);
+    }
+    logger.error('');
     logger.error('Make sure IPFS daemon is running: ' + logger.code('ipfs daemon'));
     logger.info('Or install IPFS Desktop: https://docs.ipfs.tech/install/');
     process.exit(1);

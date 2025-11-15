@@ -20,7 +20,7 @@ interface FRWConfig {
 
 const defaults: FRWConfig = {
   defaultKeyPath: join(homedir(), '.frw', 'default.key'),
-  ipfsHost: 'localhost',
+  ipfsHost: '127.0.0.1',
   ipfsPort: 5001,
   registeredNames: {},
   registrations: {}

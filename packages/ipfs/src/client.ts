@@ -15,11 +15,33 @@ export class IPFSClient {
         port: this.config.port,
         protocol: this.config.protocol
       });
-      await this.client.id();
+      
+      // Try to verify connection with id()
+      // Some IPFS versions may have multiaddr protocols that ipfs-http-client doesn't support
+      // but the connection still works for basic operations
+      try {
+        await this.client.id();
+      } catch (idError) {
+        // If id() fails due to protocol parsing, try a simpler test
+        const errorMsg = idError instanceof Error ? idError.message : '';
+        if (errorMsg.includes('no protocol with name')) {
+          // Try a basic operation to verify connection works
+          try {
+            await this.client.version();
+          } catch (versionError) {
+            throw idError; // If version also fails, throw original error
+          }
+          // version() worked, so connection is fine despite id() protocol error
+        } else {
+          throw idError;
+        }
+      }
+      
       this.ready = true;
       return true;
     } catch (error) {
-      throw new IPFSError('IPFS initialization failed', error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      throw new IPFSError(`IPFS initialization failed: ${errorMessage}`, error);
     }
   }
 
