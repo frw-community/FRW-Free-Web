@@ -5,12 +5,14 @@
   "main": "dist/main/index.js",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently \"npm run dev:vite\" \"npm run dev:electron\"",
+    "dev:vite": "vite",
+    "dev:electron": "wait-on http://localhost:5173 && electron .",
     "build": "vite build && electron-builder",
     "build:vite": "vite build",
     "build:dist": "electron-builder",
     "preview": "vite preview",
-    "electron:dev": "vite",
+    "electron:dev": "electron .",
     "electron:build": "vite build && electron-builder"
   },
   "keywords": [

@@ -19,7 +19,8 @@ export default defineConfig({
                 '@frw/common',
                 '@frw/crypto',
                 '@frw/ipfs',
-                '@frw/protocol'
+                '@frw/protocol',
+                '@frw/name-registry'
               ]
             }
           }

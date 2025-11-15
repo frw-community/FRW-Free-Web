@@ -3,7 +3,7 @@
 
 import { create as createIPFSClient, IPFSHTTPClient } from 'ipfs-http-client';
 import { SignatureManager } from '@frw/crypto';
-import { ProofOfWork } from '@frw/name-registry';
+import type { ProofOfWork } from '@frw/name-registry';
 import bs58 from 'bs58';
 
 /**

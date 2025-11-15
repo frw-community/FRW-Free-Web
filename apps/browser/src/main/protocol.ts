@@ -39,7 +39,7 @@ function getConfigFallback(): { names: Record<string, string>; sites: Record<str
 }
 
 export function registerFRWProtocol() {
-  protocol.registerStringProtocol('frw', async (request, callback) => {
+  protocol.registerBufferProtocol('frw', async (request, callback) => {
     try {
       console.log('[FRW Protocol] Loading:', request.url);
       
@@ -47,7 +47,7 @@ export function registerFRWProtocol() {
       const urlMatch = request.url.match(/^frw:\/\/([^\/]+)(\/.*)?$/);
       if (!urlMatch) {
         return callback({
-          data: '<h1>Invalid FRW URL</h1>',
+          data: Buffer.from('<h1>Invalid FRW URL</h1>'),
           mimeType: 'text/html'
         });
       }
@@ -95,7 +95,7 @@ export function registerFRWProtocol() {
 </body>
 </html>
         `;
-        return callback({ data: errorHtml, mimeType: 'text/html' });
+        return callback({ data: Buffer.from(errorHtml), mimeType: 'text/html' });
       }
       
       // Try to fetch from IPFS - try local first, then public gateways
@@ -125,11 +125,16 @@ export function registerFRWProtocol() {
           console.log('[FRW Protocol] Response OK:', response.ok);
           
           if (response.ok) {
-            const content = await response.text();
-            console.log('[FRW Protocol] ✅ SUCCESS! Content fetched from', gateway, ':', content.length, 'bytes');
+            const arrayBuffer = await response.arrayBuffer();
+            const buffer = Buffer.from(arrayBuffer);
+            // Use Content-Type from IPFS response, fallback to guessing from path
+            let mimeType = response.headers.get('content-type') || getMimeType(path || '/index.html');
+            // Remove charset and other parameters for consistency
+            mimeType = mimeType.split(';')[0].trim();
+            console.log('[FRW Protocol] ✅ SUCCESS! Content fetched from', gateway, ':', buffer.length, 'bytes, mime:', mimeType);
             callback({
-              data: content,
-              mimeType: 'text/html'
+              data: buffer,
+              mimeType: mimeType
             });
             return;
           } else {
@@ -222,7 +227,7 @@ export function registerFRWProtocol() {
       `;
 
       callback({
-        data: html,
+        data: Buffer.from(html),
         mimeType: 'text/html'
       });
       
@@ -241,7 +246,7 @@ export function registerFRWProtocol() {
       `;
       
       callback({
-        data: errorHtml,
+        data: Buffer.from(errorHtml),
         mimeType: 'text/html'
       });
     }
@@ -259,8 +264,14 @@ function getMimeType(path: string): string {
     'png': 'image/png',
     'jpg': 'image/jpeg',
     'jpeg': 'image/jpeg',
+    'gif': 'image/gif',
+    'webp': 'image/webp',
     'svg': 'image/svg+xml',
-    'ico': 'image/x-icon'
+    'ico': 'image/x-icon',
+    'woff': 'font/woff',
+    'woff2': 'font/woff2',
+    'ttf': 'font/ttf',
+    'eot': 'application/vnd.ms-fontobject'
   };
   return mimeTypes[ext || 'html'] || 'text/plain';
 }
