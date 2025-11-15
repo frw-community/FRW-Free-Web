@@ -1,6 +1,6 @@
 {
   "name": "@frw/crypto",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "FRW cryptography - Ed25519 signatures and key management",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

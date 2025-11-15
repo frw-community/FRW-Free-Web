@@ -1,6 +1,6 @@
 {
   "name": "@frw/browser",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "FRW Browser - Decentralized web browser",
   "main": "dist/main/index.js",
   "type": "module",

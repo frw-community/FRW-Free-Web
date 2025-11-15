@@ -1,6 +1,6 @@
 {
   "name": "@frw/bootstrap-node",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "FRW Bootstrap Index Node - Maintains global name index",
   "main": "dist/index.js",
   "type": "module",

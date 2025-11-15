@@ -1,6 +1,6 @@
 {
   "name": "frw-free-web-modern",
-  "version": "0.1.0",
+  "version": "1.0.1",
   "description": "Decentralized web protocol and client - Monorepo",
   "private": true,
   "workspaces": [

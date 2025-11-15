@@ -1,6 +1,6 @@
 {
   "name": "@frw/ipfs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "FRW IPFS integration - IPFS client wrapper",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
