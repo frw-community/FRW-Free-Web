@@ -107,6 +107,16 @@ export class DistributedNameRegistry {
     this.l1Cache = new Map();
     this.l2Cache = new Map();
     
+    // Security: Warn about HTTP bootstrap nodes in production
+    if (this.bootstrapNodes) {
+      for (const node of this.bootstrapNodes) {
+        if (node.startsWith('http://') && process.env.NODE_ENV === 'production') {
+          console.warn('[SECURITY WARNING] HTTP bootstrap node in production:', node);
+          console.warn('[SECURITY WARNING] Consider using HTTPS for production bootstrap nodes');
+        }
+      }
+    }
+    
     this.initializePubsub();
   }
 
@@ -712,6 +722,16 @@ export class DistributedNameRegistry {
   private validateRecord(record: DistributedNameRecord): void {
     if (!record.name || !/^[a-z0-9-]+$/.test(record.name)) {
       throw new Error('Invalid name format');
+    }
+    
+    // Security: Enforce maximum name length (DNS label limit)
+    if (record.name.length > 63) {
+      throw new Error('Name too long (max 63 characters)');
+    }
+    
+    // Security: Enforce minimum name length
+    if (record.name.length < 3) {
+      throw new Error('Name too short (min 3 characters)');
     }
     
     if (!record.publicKey) {

@@ -40,6 +40,12 @@ export class FRWValidator {
       errors.push('Invalid date format (expected: ISO 8601)');
     }
 
+    // Security: Check for Content Security Policy meta tag
+    if (!html.includes('Content-Security-Policy')) {
+      // Note: This is informational, not an error - CSP is recommended but not required
+      console.info('[Security] Page missing Content-Security-Policy meta tag (recommended)');
+    }
+
     return {
       valid: errors.length === 0,
       errors
