@@ -17,10 +17,10 @@ Decentralized web browser for the FRW protocol.
 npm install
 
 # Start development mode
-npm run electron:dev
+npm run dev
 
 # Build for production
-npm run electron:build
+npm run build
 ```
 
 ## Architecture
@@ -48,14 +48,8 @@ npm run electron:build
 ## Building
 
 ```bash
-# Windows
-npm run electron:build
-
-# macOS
-npm run electron:build
-
-# Linux
-npm run electron:build
+# All platforms
+npm run build
 ```
 
 Installers will be created in the `release/` directory.

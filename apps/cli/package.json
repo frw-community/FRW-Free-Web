@@ -1,6 +1,6 @@
 {
   "name": "frw-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "CLI for FRW (Free Resilient Web) - A decentralized web browser and publishing platform",
   "type": "module",
   "main": "dist/index.js",

@@ -25,6 +25,12 @@ Patch release with security improvements, performance optimizations, and compreh
 - Test expectations updated to match actual implementation
 
 ### Fixed
+- **Browser development mode** - Fixed package version mismatches (1.0.0 → 1.0.1)
+- **Browser ESM imports** - Added .js extension to bootstrap config import for proper ESM resolution
+- **CLI dependencies** - Added missing dependencies: stdin-discarder, data-uri-to-buffer, formdata-polyfill, fetch-blob
+- **Documentation** - Updated version badges in README (1.0.0 → 1.0.1)
+- **Documentation** - Fixed browser README command references (electron:dev → dev, electron:build → build)
+- **Version consistency** - Synchronized all package versions to 1.0.1 across monorepo
 - Fixed test expectations for difficulty values (3-char = 12, not 6)
 - Fixed BigInt serialization errors in tests
 - Fixed timestamp validation in recent proof test
@@ -41,6 +47,14 @@ Patch release with security improvements, performance optimizations, and compreh
 - 9 tests skipped (slow, non-critical)
 - 0 tests failing
 - All security-critical suites passing
+
+### Verified Working
+- ✅ Browser runs successfully in development mode with DevTools
+- ✅ CLI commands functional (register, publish work end-to-end)
+- ✅ Name registration with proof-of-work (vaultline successfully registered)
+- ✅ Publishing to distributed network (3/4 bootstrap nodes accepting registrations)
+- ✅ IPFS integration operational
+- ✅ All package dependencies properly installed and built
 
 ## [1.0.0] - 2025-11-15
 

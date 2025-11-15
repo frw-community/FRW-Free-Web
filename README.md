@@ -8,7 +8,7 @@
 [![Node](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen.svg)](https://nodejs.org)
 [![IPFS](https://img.shields.io/badge/IPFS-Powered-blueviolet.svg)](https://ipfs.tech)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)](https://typescriptlang.org)
-[![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.0.1-green.svg)](CHANGELOG.md)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 [Download for Windows](apps/browser/release) • [Documentation](docs/) • [Community](https://github.com/frw-community/frw-free-web-modern/discussions) • [Roadmap](#roadmap)
@@ -760,7 +760,7 @@ See [GitHub Discussions](https://github.com/frw-community/frw-free-web-modern/di
 
 ## Project Status
 
-- **Version:** 1.0.0
+- **Version:** 1.0.1
 - **Released:** November 2025
 - **Codebase:** ~5,000 lines (core) + ~3,500 lines (documentation)
 - **Tests:** 40/40 passing
