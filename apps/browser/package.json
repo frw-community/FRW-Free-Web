@@ -2,7 +2,7 @@
   "name": "@frw/browser",
   "version": "1.0.1",
   "description": "FRW Browser - Decentralized web browser",
-  "main": "dist/main/index.js",
+  "main": "dist/src/main/index.js",
   "type": "module",
   "scripts": {
     "dev": "concurrently \"npm run dev:vite\" \"npm run dev:electron\"",
