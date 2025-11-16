@@ -1,20 +1,20 @@
-# FRW Protocol - Chrome Extension
+# FRW Chrome Extension
 
-**Browse the decentralized web using `frw://` URLs directly in Chrome, Edge, Brave, and other Chromium browsers.**
+Chrome extension for browsing decentralized FRW protocol sites in Chromium-based browsers.
 
 ## Overview
 
-This Chrome extension enables seamless browsing of FRW (Free Web) content published on IPFS with human-readable names. No separate application needed - just install the extension and start browsing `frw://name/` URLs!
+Enables access to decentralized websites using the `frw://` protocol. Connects to FRW's distributed network for name resolution and fetches content from IPFS via public gateways.
 
-### Key Features
+### Features
 
-- **frw:// Protocol Support** - Navigate to `frw://alice/`, `frw://bob/`, etc.
-- **Distributed Name Resolution** - Queries 4 Swiss bootstrap nodes for fast, reliable resolution
-- **IPFS Gateway Fallback** - Automatically tries multiple IPFS gateways (ipfs.io, Cloudflare, dweb.link, etc.)
-- **Verification Badges** - Visual indicators showing cryptographically verified content
-- **Smart Caching** - 5-minute L1 cache for instant repeated access
-- **Beautiful UI** - Modern, clean interface matching FRW branding
-- **Zero Configuration** - Works out of the box with FRW network
+- Distributed name resolution via bootstrap nodes
+- IPFS content fetching with 5-gateway failover
+- Cryptographic signature verification
+- Omnibox integration (`frw` + Tab)
+- Extension popup with quick navigation
+- L1 caching (5 min TTL)
+- Support for HTML, images, text, and binary content
 
 ## Installation
 
@@ -47,34 +47,26 @@ Same process as Chrome - all Chromium browsers support the same extension format
 
 ## Usage
 
-**IMPORTANT**: Chrome extensions cannot intercept `frw://` URLs typed directly in the address bar due to browser security limitations. Use one of these methods instead:
+**Note**: Chrome extensions cannot intercept `frw://` URLs typed directly in the address bar due to browser security restrictions. Use one of the following methods:
 
-### Method 1: Extension Popup (Recommended - Easiest!)
+### Extension Popup (Recommended)
 
-1. **Click** the FRW icon in your toolbar (⚓ nautical wheel logo)
-2. **Type** the name (e.g., `frw`)
-3. **Click** "Go" or press Enter
+1. Click the FRW icon in toolbar
+2. Enter a name (e.g., `frw`)
+3. Press Enter or click "Go"
 
-**This is the most natural way to use the extension!**
+Keyboard shortcut: `Alt+F`
 
-### Method 2: Omnibox Keyword
+### Omnibox
 
 1. Type `frw` in address bar
-2. Press **Tab** (you'll see "Search FRW Protocol")
-3. Type the name (e.g., `frw`)
-4. Press **Enter**
+2. Press `Tab`
+3. Enter the name
+4. Press `Enter`
 
-### Method 3: Keyboard Shortcut (Coming Soon)
+### Protocol Limitation
 
-We're working on adding `Alt+F` to open the extension popup quickly.
-
----
-
-## Why Can't I Type `frw://name` Directly?
-
-Chrome doesn't allow extensions to register custom protocol handlers like `frw://`. This is a security restriction to prevent malicious extensions from hijacking URLs.
-
-**For native `frw://` support**, use the **FRW Electron Browser** (`apps/browser/`) which registers the protocol at the OS level.
+Chrome extensions cannot register custom protocol handlers for security reasons. For native `frw://` URL support in the address bar, use the FRW Electron browser (`apps/browser/`).
 
 ## Architecture
 
@@ -292,26 +284,18 @@ const resolver = new FRWResolver({ cacheTTL: 600000 }); // 10 minutes
 
 ## Browser Compatibility
 
-- ✅ Chrome 88+
-- ✅ Edge 88+
-- ✅ Brave 1.20+
-- ✅ Opera 74+
-- ✅ Any Chromium-based browser with Manifest V3 support
+- Chrome 88+
+- Edge 88+
+- Brave 1.20+
+- Opera 74+
+- Any Chromium-based browser with Manifest V3 support
 
 ## Contributing
 
-### Adding Features
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-1. Create feature branch: `git checkout -b feature/my-feature`
-2. Write code with tests
-3. Run `npm test` and `npm run lint`
-4. Submit pull request
-
-### Reporting Bugs
-
-Open an issue with:
-- Browser version
-- Extension version
+For bug reports, include:
+- Browser and extension version
 - Steps to reproduce
 - Console logs
 
@@ -353,9 +337,3 @@ MIT License - see LICENSE file
 
 - **Issues**: https://github.com/frw-community/FRW-Free-Web/issues
 - **Discussions**: https://github.com/frw-community/FRW-Free-Web/discussions
-
----
-
-**Built with ❤️ by the FRW Community**
-
-**Making the decentralized web accessible to everyone, one extension at a time.**

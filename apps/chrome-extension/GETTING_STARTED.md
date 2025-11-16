@@ -1,6 +1,8 @@
-# Getting Started with FRW Chrome Extension
+# Getting Started
 
-## Quick Start (5 minutes)
+Quick start guide for developing and testing the FRW Chrome Extension.
+
+## Installation
 
 ### 1. Install Dependencies
 
@@ -9,34 +11,32 @@ cd apps/chrome-extension
 npm install
 ```
 
-### 2. Build the Extension
+### 2. Build
 
 ```bash
 npm run build
 ```
 
-This creates a `dist/` directory with the compiled extension.
+Compiled extension will be in `dist/` directory.
 
-### 3. Load in Chrome
+### 3. Load in Browser
 
-1. Open Chrome and go to: `chrome://extensions/`
-2. Toggle "Developer mode" ON (top right corner)
+1. Open `chrome://extensions/`
+2. Enable "Developer mode"
 3. Click "Load unpacked"
-4. Navigate to and select the `apps/chrome-extension/dist` folder
-5. Done! The FRW extension is now installed
+4. Select `apps/chrome-extension/dist`
 
-### 4. Test It Out
+### 4. Test
 
-Try navigating to a FRW URL:
+Use the extension popup:
+1. Click the FRW icon in toolbar (or press Alt+F)
+2. Enter a name (e.g., `frw`)
+3. Press Enter
 
-```
-frw://frw/
-```
-
-Or use the extension:
-1. Click the FRW extension icon in toolbar
-2. Type a name (e.g., "frw")
-3. Click "Go"
+Or use the omnibox:
+1. Type `frw` in address bar
+2. Press Tab
+3. Enter name and press Enter
 
 ## Development Workflow
 
@@ -82,10 +82,9 @@ src/
 
 ## Next Steps
 
-1. **Read the README** - Full documentation in README.md
-2. **Explore the Code** - Start with `src/core/resolver.ts`
-3. **Run Tests** - `npm test` to see all tests passing
-4. **Make Changes** - Try modifying the UI or adding features
+- Read full documentation in README.md
+- Review test suite: `npm test`
+- See CONTRIBUTING.md for development guidelines
 
 ## Common Tasks
 
