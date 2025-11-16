@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import VerificationBadge from './VerificationBadge';
-import { queryName } from '../../config/bootstrap';
+import { queryName } from '../../config/bootstrap-renderer';
 
 interface ContentViewerProps {
   url: string;
