@@ -7,7 +7,6 @@
   "homepage_url": "https://github.com/frw-community/FRW-Free-Web",
   
   "permissions": [
-    "webRequest",
     "storage",
     "tabs"
   ],

@@ -15,21 +15,8 @@ chrome.omnibox.onInputEntered.addListener((text) => {
   handleFRWUrl(url);
 });
 
-/**
- * Handle frw:// URL navigation
- */
-chrome.webRequest.onBeforeRequest.addListener(
-  (details) => {
-    if (details.url.startsWith('frw://')) {
-      console.log('[FRW Extension] Intercepted:', details.url);
-      handleFRWUrl(details.url);
-      return { cancel: true };
-    }
-    return { cancel: false };
-  },
-  { urls: ['<all_urls>'] },
-  ['blocking']
-);
+// Note: Chrome extensions cannot intercept custom protocols like frw://
+// Users must use the omnibox (frw + Tab) or extension popup instead
 
 /**
  * Handle tab updates to detect frw:// in address bar
