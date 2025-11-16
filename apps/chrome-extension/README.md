@@ -47,31 +47,34 @@ Same process as Chrome - all Chromium browsers support the same extension format
 
 ## Usage
 
-### Method 1: Address Bar
+**IMPORTANT**: Chrome extensions cannot intercept `frw://` URLs typed directly in the address bar due to browser security limitations. Use one of these methods instead:
 
-Simply type a FRW URL in the address bar:
+### Method 1: Extension Popup (Recommended - Easiest!)
 
-```
-frw://alice/
-frw://sovathasok/
-frw://myblog/
-```
+1. **Click** the FRW icon in your toolbar (⚓ nautical wheel logo)
+2. **Type** the name (e.g., `frw`)
+3. **Click** "Go" or press Enter
 
-The extension will automatically intercept and load the content.
+**This is the most natural way to use the extension!**
 
-### Method 2: Omnibox
+### Method 2: Omnibox Keyword
 
-Type `frw` + Tab, then the name:
+1. Type `frw` in address bar
+2. Press **Tab** (you'll see "Search FRW Protocol")
+3. Type the name (e.g., `frw`)
+4. Press **Enter**
 
-```
-frw<Tab> alice<Enter>
-```
+### Method 3: Keyboard Shortcut (Coming Soon)
 
-### Method 3: Extension Popup
+We're working on adding `Alt+F` to open the extension popup quickly.
 
-1. Click the FRW extension icon
-2. Enter a name in the input field
-3. Click "Go"
+---
+
+## Why Can't I Type `frw://name` Directly?
+
+Chrome doesn't allow extensions to register custom protocol handlers like `frw://`. This is a security restriction to prevent malicious extensions from hijacking URLs.
+
+**For native `frw://` support**, use the **FRW Electron Browser** (`apps/browser/`) which registers the protocol at the OS level.
 
 ## Architecture
 

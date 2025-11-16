@@ -30,12 +30,12 @@ This creates a `dist/` directory with the compiled extension.
 Try navigating to a FRW URL:
 
 ```
-frw://sovathasok/
+frw://frw/
 ```
 
 Or use the extension:
 1. Click the FRW extension icon in toolbar
-2. Type a name (e.g., "sovathasok")
+2. Type a name (e.g., "frw")
 3. Click "Go"
 
 ## Development Workflow

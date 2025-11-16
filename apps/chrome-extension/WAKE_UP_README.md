@@ -38,12 +38,18 @@ npm run build
 
 ### 3. Test It!
 
-Navigate to: **`frw://sovathasok/`**
+**Click the FRW icon in your toolbar**, then:
+- Type "frw" or "frw"
+- Press Enter or click "Go"
+
+**Or use keyboard shortcut: Alt+F**
 
 You should see:
 - ✅ Content loads from IPFS
 - ✅ Verification badge at top
 - ✅ Modern, clean UI
+
+**Note**: You cannot type `frw://` URLs directly in Chrome's address bar due to browser security limitations. Use the extension popup or omnibox (frw + Tab) instead!
 
 ---
 
@@ -227,7 +233,7 @@ Same extension works on Edge - just upload to Edge Add-ons store (FREE).
 1. ✅ Install dependencies: `npm install`
 2. ✅ Build: `npm run build`
 3. ✅ Load in Chrome
-4. ✅ Test with `frw://sovathasok/`
+4. ✅ Test with `frw://frw/`
 
 ### This Week (Optional)
 1. Create icons (5 min)

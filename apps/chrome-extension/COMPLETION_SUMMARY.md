@@ -284,7 +284,7 @@ npm test
 
 ### Test URL
 
-Navigate to: `frw://sovathasok/`
+Navigate to: `frw://frw/`
 
 **Expected Result**: Content loads with verification badge
 
@@ -319,7 +319,7 @@ To publish on Chrome Web Store, you'll need:
 
 2. **Test Extension** (10 min)
    - Load in Chrome
-   - Navigate to `frw://sovathasok/`
+   - Navigate to `frw://frw/`
    - Test popup
    - Verify verification badge
 
