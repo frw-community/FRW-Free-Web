@@ -1,0 +1,62 @@
+{
+  "manifest_version": 3,
+  "name": "FRW Protocol - Decentralized Web Browser",
+  "version": "1.0.0",
+  "description": "Browse the decentralized web using frw:// URLs. Access content published on IPFS with human-readable names.",
+  "author": "FRW Community",
+  "homepage_url": "https://github.com/frw-community/FRW-Free-Web",
+  
+  "permissions": [
+    "storage",
+    "tabs"
+  ],
+  
+  "host_permissions": [
+    "*://*/*"
+  ],
+  
+  "background": {
+    "service_worker": "background/service-worker.js",
+    "type": "module"
+  },
+  
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  
+  "web_accessible_resources": [
+    {
+      "resources": ["viewer/viewer.html", "viewer/viewer.js", "viewer/viewer.css"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  
+  "omnibox": {
+    "keyword": "frw"
+  },
+  
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+F",
+        "windows": "Alt+F",
+        "mac": "Alt+F",
+        "linux": "Alt+F"
+      },
+      "description": "Open FRW extension popup"
+    }
+  }
+}
