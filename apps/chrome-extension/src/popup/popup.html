@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FRW Extension</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>FRW Protocol</h1>
+      <p class="tagline">Decentralized Web Browser</p>
+    </header>
+
+    <div class="quick-access">
+      <input type="text" id="name-input" placeholder="Enter frw:// name..." />
+      <button id="go-button">Go</button>
+    </div>
+
+    <div class="stats">
+      <h3>Statistics</h3>
+      <div class="stat-item">
+        <span class="stat-label">Cached Names:</span>
+        <span id="cache-count" class="stat-value">-</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Bootstrap Nodes:</span>
+        <span class="stat-value">4 Swiss nodes</span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="clear-cache" class="secondary">Clear Cache</button>
+      <button id="settings" class="secondary">Settings</button>
+    </div>
+
+    <footer>
+      <a href="https://github.com/frw-community/FRW-Free-Web" target="_blank">Documentation</a>
+      <span>v1.0.0</span>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

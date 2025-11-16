@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FRW Browser</title>
+  <link rel="stylesheet" href="viewer.css">
+</head>
+<body>
+  <!-- Verification Badge -->
+  <div id="verification" class="verification-badge">
+    <div class="badge-icon">✓</div>
+    <div class="badge-info">
+      <div class="badge-label">Verified</div>
+      <div class="badge-details">
+        <strong id="name-display"></strong>
+        <span class="separator">|</span>
+        <span id="author"></span>
+        <span class="separator">|</span>
+        <span id="date"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading FRW content...</p>
+  </div>
+
+  <!-- Error State -->
+  <div id="error" class="error" style="display: none;">
+    <div class="error-icon">⚠</div>
+    <h1>Failed to Load</h1>
+    <p id="error-message"></p>
+    <button onclick="window.location.reload()">Try Again</button>
+  </div>
+
+  <!-- Content Area -->
+  <div id="content" style="display: none;"></div>
+
+  <script src="viewer.js"></script>
+</body>
+</html>
