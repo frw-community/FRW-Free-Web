@@ -69,11 +69,9 @@ async function init() {
     console.log('[Viewer] Content fetched:', result);
     
     // Step 3: Display content
-    displayContent(result.content, result.mimeType);
+    await displayContent(result.content, result.mimeType, record.contentCID);
     
-    // Hide loading, show content
-    loadingEl.style.display = 'none';
-    contentEl.style.display = 'block';
+    // Show verification badge
     verificationEl.style.display = 'flex';
     
   } catch (err) {
@@ -93,11 +91,75 @@ function showVerification(record: NameRecord) {
 }
 
 /**
+ * Preload all images in HTML and convert to data URLs
+ */
+async function preloadImagesInHtml(html: string, cid: string): Promise<string> {
+  console.log('[FRW Viewer] Preloading images...');
+  
+  // Find all img src attributes
+  const imgRegex = /<img[^>]+src=["']([^"']+)["']/gi;
+  const matches = [...html.matchAll(imgRegex)];
+  
+  if (matches.length === 0) {
+    console.log('[FRW Viewer] No images found');
+    return html;
+  }
+  
+  console.log('[FRW Viewer] Found', matches.length, 'images to preload');
+  
+  const fetcher = new IPFSFetcher();
+  
+  for (const match of matches) {
+    const originalSrc = match[1];
+    
+    // Skip if already data URL or absolute URL
+    if (originalSrc.startsWith('data:') || originalSrc.startsWith('http')) {
+      continue;
+    }
+    
+    console.log('[FRW Viewer] Loading image:', originalSrc);
+    
+    try {
+      // Fetch image from IPFS
+      const result = await fetcher.fetch(cid, originalSrc);
+      
+      if (result.content) {
+        // Convert to base64 data URL
+        const buffer = result.content instanceof ArrayBuffer ? result.content : new TextEncoder().encode(result.content);
+        const bytes = new Uint8Array(buffer);
+        let binary = '';
+        for (let i = 0; i < bytes.byteLength; i++) {
+          binary += String.fromCharCode(bytes[i]);
+        }
+        const base64 = btoa(binary);
+        const dataUrl = `data:${result.mimeType};base64,${base64}`;
+        
+        // Replace src with data URL
+        html = html.replace(match[0], match[0].replace(originalSrc, dataUrl));
+        console.log('[FRW Viewer] Loaded image:', originalSrc);
+      }
+    } catch (error) {
+      console.warn('[FRW Viewer] Failed to load image:', originalSrc, error);
+    }
+  }
+  
+  console.log('[FRW Viewer] All images preloaded');
+  return html;
+}
+
+/**
  * Display content based on MIME type
  */
-function displayContent(content: string | ArrayBuffer, mimeType: string) {
-  if (mimeType.startsWith('text/html')) {
-    // HTML content - display in iframe
+async function displayContent(content: ArrayBuffer | string, mimeType: string, cid: string) {
+  loadingEl.style.display = 'none';
+  contentEl.style.display = 'block';
+  
+  if (mimeType.includes('html')) {
+    // HTML content - preload images first
+    let htmlContent = content as string;
+    htmlContent = await preloadImagesInHtml(htmlContent, cid);
+    
+    // Display in iframe
     const iframe = document.createElement('iframe');
     iframe.style.width = '100%';
     iframe.style.height = '100%';
@@ -109,7 +171,7 @@ function displayContent(content: string | ArrayBuffer, mimeType: string) {
     const doc = iframe.contentDocument || iframe.contentWindow?.document;
     if (doc) {
       doc.open();
-      doc.write(content as string);
+      doc.write(htmlContent);
       doc.close();
     }
   } else if (mimeType.startsWith('text/')) {

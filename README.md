@@ -125,17 +125,40 @@ Implement censorship-resistant infrastructure for business continuity. Content r
 | **No Mining/Staking** | ✅ | N/A | ✅ | ❌ |
 | **Offline Access** | ✅ | ❌ | ✅ | ❌ |
 
+## Browser Options Comparison
+
+FRW offers two ways to browse decentralized content:
+
+| Feature | Chrome Extension | Electron Browser |
+|---------|------------------|------------------|
+| **Platforms** | Chrome, Edge, Brave, Opera | Windows, Linux, macOS |
+| **Direct `frw://` URLs** | ❌ (Chrome limitation) | ✅ Native support |
+| **How to Browse** | Click icon or `frw`+`Tab` | Type `frw://name` directly |
+| **Installation** | Load unpacked extension | Install app |
+| **Easy to Use** | ✅ Very easy | ✅ Very easy |
+| **Recommended For** | Most users, quick access | Power users, native feel |
+| **Auto-updates** | Manual reload | Via app installer |
+
+**Bottom line**: Chrome extension is easiest for most users. Use Electron browser if you want to type `frw://` URLs directly.
+
 ## Installation
 
 ### Windows
 
 #### Pre-built Binaries (Recommended)
 
-**FRW Browser**
+**FRW Chrome Extension** (Easiest - Recommended for most users!)
+- Browse FRW sites in Chrome, Edge, Brave, Opera, and all Chromium browsers
+- **Note**: Due to Chrome security restrictions, you cannot type `frw://` URLs directly in the address bar
+- **Use instead**: Click the extension icon OR type `frw` + `Tab` in address bar
+- No installation required - Just load the extension
+- See: [Chrome Extension Guide](apps/chrome-extension/README.md)
+
+**FRW Electron Browser** (For native `frw://` protocol support)
 - [FRW Browser Setup 1.0.0.exe](apps/browser/release/FRW%20Browser%20Setup%201.0.0.exe) - Installer with Start Menu integration
 - [FRW Browser 1.0.0.exe](apps/browser/release/FRW%20Browser%201.0.0.exe) - Portable executable
 
-**FRW CLI**
+**FRW CLI** (For publishing content)
 - [frw-cli-windows.zip](apps/cli/release/) - Portable command-line tools
 
 Extract and test the CLI:
@@ -281,14 +304,45 @@ frw publish ./mysite --name myname
 
 ### Browsing FRW Sites
 
+**🌐 Chrome Extension (Easiest - Works on All Platforms!)**
+
+1. Load the extension in Chrome/Edge/Brave/Opera:
+   ```bash
+   cd apps/chrome-extension
+   npm install
+   npm run build
+   # Then: chrome://extensions → Load unpacked → Select 'dist' folder
+   ```
+
+2. **How to browse** (Chrome security prevents direct `frw://` URLs):
+   
+   **Method A - Extension Popup (Recommended):**
+   - Click the FRW icon in toolbar (or press `Alt+F`)
+   - Type a name (e.g., `frw`, `alice`)
+   - Press Enter
+   
+   **Method B - Omnibox:**
+   - Type `frw` in address bar
+   - Press `Tab` (you'll see "Search FRW Protocol")
+   - Type the name (e.g., `frw`)
+   - Press `Enter`
+
+**⚠️ Important**: You **cannot** type `frw://name` directly in Chrome's address bar. This is a Chrome security restriction that prevents extensions from registering custom protocols. Use Method A or B above instead.
+
+**💡 For native `frw://` support**, use the Electron browser below.
+
+See full guide: [Chrome Extension README](apps/chrome-extension/README.md)
+
+---
+
 <details>
-<summary><b>Windows</b></summary>
+<summary><b>Alternative: FRW Electron Browser (Native Protocol Support)</b></summary>
 
-**Option A: Use FRW Browser (Recommended)**
+**Windows:**
 - Launch "FRW Browser" from Start Menu
-- Navigate to `frw://myname/`
+- Navigate to `frw://myname/` directly in address bar
 
-**Option B: Development Mode**
+**Development Mode:**
 ```powershell
 cd apps\browser
 npm run dev
@@ -410,8 +464,9 @@ See [packages/name-registry/README.md](packages/name-registry/README.md) for com
 
 ### Applications
 
+- **apps/chrome-extension** - Chrome/Edge/Brave extension for browsing `frw://` sites (Recommended!)
+- **apps/browser** - Electron-based browser for native `frw://` protocol support
 - **apps/cli** - Command-line interface for publishing and managing content
-- **apps/browser** - Electron-based browser for viewing `frw://` sites
 - **apps/bootstrap-node** - Optional HTTP index node for fast name resolution
 
 ### Name Registration & Proof-of-Work
@@ -608,7 +663,8 @@ npm run test:e2e
 ```
 frw-free-web-modern/
 ├── apps/
-│   ├── browser/              # Electron browser for viewing frw:// sites
+│   ├── chrome-extension/     # Chrome extension for browsing (Recommended!)
+│   ├── browser/              # Electron browser for native protocol support
 │   ├── cli/                  # Command-line tool for publishing
 │   └── bootstrap-node/       # Optional HTTP index node
 │       ├── DEPLOY_SUCCESS.md # Complete deployment guide
@@ -697,8 +753,12 @@ See [docs/DEVELOPMENT_WORKFLOW.md](docs/DEVELOPMENT_WORKFLOW.md) for detailed de
 
 ## Documentation
 
+### For Users
+- **[Chrome Extension Guide](apps/chrome-extension/README.md)** - Browse FRW sites in Chrome/Edge/Brave (Easiest!)
 - **[CLI Usage](apps/cli/README.md)** - Publishing and managing content
 - **[DNS Domain Linking](packages/name-registry/README.md#dns-domain-linking)** - Link traditional domains to FRW names
+
+### For Developers & Node Operators
 - **[Bootstrap Node Deployment](apps/bootstrap-node/DEPLOY_SUCCESS.md)** - Running a network node
 - **[Security Model](docs/SECURITY.md)** - Complete security documentation, fork protection, attack scenarios
 - **[Version Synchronization](apps/bootstrap-node/VERSION_SYNC.md)** - Keeping bootstrap nodes in sync
