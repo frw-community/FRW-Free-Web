@@ -18,18 +18,21 @@ interface PublishOptions {
 export async function publishCommand(directory: string = '.', options: PublishOptions): Promise<void> {
   logger.section('Publish to FRW');
 
-  // Get key
-  const keyPath = options.key || config.get('defaultKeyPath');
-  if (!keyPath) {
-    logger.error('No key found. Run ' + logger.code('frw init') + ' first');
-    process.exit(1);
-  }
-
   // Detect if publishing to V2 name
   let isV2 = false;
   if (options.name) {
     const registeredV2Names: Record<string, string> = config.get('registeredV2Names') || {};
     isV2 = !!registeredV2Names[options.name];
+  }
+
+  // Get key (V2 or V1)
+  let keyPath = options.key;
+  if (!keyPath) {
+    keyPath = isV2 ? config.get('defaultKeyPathV2') : config.get('defaultKeyPath');
+  }
+  if (!keyPath) {
+    logger.error(`No ${isV2 ? 'V2' : ''} key found. Run ${logger.code(isV2 ? 'frw init-v2' : 'frw init')} first`);
+    process.exit(1);
   }
 
   // Load key

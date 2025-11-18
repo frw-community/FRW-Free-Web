@@ -114,7 +114,7 @@ export async function initV2Command(options: InitV2Options): Promise<void> {
   }
 
   // Update config
-  config.set('defaultV2KeyPath', finalKeyPath);
+  config.set('defaultKeyPathV2', finalKeyPath);
 
   logger.section('V2 Initialization Complete');
   logger.success('Quantum-resistant identity created!');
