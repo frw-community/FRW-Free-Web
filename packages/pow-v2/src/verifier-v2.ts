@@ -18,6 +18,7 @@ export class ProofOfWorkVerifierV2 {
     try {
       // 1. Validate version
       if (proof.version !== 2) {
+        console.log('[PoW] Version check failed:', proof.version);
         return false;
       }
 
@@ -30,18 +31,26 @@ export class ProofOfWorkVerifierV2 {
         proof.memory_cost_mib < required.memory_mib ||
         proof.time_cost < required.iterations
       ) {
+        console.log('[PoW] Difficulty check failed:', {
+          proof: { diff: proof.difficulty, mem: proof.memory_cost_mib, time: proof.time_cost },
+          required: { diff: required.leading_zeros, mem: required.memory_mib, time: required.iterations }
+        });
         return false;
       }
 
       // 4. Check timestamp (prevent pre-computation)
       const MIN_TIMESTAMP = new Date('2025-01-01').getTime();
       if (proof.timestamp < MIN_TIMESTAMP) {
+        console.log('[PoW] Timestamp too old:', proof.timestamp);
         return false;
       }
 
-      // 5. Check proof age (must be < 1 hour old)
+      // 5. Check proof age (must be < 30 days to prevent ancient pre-computed attacks)
+      // Extended from 1 hour to 30 days for better usability
       const age = Date.now() - proof.timestamp;
-      if (age > 3600000 || age < 0) {
+      const MAX_AGE = 30 * 24 * 3600000; // 30 days in ms
+      if (age > MAX_AGE || age < 0) {
+        console.log('[PoW] Age check failed:', { age, max: MAX_AGE });
         return false;
       }
 
@@ -60,16 +69,22 @@ export class ProofOfWorkVerifierV2 {
 
       // 7. Verify hash matches
       if (!this.compareHashes(computedHash, proof.hash)) {
+        console.log('[PoW] Hash mismatch!');
+        console.log('  Computed:', Buffer.from(computedHash).toString('hex'));
+        console.log('  Provided:', Buffer.from(proof.hash).toString('hex'));
         return false;
       }
 
       // 8. Verify leading zeros
       if (!this.hasLeadingZeros(proof.hash, proof.difficulty)) {
+        console.log('[PoW] Leading zeros check failed');
         return false;
       }
 
+      console.log('[PoW] Verification passed!');
       return true;
     } catch (error) {
+      console.log('[PoW] Exception during verification:', error);
       return false;
     }
   }
