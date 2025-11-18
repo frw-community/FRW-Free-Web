@@ -1,18 +1,23 @@
 {
   "name": "frw-free-web-modern",
-  "version": "1.0.1",
-  "description": "Decentralized web protocol and client - Monorepo",
+  "version": "2.0.0",
+  "description": "Decentralized web protocol with quantum-resistant cryptography",
   "private": true,
   "workspaces": [
     "packages/common",
     "packages/crypto",
+    "packages/crypto-pq",
     "packages/ipfs",
     "packages/protocol",
+    "packages/protocol-v2",
+    "packages/pow-v2",
+    "packages/sandbox",
     "packages/storage",
     "packages/name-registry",
     "apps/cli",
     "apps/browser",
-    "apps/bootstrap-node"
+    "apps/bootstrap-node",
+    "apps/chrome-extension"
   ],
   "scripts": {
     "bootstrap": "npm install && npm run build",
