@@ -21,7 +21,7 @@
   ],
   "scripts": {
     "bootstrap": "npm install && npm run build",
-    "build": "npx tsc -b packages/common && npx tsc -b packages/crypto packages/ipfs packages/protocol packages/sandbox packages/storage packages/name-registry && npm run build:cli && npm run build:bootstrap",
+    "build": "npx tsc -b packages/common && npx tsc -b packages/crypto packages/ipfs packages/protocol packages/storage packages/name-registry && npm run build:cli && npm run build:bootstrap",
     "build:cli": "npx tsc -b apps/cli",
     "build:bootstrap": "cd apps/bootstrap-node && npm run build",
     "start:bootstrap": "cd apps/bootstrap-node && npm start",
@@ -73,7 +73,6 @@
     "@types/bs58": "^4.0.4",
     "bs58": "^6.0.0",
     "ipfs-http-client": "^60.0.1",
-    "tweetnacl": "^1.0.3",
-    "vm2": "^3.10.0"
+    "tweetnacl": "^1.0.3"
   }
 }
