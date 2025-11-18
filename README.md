@@ -12,7 +12,7 @@
 [![Quantum Safe](https://img.shields.io/badge/Quantum-Resistant-purple.svg)](docs/v2/README.md)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-[📦 Download Distribution](DISTRIBUTION.md) • [Documentation](docs/) • [🔐 V2 Quantum-Resistant](docs/v2/) • [Community](https://github.com/frw-community/frw-free-web-modern/discussions) • [Roadmap](#roadmap)
+[Download Distribution](DISTRIBUTION.md) • [Documentation](docs/) • [V2 Quantum-Resistant](docs/v2/) • [Community](https://github.com/frw-community/frw-free-web-modern/discussions) • [Roadmap](#roadmap)
 
 </div>
 
@@ -76,16 +76,16 @@ FRW addresses several limitations of traditional web infrastructure:
 
 ## V2 Quantum-Resistant Upgrade
 
-**NEW**: FRW V2 introduces post-quantum cryptography for long-term security against future quantum computing threats.
+FRW V2 introduces post-quantum cryptography for long-term security against future quantum computing threats.
 
 ### What's New in V2
 
-- **🔐 Quantum-Resistant Signatures** - ML-DSA-65 (Dilithium3) provides NIST Level 3 post-quantum security
-- **🔑 Hybrid Cryptography** - Combines Dilithium3 + Ed25519 for maximum compatibility
-- **🛡️ Password Protection** - AES-256-GCM encryption for private keys
-- **⬆️ Seamless Migration** - Upgrade V1 names to V2 while preserving content
-- **🔄 Backward Compatible** - V1 and V2 operate side-by-side
-- **💪 Memory-Hard PoW** - Argon2id replaces SHA-256 for spam resistance
+- **Quantum-Resistant Signatures** - ML-DSA-65 (Dilithium3) provides NIST Level 3 post-quantum security
+- **Hybrid Cryptography** - Combines Dilithium3 + Ed25519 for maximum compatibility
+- **Password Protection** - AES-256-GCM encryption for private keys
+- **Seamless Migration** - Upgrade V1 names to V2 while preserving content
+- **Backward Compatible** - V1 and V2 operate side-by-side
+- **Memory-Hard PoW** - Argon2id replaces SHA-256 for spam resistance
 
 ### V2 Quick Start
 
@@ -150,15 +150,15 @@ Implement censorship-resistant infrastructure for business continuity. Content r
 
 | Feature | FRW | Traditional Web | IPFS Only | Blockchain DNS |
 |---------|-----|----------------|-----------|----------------|
-| **Decentralized Hosting** | ✅ | ❌ | ✅ | ✅ |
-| **Human-Readable Names** | ✅ | ✅ | ❌ | ✅ |
-| **No Registration Fees** | ✅ | ❌ | N/A | ❌ |
-| **DNS Domain Linking** | ✅ | N/A | ❌ | ❌ |
-| **Works Without Blockchain** | ✅ | N/A | ✅ | ❌ |
-| **Sub-second Updates** | ✅ | ✅ | ❌ | ❌ |
-| **Censorship Resistant** | ✅ | ❌ | ✅ | ✅ |
-| **No Mining/Staking** | ✅ | N/A | ✅ | ❌ |
-| **Offline Access** | ✅ | ❌ | ✅ | ❌ |
+| **Decentralized Hosting** | Yes | No | Yes | Yes |
+| **Human-Readable Names** | Yes | Yes | No | Yes |
+| **No Registration Fees** | Yes | No | N/A | No |
+| **DNS Domain Linking** | Yes | N/A | No | No |
+| **Works Without Blockchain** | Yes | N/A | Yes | No |
+| **Sub-second Updates** | Yes | Yes | No | No |
+| **Censorship Resistant** | Yes | No | Yes | Yes |
+| **No Mining/Staking** | Yes | N/A | Yes | No |
+| **Offline Access** | Yes | No | Yes | No |
 
 ## Browser Options Comparison
 
@@ -167,10 +167,10 @@ FRW offers two ways to browse decentralized content:
 | Feature | Chrome Extension | Electron Browser |
 |---------|------------------|------------------|
 | **Platforms** | Chrome, Edge, Brave, Opera | Windows, Linux, macOS |
-| **Direct `frw://` URLs** | ❌ (Chrome limitation) | ✅ Native support |
+| **Direct `frw://` URLs** | No (Chrome limitation) | Yes (Native support) |
 | **How to Browse** | Click icon or `frw`+`Tab` | Type `frw://name` directly |
 | **Installation** | Load unpacked extension | Install app |
-| **Easy to Use** | ✅ Very easy | ✅ Very easy |
+| **Easy to Use** | Very easy | Very easy |
 | **Recommended For** | Most users, quick access | Power users, native feel |
 | **Auto-updates** | Manual reload | Via app installer |
 
@@ -802,7 +802,7 @@ See [docs/DEVELOPMENT_WORKFLOW.md](docs/DEVELOPMENT_WORKFLOW.md) for detailed de
 
 ## Documentation
 
-**[📚 Complete Documentation Index](docs/README.md)**
+**[Complete Documentation Index](docs/README.md)**
 
 ### Quick Links
 
