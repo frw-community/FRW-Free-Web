@@ -203,13 +203,26 @@ export async function publishCommand(directory: string = '.', options: PublishOp
         if (!registration || !registration.pow) {
           spinner.fail(`V2 registration incomplete. Run: frw register-v2 ${options.name}`);
         } else {
+          // Convert config PoW format to ProofOfWorkV2 format
+          const pow = registration.pow;
+          const proofV2 = {
+            version: 2 as const,
+            nonce: BigInt(pow.nonce),
+            timestamp: pow.timestamp,
+            hash: Buffer.from(pow.hash, 'hex'),
+            difficulty: pow.leading_zeros,
+            memory_cost_mib: pow.memory_mib,
+            time_cost: pow.iterations,
+            parallelism: 4
+          };
+          
           // Create V2 record with updated content CID
           const recordV2 = createRecordV2(
             options.name,
             rootCID,
             ipnsName || `/ipns/${publicKeyEncoded}`,
             keyPairV2!,
-            registration.pow
+            proofV2
           );
           
           // Submit to V2 bootstrap endpoints
@@ -220,13 +233,30 @@ export async function publishCommand(directory: string = '.', options: PublishOp
             'http://83.228.214.72:3100'
           ];
           
+          // Serialize record properly (convert Uint8Array to base64 for JSON)
+          const serializedRecord = {
+            ...recordV2,
+            publicKey_ed25519: Buffer.from(recordV2.publicKey_ed25519).toString('base64'),
+            publicKey_dilithium3: Buffer.from(recordV2.publicKey_dilithium3).toString('base64'),
+            signature_ed25519: Buffer.from(recordV2.signature_ed25519).toString('base64'),
+            signature_dilithium3: Buffer.from(recordV2.signature_dilithium3).toString('base64'),
+            hash_sha256: Buffer.from(recordV2.hash_sha256).toString('base64'),
+            hash_sha3: Buffer.from(recordV2.hash_sha3).toString('base64'),
+            previousHash_sha3: recordV2.previousHash_sha3 ? Buffer.from(recordV2.previousHash_sha3).toString('base64') : null,
+            proof_v2: {
+              ...recordV2.proof_v2,
+              nonce: recordV2.proof_v2.nonce.toString(),
+              hash: Buffer.from(recordV2.proof_v2.hash).toString('base64')
+            }
+          };
+          
           let submitted = false;
           for (const node of nodes) {
             try {
               const response = await fetch(`${node}/api/submit/v2`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(recordV2)
+                body: JSON.stringify(serializedRecord)
               });
               if (response.ok) {
                 spinner.succeed('V2 name registry updated');
