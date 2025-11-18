@@ -5,6 +5,7 @@
   "main": "dist/src/main/index.js",
   "type": "module",
   "scripts": {
+    "start": "electron dist/src/main/index.js",
     "dev": "concurrently \"npm run dev:vite\" \"npm run dev:electron\"",
     "dev:vite": "vite",
     "dev:electron": "wait-on http://localhost:5173 && npx tsc -p tsconfig.build.json && electron dist/src/main/index.js",
@@ -24,6 +25,7 @@
   "dependencies": {
     "@frw/common": "1.0.1",
     "@frw/crypto": "1.0.1",
+    "@frw/crypto-pq": "2.0.0",
     "@frw/ipfs": "1.0.1",
     "@frw/name-registry": "1.0.1",
     "@frw/protocol": "1.0.1",
