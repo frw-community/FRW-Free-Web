@@ -164,7 +164,7 @@ export async function registerV2Command(name: string, options: RegisterV2Options
   registeredV2Names[name] = keyPair.did;
   config.set('registeredV2Names', registeredV2Names);
   
-  // Save to registrations format with full metadata
+  // Save to registrations format with full metadata including PoW
   const v2Registrations: Record<string, any> = config.get('v2Registrations') || {};
   v2Registrations[name] = {
     did: keyPair.did,
@@ -172,7 +172,15 @@ export async function registerV2Command(name: string, options: RegisterV2Options
     publicKey_ed25519: Buffer.from(keyPair.publicKey_ed25519).toString('base64'),
     registered: Date.now(),
     version: 2,
-    pqSecure: true
+    pqSecure: true,
+    pow: {
+      leading_zeros: proof.difficulty,
+      memory_mib: proof.memory_cost_mib,
+      iterations: proof.time_cost,
+      nonce: Number(proof.nonce),
+      hash: Buffer.from(proof.hash).toString('hex'),
+      timestamp: proof.timestamp
+    }
   };
   config.set('v2Registrations', v2Registrations);
 
