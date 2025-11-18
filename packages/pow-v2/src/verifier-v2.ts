@@ -48,7 +48,7 @@ export class ProofOfWorkVerifierV2 {
       // 6. Recompute hash
       const computedHash = await this.computeHash(
         name,
-        publicKey_pq,
+        publicKey_dilithium3,
         proof.nonce,
         proof.timestamp,
         {
@@ -100,7 +100,7 @@ export class ProofOfWorkVerifierV2 {
     view.setBigUint64(8, BigInt(timestamp), false);
 
     // Compute Argon2id
-    const argonHash = await argon2.hash(password, {
+    const argonHash = await argon2.hash(Buffer.from(password), {
       salt: Buffer.from(salt),
       hashLength: 32,
       memoryCost: params.memory_mib * 1024,

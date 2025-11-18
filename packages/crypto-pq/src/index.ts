@@ -7,7 +7,6 @@ export * from './signatures-pq';
 export * from './hash-pq';
 
 // Convenience re-exports
-export { KeyManagerV2, generateKeyPairV2, exportKeyPairV2, importKeyPairV2 } from './keys-pq';
-export { SignatureManagerV2, signV2, verifyV2 } from './signatures-pq';
-export { HashManagerV2, hashPQ, verifyHashPQ } from './hash-pq';
-export * from './types';
+export { KeyManagerV2, generateKeyPairV2, validateKeyPairV2 } from './keys-pq';
+export { SignatureManagerV2, signV2, verifyV2, signStringV2, verifyStringV2 } from './signatures-pq';
+export { HashManagerV2, hashPQ, hashFast, hashV2, hashStringV2, verifyHashV2 } from './hash-pq';

@@ -9,22 +9,6 @@ import type { FRWKeyPairV2, CryptoConfigV2 } from './types';
 import { DEFAULT_CONFIG_V2 } from './types';
 import { QuantumCryptoError } from './types';
 
-// Convenience function
-export function generateKeyPairV2(): FRWKeyPairV2 {
-  const manager = new KeyManagerV2();
-  return manager.generateKeyPair();
-}
-
-export function exportKeyPairV2(keyPair: FRWKeyPairV2, password?: string): string {
-  const manager = new KeyManagerV2();
-  return manager.exportKeyPair(keyPair, password);
-}
-
-export function importKeyPairV2(exported: string, password?: string): FRWKeyPairV2 {
-  const manager = new KeyManagerV2();
-  return manager.importKeyPair(exported, password);
-}
-
 export class KeyManagerV2 {
   private config: CryptoConfigV2;
 

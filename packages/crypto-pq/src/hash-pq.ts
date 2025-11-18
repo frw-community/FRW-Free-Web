@@ -8,17 +8,6 @@ import type { HybridHash, CryptoConfigV2 } from './types';
 import { DEFAULT_CONFIG_V2 } from './types';
 import { QuantumCryptoError } from './types';
 
-// Convenience functions
-export function hashPQ(data: Uint8Array): Uint8Array {
-  const manager = new HashManagerV2();
-  return manager.hashSHA3(data);
-}
-
-export function verifyHashPQ(data: Uint8Array, expectedHash: Uint8Array): boolean {
-  const manager = new HashManagerV2();
-  return manager.verifyHash(data, expectedHash);
-}
-
 export class HashManagerV2 {
   private config: CryptoConfigV2;
 

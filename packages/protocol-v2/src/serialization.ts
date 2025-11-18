@@ -24,11 +24,8 @@ export function serializeCanonical(record: DistributedNameRecordV2): Uint8Array 
         : null
     };
 
-    // CBOR encode with deterministic sorting
-    const encoded = cborEncode(canonical, {
-      useRecords: false,
-      mapsAsObjects: true
-    });
+    // CBOR encode (deterministic by default)
+    const encoded = cborEncode(canonical);
 
     return new Uint8Array(encoded);
   } catch (error) {

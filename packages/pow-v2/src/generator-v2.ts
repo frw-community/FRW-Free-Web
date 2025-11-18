@@ -7,16 +7,6 @@ import type { ProofOfWorkV2, DifficultyParams, POWProgress } from './types';
 import { POWError } from './types';
 import { getRequiredDifficulty } from './difficulty-v2';
 
-// Convenience function
-export async function generatePOWV2(
-  name: string,
-  publicKey_dilithium3: Uint8Array,
-  onProgress?: (progress: POWProgress) => void
-): Promise<ProofOfWorkV2> {
-  const generator = new ProofOfWorkGeneratorV2();
-  return generator.generate(name, publicKey_dilithium3, onProgress);
-}
-
 export class ProofOfWorkGeneratorV2 {
   /**
    * Generate quantum-resistant proof of work
@@ -132,7 +122,7 @@ export class ProofOfWorkGeneratorV2 {
       view.setBigUint64(8, BigInt(timestamp), false);
 
       // Compute Argon2id
-      const argonHash = await argon2.hash(password, {
+      const argonHash = await argon2.hash(Buffer.from(password), {
         salt: Buffer.from(salt),
         hashLength: 32,
         memoryCost: params.memory_mib * 1024, // Convert MiB to KiB

@@ -9,21 +9,6 @@ import type { FRWKeyPairV2, HybridSignature, CryptoConfigV2 } from './types';
 import { DEFAULT_CONFIG_V2 } from './types';
 import { QuantumCryptoError } from './types';
 
-// Convenience functions
-export function signV2(message: Uint8Array, keyPair: FRWKeyPairV2): HybridSignature {
-  const manager = new SignatureManagerV2();
-  return manager.sign(message, keyPair);
-}
-
-export function verifyV2(
-  message: Uint8Array,
-  signature: HybridSignature,
-  keyPair: FRWKeyPairV2
-): boolean {
-  const manager = new SignatureManagerV2();
-  return manager.verify(message, signature, keyPair);
-}
-
 export class SignatureManagerV2 {
   private config: CryptoConfigV2;
 
