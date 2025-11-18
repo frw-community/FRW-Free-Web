@@ -159,12 +159,13 @@ async function displayContent(content: ArrayBuffer | string, mimeType: string, c
     let htmlContent = content as string;
     htmlContent = await preloadImagesInHtml(htmlContent, cid);
     
-    // Display in iframe
+    // Display in iframe with secure sandbox
     const iframe = document.createElement('iframe');
     iframe.style.width = '100%';
     iframe.style.height = '100%';
     iframe.style.border = 'none';
-    iframe.sandbox.add('allow-scripts', 'allow-same-origin', 'allow-forms');
+    // Security: Do NOT combine allow-scripts + allow-same-origin as it breaks sandboxing
+    iframe.sandbox.add('allow-scripts', 'allow-forms');
     
     // Write content to iframe
     contentEl.appendChild(iframe);
