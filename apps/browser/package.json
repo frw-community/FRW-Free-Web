@@ -5,6 +5,7 @@
   "main": "dist/src/main/index.js",
   "type": "module",
   "scripts": {
+    "start": "electron dist/src/main/index.js",
     "dev": "concurrently \"npm run dev:vite\" \"npm run dev:electron\"",
     "dev:vite": "vite",
     "dev:electron": "wait-on http://localhost:5173 && npx tsc -p tsconfig.build.json && electron dist/src/main/index.js",
