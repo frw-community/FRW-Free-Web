@@ -181,14 +181,9 @@ async function displayContent(content: ArrayBuffer | string, mimeType: string, c
     // Security: Do NOT combine allow-scripts + allow-same-origin as it breaks sandboxing
     iframe.sandbox.add('allow-scripts', 'allow-forms');
 
-    // Write sanitized content to iframe
+    // Use srcdoc instead of document.write() to avoid cross-origin issues
+    iframe.srcdoc = sanitizedHtml;
     contentEl.appendChild(iframe);
-    const doc = iframe.contentDocument || iframe.contentWindow?.document;
-    if (doc) {
-      doc.open();
-      doc.write(sanitizedHtml);
-      doc.close();
-    }
   } else if (mimeType.startsWith('text/')) {
     // Text content
     const pre = document.createElement('pre');
