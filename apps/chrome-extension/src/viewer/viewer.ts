@@ -170,7 +170,10 @@ async function displayContent(content: ArrayBuffer | string, mimeType: string, c
       ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'id', 'style', 'type',
                      'name', 'value', 'placeholder', 'target', 'rel'],
       KEEP_CONTENT: true,
-      ALLOW_DATA_ATTR: false
+      ALLOW_DATA_ATTR: false,
+      // Allow CSS in style tags (safe in sandboxed iframe)
+      FORCE_BODY: false,
+      WHOLE_DOCUMENT: true
     });
 
     // Display in iframe with secure sandbox
