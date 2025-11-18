@@ -3,6 +3,7 @@
  * Displays content loaded from IPFS
  */
 
+import DOMPurify from 'dompurify';
 import { FRWResolver, type NameRecord } from '../core/resolver';
 import { IPFSFetcher } from '../core/ipfs-fetcher';
 
@@ -158,7 +159,20 @@ async function displayContent(content: ArrayBuffer | string, mimeType: string, c
     // HTML content - preload images first
     let htmlContent = content as string;
     htmlContent = await preloadImagesInHtml(htmlContent, cid);
-    
+
+    // Security: Sanitize HTML to prevent XSS attacks
+    const sanitizedHtml = DOMPurify.sanitize(htmlContent, {
+      ALLOWED_TAGS: ['html', 'head', 'body', 'meta', 'title', 'link', 'style',
+                     'div', 'span', 'p', 'a', 'img', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+                     'ul', 'ol', 'li', 'table', 'tr', 'td', 'th', 'thead', 'tbody',
+                     'br', 'hr', 'strong', 'em', 'b', 'i', 'u', 'code', 'pre', 'blockquote',
+                     'form', 'input', 'button', 'label', 'select', 'option', 'textarea'],
+      ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'id', 'style', 'type',
+                     'name', 'value', 'placeholder', 'target', 'rel'],
+      KEEP_CONTENT: true,
+      ALLOW_DATA_ATTR: false
+    });
+
     // Display in iframe with secure sandbox
     const iframe = document.createElement('iframe');
     iframe.style.width = '100%';
@@ -166,13 +180,13 @@ async function displayContent(content: ArrayBuffer | string, mimeType: string, c
     iframe.style.border = 'none';
     // Security: Do NOT combine allow-scripts + allow-same-origin as it breaks sandboxing
     iframe.sandbox.add('allow-scripts', 'allow-forms');
-    
-    // Write content to iframe
+
+    // Write sanitized content to iframe
     contentEl.appendChild(iframe);
     const doc = iframe.contentDocument || iframe.contentWindow?.document;
     if (doc) {
       doc.open();
-      doc.write(htmlContent);
+      doc.write(sanitizedHtml);
       doc.close();
     }
   } else if (mimeType.startsWith('text/')) {
