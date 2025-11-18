@@ -25,6 +25,7 @@
   "dependencies": {
     "@frw/common": "1.0.1",
     "@frw/crypto": "1.0.1",
+    "@frw/crypto-pq": "2.0.0",
     "@frw/ipfs": "1.0.1",
     "@frw/name-registry": "1.0.1",
     "@frw/protocol": "1.0.1",

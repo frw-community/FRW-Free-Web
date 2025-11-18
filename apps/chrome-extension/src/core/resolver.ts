@@ -10,6 +10,12 @@ export interface NameRecord {
   ipnsKey: string;
   timestamp: number;
   signature: string;
+  // V2 fields (optional for backward compatibility)
+  version?: 1 | 2;
+  did?: string;
+  publicKey_ed25519?: string;
+  publicKey_dilithium3?: string;
+  quantumSafe?: boolean;
 }
 
 export interface ResolverConfig {

@@ -6,6 +6,7 @@
 import DOMPurify from 'dompurify';
 import { FRWResolver, type NameRecord } from '../core/resolver';
 import { IPFSFetcher } from '../core/ipfs-fetcher';
+import { verifyContent, type VerificationResult } from '../core/verification';
 
 const resolver = new FRWResolver();
 const fetcher = new IPFSFetcher();
@@ -69,10 +70,31 @@ async function init() {
     
     console.log('[Viewer] Content fetched:', result);
     
-    // Step 3: Display content
+    // Step 3: Verify content signature (if HTML)
+    let verificationResult: VerificationResult | null = null;
+    if (result.mimeType.includes('html') && typeof result.content === 'string') {
+      loadingEl.textContent = `Verifying content signature...`;
+      verificationResult = await verifyContent(result.content, record);
+      console.log('[Viewer] Verification result:', verificationResult);
+      
+      if (!verificationResult.valid) {
+        showError(`Content signature verification failed: ${verificationResult.error || 'Invalid signature'}`);
+        return;
+      }
+    }
+    
+    // Step 4: Display content
     await displayContent(result.content, result.mimeType, record.contentCID);
     
-    // Show verification badge
+    // Show verification badge with V2 indicator
+    if (verificationResult?.quantumSafe) {
+      verificationEl.classList.add('quantum-safe');
+      const badge = document.createElement('span');
+      badge.className = 'quantum-badge';
+      badge.textContent = '🛡️ Quantum-Safe';
+      badge.title = 'Protected against quantum computer attacks';
+      verificationEl.appendChild(badge);
+    }
     verificationEl.style.display = 'flex';
     
   } catch (err) {

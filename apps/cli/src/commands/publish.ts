@@ -3,8 +3,10 @@ import { join, relative, basename } from 'path';
 import ora from 'ora';
 import inquirer from 'inquirer';
 import { KeyManager, SignatureManager } from '@frw/crypto';
+import { KeyManagerV2, SignatureManagerV2 } from '@frw/crypto-pq';
 import { IPFSClient, DistributedNameRegistry, createDistributedNameRecord } from '@frw/ipfs';
 import { ProofOfWorkGenerator, getRequiredDifficulty } from '@frw/name-registry';
+import { createRecordV2 } from '@frw/protocol-v2';
 import { config } from '../utils/config.js';
 import { logger } from '../utils/logger.js';
 
@@ -23,14 +25,24 @@ export async function publishCommand(directory: string = '.', options: PublishOp
     process.exit(1);
   }
 
+  // Detect if publishing to V2 name
+  let isV2 = false;
+  if (options.name) {
+    const registeredV2Names: Record<string, string> = config.get('registeredV2Names') || {};
+    isV2 = !!registeredV2Names[options.name];
+  }
+
   // Load key
-  const spinner = ora('Loading keypair...').start();
-  let keyPair;
+  const spinner = ora(isV2 ? 'Loading V2 keypair...' : 'Loading keypair...').start();
+  let keyPair: any;
+  let keyPairV2: any;
+  let publicKeyEncoded: string;
+  
   try {
     const keyData = JSON.parse(await readFile(keyPath, 'utf-8'));
     
     let password: string | undefined;
-    if (typeof keyData.privateKey === 'object') {
+    if (typeof keyData.privateKey === 'object' || typeof keyData.privateKey_ed25519 === 'object') {
       spinner.stop();
       const { keyPassword } = await inquirer.prompt([
         {
@@ -41,17 +53,23 @@ export async function publishCommand(directory: string = '.', options: PublishOp
         }
       ]);
       password = keyPassword;
-      spinner.start('Loading keypair...');
+      spinner.start(isV2 ? 'Loading V2 keypair...' : 'Loading keypair...');
     }
 
-    keyPair = KeyManager.importKeyPair(keyData, password);
-    spinner.succeed('Keypair loaded');
+    if (isV2) {
+      const keyManager = new KeyManagerV2();
+      keyPairV2 = keyManager.importKeyPair(keyData, password);
+      publicKeyEncoded = keyPairV2.did;
+      spinner.succeed('V2 Keypair loaded');
+    } else {
+      keyPair = KeyManager.importKeyPair(keyData, password);
+      publicKeyEncoded = SignatureManager.encodePublicKey(keyPair.publicKey);
+      spinner.succeed('Keypair loaded');
+    }
   } catch (error) {
     spinner.fail('Failed to load keypair');
     process.exit(1);
   }
-
-  const publicKeyEncoded = SignatureManager.encodePublicKey(keyPair.publicKey);
 
   // Scan directory
   spinner.start('Scanning directory...');
@@ -68,7 +86,24 @@ export async function publishCommand(directory: string = '.', options: PublishOp
     
     if (filePath.endsWith('.html') || filePath.endsWith('.frw')) {
       const content = await readFile(filePath, 'utf-8');
-      const signed = SignatureManager.signPage(content, keyPair.privateKey);
+      let signed: string;
+      
+      if (isV2) {
+        // V2 signing with Dilithium3
+        const signatureManager = new SignatureManagerV2();
+        const signature = signatureManager.signString(content, keyPairV2);
+        // Inject V2 signature into HTML
+        signed = content.replace('</head>', `
+<meta name="frw-version" content="2">
+<meta name="frw-did" content="${keyPairV2.did}">
+<meta name="frw-signature-dilithium3" content="${Buffer.from(signature.signature_dilithium3).toString('base64')}">
+<meta name="frw-signature-ed25519" content="${Buffer.from(signature.signature_ed25519).toString('base64')}">
+</head>`);
+      } else {
+        // V1 signing with Ed25519
+        signed = SignatureManager.signPage(content, keyPair.privateKey);
+      }
+      
       signedFiles.push({
         path: relativePath,
         content: Buffer.from(signed, 'utf-8')
@@ -153,11 +188,66 @@ export async function publishCommand(directory: string = '.', options: PublishOp
   if (options.name) {
     spinner.start('Updating name registry...');
     try {
-      // Get registered name info from config
-      const registeredNames = config.get('registeredNames') || {};
-      if (!registeredNames[options.name]) {
-        spinner.warn(`Name "${options.name}" not registered. Run: frw register ${options.name}`);
+      // Detect if V2 name
+      const registeredV2Names: Record<string, any> = config.get('registeredV2Names') || {};
+      const isV2 = !!registeredV2Names[options.name];
+      
+      if (isV2) {
+        // V2 publishing - create and submit V2 record
+        const v2Registrations: Record<string, any> = config.get('v2Registrations') || {};
+        const registration = v2Registrations[options.name];
+        
+        if (!registration || !registration.pow) {
+          spinner.fail(`V2 registration incomplete. Run: frw register-v2 ${options.name}`);
+        } else {
+          // Create V2 record with updated content CID
+          const recordV2 = createRecordV2(
+            options.name,
+            rootCID,
+            ipnsName || `/ipns/${publicKeyEncoded}`,
+            keyPairV2!,
+            registration.pow
+          );
+          
+          // Submit to V2 bootstrap endpoints
+          const nodes = [
+            'http://83.228.214.189:3100',
+            'http://83.228.213.45:3100',
+            'http://83.228.213.240:3100',
+            'http://83.228.214.72:3100'
+          ];
+          
+          let submitted = false;
+          for (const node of nodes) {
+            try {
+              const response = await fetch(`${node}/api/submit/v2`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(recordV2)
+              });
+              if (response.ok) {
+                spinner.succeed('V2 name registry updated');
+                submitted = true;
+                break;
+              } else {
+                const errorText = await response.text();
+                logger.debug(`Bootstrap node ${node} rejected V2 record: ${errorText}`);
+              }
+            } catch (err) {
+              logger.debug(`Bootstrap node ${node} unreachable: ${err}`);
+            }
+          }
+          
+          if (!submitted) {
+            spinner.warn('V2 registry update failed - content still published to IPFS');
+          }
+        }
       } else {
+        // V1 publishing
+        const registeredNames = config.get('registeredNames') || {};
+        if (!registeredNames[options.name]) {
+          spinner.warn(`Name "${options.name}" not registered. Run: frw register ${options.name}`);
+        } else {
         // Create updated record with new contentCID
         const ipnsKey = `/ipns/${publicKeyEncoded}`;
         const record = createDistributedNameRecord(
@@ -202,6 +292,7 @@ export async function publishCommand(directory: string = '.', options: PublishOp
           } catch (err) {
             // Continue to next node
           }
+        }
         }
       }
     } catch (error) {

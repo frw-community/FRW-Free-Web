@@ -22,7 +22,12 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js']
+    extensions: ['.tsx', '.ts', '.js'],
+    fallback: {
+      'crypto': false,  // Not needed for verification
+      'stream': false,
+      'buffer': false
+    }
   },
   plugins: [
     new CopyPlugin({
