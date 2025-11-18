@@ -35,7 +35,9 @@ export class V2RecordManager {
       // Verify record
       const verification = await this.verifier.verify(record);
       if (!verification.valid) {
-        console.error('[V2] Invalid record:', verification.errors);
+        console.error('[V2] ✗ Record validation failed for:', record.name);
+        console.error('[V2] Errors:', JSON.stringify(verification.errors, null, 2));
+        console.error('[V2] Checks:', JSON.stringify(verification.checks, null, 2));
         return false;
       }
 

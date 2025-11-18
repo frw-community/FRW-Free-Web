@@ -6,7 +6,7 @@ import { KeyManager, SignatureManager } from '@frw/crypto';
 import { KeyManagerV2, SignatureManagerV2 } from '@frw/crypto-pq';
 import { IPFSClient, DistributedNameRegistry, createDistributedNameRecord } from '@frw/ipfs';
 import { ProofOfWorkGenerator, getRequiredDifficulty } from '@frw/name-registry';
-import { createRecordV2 } from '@frw/protocol-v2';
+import { createRecordV2, toJSON } from '@frw/protocol-v2';
 import { config } from '../utils/config.js';
 import { logger } from '../utils/logger.js';
 
@@ -227,28 +227,15 @@ export async function publishCommand(directory: string = '.', options: PublishOp
           
           // Submit to V2 bootstrap endpoints
           const nodes = [
+            'http://localhost:3100',  // Local testing
             'http://83.228.214.189:3100',
             'http://83.228.213.45:3100',
             'http://83.228.213.240:3100',
             'http://83.228.214.72:3100'
           ];
           
-          // Serialize record properly (convert Uint8Array to base64 for JSON)
-          const serializedRecord = {
-            ...recordV2,
-            publicKey_ed25519: Buffer.from(recordV2.publicKey_ed25519).toString('base64'),
-            publicKey_dilithium3: Buffer.from(recordV2.publicKey_dilithium3).toString('base64'),
-            signature_ed25519: Buffer.from(recordV2.signature_ed25519).toString('base64'),
-            signature_dilithium3: Buffer.from(recordV2.signature_dilithium3).toString('base64'),
-            hash_sha256: Buffer.from(recordV2.hash_sha256).toString('base64'),
-            hash_sha3: Buffer.from(recordV2.hash_sha3).toString('base64'),
-            previousHash_sha3: recordV2.previousHash_sha3 ? Buffer.from(recordV2.previousHash_sha3).toString('base64') : null,
-            proof_v2: {
-              ...recordV2.proof_v2,
-              nonce: recordV2.proof_v2.nonce.toString(),
-              hash: Buffer.from(recordV2.proof_v2.hash).toString('base64')
-            }
-          };
+          // Use official protocol serialization
+          const recordJSON = toJSON(recordV2);
           
           let submitted = false;
           for (const node of nodes) {
@@ -256,7 +243,7 @@ export async function publishCommand(directory: string = '.', options: PublishOp
               const response = await fetch(`${node}/api/submit/v2`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(serializedRecord)
+                body: recordJSON
               });
               if (response.ok) {
                 spinner.succeed('V2 name registry updated');
