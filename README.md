@@ -8,10 +8,11 @@
 [![Node](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen.svg)](https://nodejs.org)
 [![IPFS](https://img.shields.io/badge/IPFS-Powered-blueviolet.svg)](https://ipfs.tech)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)](https://typescriptlang.org)
-[![Version](https://img.shields.io/badge/version-1.0.1-green.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-2.0.0-green.svg)](CHANGELOG.md)
+[![Quantum Safe](https://img.shields.io/badge/Quantum-Resistant-purple.svg)](docs/v2/README.md)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-[📦 Download Distribution](DISTRIBUTION.md) • [Documentation](docs/) • [Community](https://github.com/frw-community/frw-free-web-modern/discussions) • [Roadmap](#roadmap)
+[📦 Download Distribution](DISTRIBUTION.md) • [Documentation](docs/) • [🔐 V2 Quantum-Resistant](docs/v2/) • [Community](https://github.com/frw-community/frw-free-web-modern/discussions) • [Roadmap](#roadmap)
 
 </div>
 
@@ -21,6 +22,7 @@
 
 - [What is FRW?](#what-is-frw)
 - [Why FRW?](#why-frw)
+- [V2 Quantum-Resistant Upgrade](#v2-quantum-resistant-upgrade)
 - [Key Features](#key-features)
 - [Use Cases](#use-cases)
 - [Comparison with Alternatives](#comparison-with-alternatives)
@@ -39,7 +41,7 @@
 
 FRW is a decentralized web platform where content is stored on IPFS, names are registered via distributed consensus with proof-of-work anti-spam protection, and everything is cryptographically verified.
 
-The system operates without central servers or gatekeepers. Content distribution is handled through IPFS, name resolution uses a multi-layer approach (bootstrap nodes + DHT + pubsub), and all operations are verified using Ed25519 signatures.
+The system operates without central servers or gatekeepers. Content distribution is handled through IPFS, name resolution uses a multi-layer approach (bootstrap nodes + DHT + pubsub), and all operations are verified using quantum-resistant cryptography (V2) or Ed25519 signatures (V1).
 
 ### Key Metrics
 
@@ -69,7 +71,38 @@ FRW addresses several limitations of traditional web infrastructure:
 - **Content** stored on IPFS (distributed globally across thousands of nodes)
 - **Names** registered via DHT + optional bootstrap nodes (pure peer-to-peer)
 - **Updates** propagated via IPFS pubsub (real-time, censorship-resistant)
-- **Security** via Ed25519 signatures (cryptographically verified, not trust-based)
+- **Security** via quantum-resistant Dilithium3 (V2) or Ed25519 (V1) signatures
+- **Future-Proof** post-quantum cryptography protects against quantum computing threats
+
+## V2 Quantum-Resistant Upgrade
+
+**NEW**: FRW V2 introduces post-quantum cryptography for long-term security against future quantum computing threats.
+
+### What's New in V2
+
+- **🔐 Quantum-Resistant Signatures** - ML-DSA-65 (Dilithium3) provides NIST Level 3 post-quantum security
+- **🔑 Hybrid Cryptography** - Combines Dilithium3 + Ed25519 for maximum compatibility
+- **🛡️ Password Protection** - AES-256-GCM encryption for private keys
+- **⬆️ Seamless Migration** - Upgrade V1 names to V2 while preserving content
+- **🔄 Backward Compatible** - V1 and V2 operate side-by-side
+- **💪 Memory-Hard PoW** - Argon2id replaces SHA-256 for spam resistance
+
+### V2 Quick Start
+
+```bash
+# Create quantum-resistant identity
+frw init-v2
+
+# Register with V2 (quantum-safe)
+frw register-v2 myname
+
+# Migrate existing V1 name to V2
+frw migrate myoldname
+```
+
+**Learn more:** [V2 Documentation](docs/v2/README.md) • [Migration Guide](docs/v2/MIGRATION_GUIDE.md)
+
+---
 
 ## Key Features
 
@@ -89,8 +122,10 @@ FRW addresses several limitations of traditional web infrastructure:
 - **Distributed registry** - Multi-layer resolution with DHT fallback
 
 ### Technical Highlights
-- **Ed25519 cryptographic signatures** for all content verification
-- **Proof-of-work name registration** prevents spam and squatting
+- **Quantum-resistant cryptography (V2)** - Dilithium3 (ML-DSA-65) + Ed25519 hybrid
+- **Ed25519 signatures (V1)** for legacy compatibility
+- **Argon2id proof-of-work (V2)** - Memory-hard spam prevention
+- **Password-protected keys** - AES-256-GCM encryption
 - **DNS domain linking** with cryptographic verification via TXT records
 - **Multi-layer resolution**: HTTP bootstrap → IPFS DHT → Pubsub
 - **Works without bootstrap nodes** - Pure P2P fallback via IPFS DHT
@@ -455,12 +490,18 @@ See [packages/name-registry/README.md](packages/name-registry/README.md) for com
 
 ### Core Packages
 
+**V1 (Ed25519):**
 - **@frw/protocol** - URL parsing and `frw://` protocol handling
 - **@frw/crypto** - Ed25519 key management, signing, and verification
 - **@frw/ipfs** - IPFS integration with DHT, pubsub, and content storage
 - **@frw/name-registry** - Distributed name resolution with proof-of-work
 - **@frw/common** - Shared types and utilities
 - **@frw/storage** - Local caching and persistence layer
+
+**V2 (Quantum-Resistant):**
+- **@frw/crypto-pq** - Dilithium3 + Ed25519 hybrid cryptography
+- **@frw/pow-v2** - Argon2id memory-hard proof of work
+- **@frw/protocol-v2** - V2 record format and verification
 
 ### Applications
 
@@ -687,9 +728,17 @@ frw-free-web-modern/
 
 ### Cryptographic Guarantees
 
+**V2 (Quantum-Resistant):**
+- **Dilithium3 (ML-DSA-65)** - NIST-approved post-quantum signatures (128-bit security)
+- **Hybrid Signatures** - Dilithium3 + Ed25519 for compatibility
+- **SHA3-256 Hashing** - Quantum-resistant hash function
+- **Argon2id PoW** - Memory-hard proof of work
+- **AES-256-GCM** - Password protection for private keys
+
+**V1 (Classic):**
 - **Ed25519 Signatures** - All content signed with 256-bit keys
+- **SHA-256 Hashing** - Content integrity verification
 - **Proof-of-Work Verification** - Bootstrap nodes validate POW before accepting registrations
-- **Content Addressing** - SHA-256 hashes ensure content integrity
 - **Signature Verification** - Every resolution verifies the signature matches the registered public key
 - **No Trust Required** - Cryptographic proof, not certificate authorities
 
@@ -753,16 +802,26 @@ See [docs/DEVELOPMENT_WORKFLOW.md](docs/DEVELOPMENT_WORKFLOW.md) for detailed de
 
 ## Documentation
 
-### For Users
-- **[Chrome Extension Guide](apps/chrome-extension/README.md)** - Browse FRW sites in Chrome/Edge/Brave (Easiest!)
-- **[CLI Usage](apps/cli/README.md)** - Publishing and managing content
-- **[DNS Domain Linking](packages/name-registry/README.md#dns-domain-linking)** - Link traditional domains to FRW names
+**[📚 Complete Documentation Index](docs/README.md)**
 
-### For Developers & Node Operators
-- **[Bootstrap Node Deployment](apps/bootstrap-node/DEPLOY_SUCCESS.md)** - Running a network node
-- **[Security Model](docs/SECURITY.md)** - Complete security documentation, fork protection, attack scenarios
-- **[Version Synchronization](apps/bootstrap-node/VERSION_SYNC.md)** - Keeping bootstrap nodes in sync
-- **[Development Workflow](docs/DEVELOPMENT_WORKFLOW.md)** - Building new features
+### Quick Links
+
+**Getting Started:**
+- [Installation & Quick Start](#installation) (see above)
+- [CLI Commands](apps/cli/README.md)
+- [Chrome Extension](apps/chrome-extension/README.md)
+
+**V2 Quantum-Resistant:**
+- [V2 Overview](docs/v2/README.md)
+- [Migration Guide](docs/v2/MIGRATION_GUIDE.md)
+
+**Node Operators:**
+- [Bootstrap Node Setup](apps/bootstrap-node/DEPLOY_SUCCESS.md)
+- [Version Sync](apps/bootstrap-node/VERSION_SYNC.md)
+
+**Security:**
+- [Security Model](docs/SECURITY.md)
+- [Cryptography Details](docs/v2/README.md#security-specifications)
 
 ## Community & Support
 
@@ -772,15 +831,26 @@ See [docs/DEVELOPMENT_WORKFLOW.md](docs/DEVELOPMENT_WORKFLOW.md) for detailed de
 
 ## Roadmap
 
+**Completed:**
 - [x] Core protocol implementation
 - [x] Proof-of-work name registration
 - [x] Bootstrap node architecture
 - [x] CLI publishing tool
 - [x] Electron browser
+- [x] Chrome extension for browsing
 - [x] Multi-layer name resolution
 - [x] DNS domain linking and verification
-- [ ] Browser extensions (Chrome, Firefox)
+- [x] V2 quantum-resistant upgrade
+- [x] Password-protected keys
+- [x] V1 to V2 migration tool
+
+**In Progress:**
+- [ ] V2 content publishing support
+- [ ] Chrome extension V2 display
 - [ ] Mobile apps (iOS, Android)
+
+**Planned:**
+- [ ] Firefox extension
 - [ ] Content moderation tools
 - [ ] DHT-only mode (no bootstrap nodes)
 - [ ] IPNS integration for mutable content
@@ -820,13 +890,14 @@ See [GitHub Discussions](https://github.com/frw-community/frw-free-web-modern/di
 
 ## Project Status
 
-- **Version:** 1.0.1
+- **Version:** 2.0.0 (Quantum-Resistant)
 - **Released:** November 2025
-- **Codebase:** ~5,000 lines (core) + ~3,500 lines (documentation)
-- **Tests:** 40/40 passing
+- **Codebase:** ~7,000 lines (core) + ~5,000 lines (documentation)
+- **Tests:** 73/73 passing (V1: 40/40, V2: 33/33)
 - **Bootstrap Nodes:** 4 active (Switzerland)
 - **Protected Names:** 95 brands
-- **Platforms:** Windows (Linux/macOS builds coming soon)
+- **Platforms:** Windows, Linux, macOS
+- **Security:** NIST Level 3 Post-Quantum (V2)
 
 ---
 

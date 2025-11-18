@@ -192,7 +192,7 @@ export class DistributedRegistryV2 {
       return null;
     }
 
-    const promises = this.bootstrapNodes.map(async (nodeUrl) => {
+    const promises = this.bootstrapNodes.map(async (nodeUrl): Promise<DistributedNameRecordAny | null> => {
       try {
         const response = await fetch(`${nodeUrl}/api/resolve/${name}`, {
           timeout: 5000
@@ -201,7 +201,7 @@ export class DistributedRegistryV2 {
         if (!response.ok) return null;
         
         const data = await response.json();
-        return data;
+        return data as DistributedNameRecordAny;
       } catch (error) {
         return null;
       }

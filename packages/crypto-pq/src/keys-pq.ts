@@ -4,6 +4,8 @@
 import nacl from 'tweetnacl';
 import { ml_dsa65 } from '@noble/post-quantum/ml-dsa';
 import { sha3_256 } from '@noble/hashes/sha3';
+import { scrypt } from '@noble/hashes/scrypt';
+import { createCipheriv, createDecipheriv, randomBytes as cryptoRandomBytes } from 'crypto';
 import bs58 from 'bs58';
 import type { FRWKeyPairV2, CryptoConfigV2 } from './types';
 import { DEFAULT_CONFIG_V2 } from './types';
@@ -91,47 +93,127 @@ export class KeyManagerV2 {
   }
 
   /**
-   * Export keypair to portable format
+   * Export keypair to portable format (with optional encryption)
    */
-  exportKeyPair(keyPair: FRWKeyPairV2): {
+  exportKeyPair(keyPair: FRWKeyPairV2, password?: string): {
     version: 2;
     did: string;
     publicKey_ed25519: string;
-    privateKey_ed25519: string;
+    privateKey_ed25519: string | { encrypted: string; salt: string; iv: string };
     publicKey_dilithium3: string;
-    privateKey_dilithium3: string;
+    privateKey_dilithium3: string | { encrypted: string; salt: string; iv: string };
+    encrypted?: boolean;
   } {
-    return {
-      version: 2,
+    const exported = {
+      version: 2 as const,
       did: keyPair.did,
       publicKey_ed25519: bs58.encode(keyPair.publicKey_ed25519),
-      privateKey_ed25519: Buffer.from(keyPair.privateKey_ed25519).toString('base64'),
+      privateKey_ed25519: Buffer.from(keyPair.privateKey_ed25519).toString('base64') as string | { encrypted: string; salt: string; iv: string },
       publicKey_dilithium3: Buffer.from(keyPair.publicKey_dilithium3).toString('base64'),
-      privateKey_dilithium3: Buffer.from(keyPair.privateKey_dilithium3).toString('base64')
+      privateKey_dilithium3: Buffer.from(keyPair.privateKey_dilithium3).toString('base64') as string | { encrypted: string; salt: string; iv: string },
+      encrypted: password ? true : undefined
     };
+
+    if (password) {
+      // Encrypt private keys
+      const salt = cryptoRandomBytes(32);
+      const key = scrypt(new TextEncoder().encode(password), salt, { N: 2 ** 16, r: 8, p: 1, dkLen: 32 });
+      
+      // Encrypt Ed25519 private key
+      const iv1 = cryptoRandomBytes(16);
+      const cipher1 = createCipheriv('aes-256-gcm', key, iv1);
+      const encrypted1 = Buffer.concat([cipher1.update(keyPair.privateKey_ed25519), cipher1.final()]);
+      const authTag1 = cipher1.getAuthTag();
+      exported.privateKey_ed25519 = {
+        encrypted: Buffer.concat([encrypted1, authTag1]).toString('base64'),
+        salt: salt.toString('base64'),
+        iv: iv1.toString('base64')
+      };
+      
+      // Encrypt Dilithium3 private key
+      const iv2 = cryptoRandomBytes(16);
+      const cipher2 = createCipheriv('aes-256-gcm', key, iv2);
+      const encrypted2 = Buffer.concat([cipher2.update(keyPair.privateKey_dilithium3), cipher2.final()]);
+      const authTag2 = cipher2.getAuthTag();
+      exported.privateKey_dilithium3 = {
+        encrypted: Buffer.concat([encrypted2, authTag2]).toString('base64'),
+        salt: salt.toString('base64'),
+        iv: iv2.toString('base64')
+      };
+    }
+
+    return exported;
   }
 
   /**
-   * Import keypair from portable format
+   * Import keypair from portable format (with optional decryption)
    */
   importKeyPair(data: {
     version: 2;
     did: string;
     publicKey_ed25519: string;
-    privateKey_ed25519: string;
+    privateKey_ed25519: string | { encrypted: string; salt: string; iv: string };
     publicKey_dilithium3: string;
-    privateKey_dilithium3: string;
-  }): FRWKeyPairV2 {
+    privateKey_dilithium3: string | { encrypted: string; salt: string; iv: string };
+    encrypted?: boolean;
+  }, password?: string): FRWKeyPairV2 {
     if (data.version !== 2) {
       throw new QuantumCryptoError('Invalid keypair version', 'INVALID_VERSION');
     }
 
+    // Check if encrypted
+    const isEncrypted = typeof data.privateKey_ed25519 === 'object';
+    
+    if (isEncrypted && !password) {
+      throw new QuantumCryptoError('Password required for encrypted keypair', 'PASSWORD_REQUIRED');
+    }
+    
+    if (isEncrypted && password) {
+      // Decrypt private keys
+      const privData1 = data.privateKey_ed25519 as { encrypted: string; salt: string; iv: string };
+      const privData2 = data.privateKey_dilithium3 as { encrypted: string; salt: string; iv: string };
+      
+      const salt = Buffer.from(privData1.salt, 'base64');
+      const key = scrypt(new TextEncoder().encode(password), salt, { N: 2 ** 16, r: 8, p: 1, dkLen: 32 });
+      
+      try {
+        // Decrypt Ed25519 private key
+        const iv1 = Buffer.from(privData1.iv, 'base64');
+        const encryptedWithTag1 = Buffer.from(privData1.encrypted, 'base64');
+        const encrypted1 = encryptedWithTag1.slice(0, -16);
+        const authTag1 = encryptedWithTag1.slice(-16);
+        const decipher1 = createDecipheriv('aes-256-gcm', key, iv1);
+        decipher1.setAuthTag(authTag1);
+        const privateKey_ed25519 = Buffer.concat([decipher1.update(encrypted1), decipher1.final()]);
+        
+        // Decrypt Dilithium3 private key
+        const iv2 = Buffer.from(privData2.iv, 'base64');
+        const encryptedWithTag2 = Buffer.from(privData2.encrypted, 'base64');
+        const encrypted2 = encryptedWithTag2.slice(0, -16);
+        const authTag2 = encryptedWithTag2.slice(-16);
+        const decipher2 = createDecipheriv('aes-256-gcm', key, iv2);
+        decipher2.setAuthTag(authTag2);
+        const privateKey_dilithium3 = Buffer.concat([decipher2.update(encrypted2), decipher2.final()]);
+        
+        return {
+          did: data.did,
+          publicKey_ed25519: new Uint8Array(bs58.decode(data.publicKey_ed25519)),
+          privateKey_ed25519: new Uint8Array(privateKey_ed25519),
+          publicKey_dilithium3: new Uint8Array(Buffer.from(data.publicKey_dilithium3, 'base64')),
+          privateKey_dilithium3: new Uint8Array(privateKey_dilithium3)
+        };
+      } catch (error) {
+        throw new QuantumCryptoError('Failed to decrypt keypair - invalid password', 'DECRYPTION_FAILED');
+      }
+    }
+
+    // Unencrypted import
     return {
       did: data.did,
       publicKey_ed25519: new Uint8Array(bs58.decode(data.publicKey_ed25519)),
-      privateKey_ed25519: new Uint8Array(Buffer.from(data.privateKey_ed25519, 'base64')),
+      privateKey_ed25519: new Uint8Array(Buffer.from(data.privateKey_ed25519 as string, 'base64')),
       publicKey_dilithium3: new Uint8Array(Buffer.from(data.publicKey_dilithium3, 'base64')),
-      privateKey_dilithium3: new Uint8Array(Buffer.from(data.privateKey_dilithium3, 'base64'))
+      privateKey_dilithium3: new Uint8Array(Buffer.from(data.privateKey_dilithium3 as string, 'base64'))
     };
   }
 

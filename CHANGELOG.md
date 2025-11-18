@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2025-11-18
+
+Major release introducing post-quantum cryptography for long-term security.
+
+### Added
+- **V2 Quantum-Resistant Protocol** - ML-DSA-65 (Dilithium3) signatures
+- Hybrid Ed25519 + Dilithium3 cryptography for compatibility
+- Password protection for private keys (AES-256-GCM)
+- V1 to V2 migration tool (`frw migrate`)
+- CLI commands: `frw init-v2`, `frw register-v2`, `frw migrate`
+- Argon2id memory-hard proof-of-work
+- SHA3-256 hashing for quantum resistance
+
+### Packages
+- @frw/crypto-pq - Post-quantum cryptography (12 tests)
+- @frw/pow-v2 - Argon2id proof of work (16 tests)
+- @frw/protocol-v2 - V2 record format (5 tests)
+
+### Changed
+- Bootstrap nodes now support V1 and V2 simultaneously
+- Distributed registry handles both protocol versions
+- V2 uses larger signatures (3309 bytes vs 64 bytes)
+
+### Security
+- NIST Level 3 post-quantum security (128-bit)
+- Resistant to Shor's algorithm and Grover's algorithm
+- Future-proof against quantum computing threats
+
+### Backward Compatibility
+- V1 protocol remains fully functional
+- V1 and V2 operate side-by-side
+- Migration preserves existing content
+
 ## [1.0.1] - 2025-11-15
 
 Patch release with security improvements, performance optimizations, and comprehensive testing.
