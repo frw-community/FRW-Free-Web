@@ -11,7 +11,7 @@ import { verifyProof, getRequiredDifficulty } from '@frw/name-registry';
 import { SignatureManager } from '@frw/crypto';
 import { V2RecordManager, createUnifiedResponse } from './v2-support.js';
 import type { DistributedNameRecordV2 } from '@frw/protocol-v2';
-import { fromJSON } from '@frw/protocol-v2';
+import { fromJSON, toJSON } from '@frw/protocol-v2';
 
 interface IndexEntry {
   name: string;
@@ -264,22 +264,28 @@ class BootstrapIndexNode {
           return;
         }
 
-        // Broadcast via V2 pubsub
-        await this.ipfs.pubsub.publish(
-          this.v2Manager.getPubsubTopic(),
-          Buffer.from(JSON.stringify({
-            type: 'name-register-v2',
-            record,
-            submittedBy: this.nodeId,
-            timestamp: Date.now()
-          }))
-        );
+        // Try to broadcast via V2 pubsub (non-critical, may fail if pubsub disabled)
+        try {
+          const recordJSON = toJSON(record);
+          await this.ipfs.pubsub.publish(
+            this.v2Manager.getPubsubTopic(),
+            Buffer.from(JSON.stringify({
+              type: 'name-register-v2',
+              record: JSON.parse(recordJSON),  // Already serialized
+              submittedBy: this.nodeId,
+              timestamp: Date.now()
+            }))
+          );
+          console.log(`[V2] 📡 Broadcasted ${record.name} via pubsub`);
+        } catch (pubsubError: any) {
+          console.log(`[V2] ⚠ Pubsub broadcast failed (non-critical):`, pubsubError?.message || 'Unknown');
+        }
 
         res.json({
           success: true,
           name: record.name,
           did: record.did,
-          message: 'V2 name registered and broadcasted'
+          message: 'V2 name registered successfully'
         });
 
       } catch (error) {

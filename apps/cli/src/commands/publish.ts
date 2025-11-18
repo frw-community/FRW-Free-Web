@@ -227,6 +227,7 @@ export async function publishCommand(directory: string = '.', options: PublishOp
           
           // Submit to V2 bootstrap endpoints
           const nodes = [
+            'http://localhost:3100',  // Local testing
             'http://83.228.214.189:3100',
             'http://83.228.213.45:3100',
             'http://83.228.213.240:3100',
