@@ -108,10 +108,10 @@ export class ProofOfWorkVerifierV2 {
       parallelism: 4,
       type: argon2.argon2id,
       raw: true
-    });
+    }) as Buffer;
 
     // Final hash: SHA3-256(argon_output)
-    return sha3_256(new Uint8Array(argonHash));
+    return sha3_256(Uint8Array.from(argonHash));
   }
 
   /**

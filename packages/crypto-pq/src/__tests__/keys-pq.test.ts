@@ -17,7 +17,7 @@ describe('KeyManagerV2', () => {
       expect(keyPair.publicKey_dilithium3.length).toBe(1952);
       
       expect(keyPair.privateKey_dilithium3).toBeInstanceOf(Uint8Array);
-      expect(keyPair.privateKey_dilithium3.length).toBe(4000);
+      expect(keyPair.privateKey_dilithium3.length).toBe(4032); // Actual ML-DSA-65 size
       
       expect(keyPair.did).toMatch(/^did:frw:v2:/);
     });

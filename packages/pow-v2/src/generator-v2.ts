@@ -130,15 +130,16 @@ export class ProofOfWorkGeneratorV2 {
         parallelism: 4,
         type: argon2.argon2id,
         raw: true
-      });
+      }) as Buffer;
 
       // Final hash: SHA3-256(argon_output)
-      const finalHash = sha3_256(new Uint8Array(argonHash));
+      const finalHash = sha3_256(Uint8Array.from(argonHash));
 
       return finalHash;
     } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
       throw new POWError(
-        `Hash computation failed: ${error instanceof Error ? error.message : 'Unknown'}`,
+        `Hash computation failed: ${errorMsg}`,
         'HASH_ERROR'
       );
     }

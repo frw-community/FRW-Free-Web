@@ -20,14 +20,14 @@ export class SignatureManagerV2 {
    * Sign message with hybrid signatures
    * Returns both Ed25519 and Dilithium3 signatures
    */
-  sign(message: Uint8Array, keyPair: FRWKeyPairV2): HybridSignature {
+  sign(message: Uint8Array, keyPair: FRWKeyPairV2, timestamp?: number): HybridSignature {
     try {
-      const timestamp = Date.now();
+      const ts = timestamp ?? Date.now();
       
       // Add timestamp to message for replay protection
       const messageWithTimestamp = new Uint8Array(message.length + 8);
       messageWithTimestamp.set(message);
-      messageWithTimestamp.set(this.timestampToBytes(timestamp), message.length);
+      messageWithTimestamp.set(this.timestampToBytes(ts), message.length);
 
       // Hash message with both algorithms
       const hash_sha256 = sha256(messageWithTimestamp);
@@ -48,7 +48,7 @@ export class SignatureManagerV2 {
         version: 2,
         signature_ed25519,
         signature_dilithium3,
-        timestamp,
+        timestamp: ts,
         algorithm: this.config.mode === 'hybrid' ? 'hybrid-v2' : 'pq-only'
       };
     } catch (error) {

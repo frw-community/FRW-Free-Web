@@ -143,7 +143,7 @@ export class KeyManagerV2 {
       keyPair.publicKey_ed25519.length === 32 &&
       keyPair.privateKey_ed25519.length === 64 &&
       keyPair.publicKey_dilithium3.length === 1952 &&
-      keyPair.privateKey_dilithium3.length === 4000 &&
+      keyPair.privateKey_dilithium3.length === 4032 && // Actual ML-DSA-65 size
       keyPair.did.startsWith('did:frw:v2:')
     );
   }

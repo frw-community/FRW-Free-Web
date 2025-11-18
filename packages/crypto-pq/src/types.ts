@@ -7,7 +7,7 @@ export interface FRWKeyPairV2 {
   
   // Dilithium3 (primary PQ signature)
   publicKey_dilithium3: Uint8Array;   // 1952 bytes
-  privateKey_dilithium3: Uint8Array;  // 4000 bytes
+  privateKey_dilithium3: Uint8Array;  // 4032 bytes (actual ML-DSA-65 size)
   
   // DID identifier
   did: string;  // did:frw:v2:<hash>
@@ -20,7 +20,7 @@ export interface HybridSignature {
   signature_ed25519: Uint8Array;  // 64 bytes
   
   // Post-quantum signature
-  signature_dilithium3: Uint8Array;  // 3293 bytes
+  signature_dilithium3: Uint8Array;  // 3309 bytes (actual ML-DSA-65 size)
   
   // Metadata
   timestamp: number;

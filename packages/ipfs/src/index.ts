@@ -12,6 +12,10 @@ export type { SharedRegistry, NameEntry } from './shared-registry.js';
 export { DistributedNameRegistry, createDistributedNameRecord } from './distributed-registry.js';
 export type { DistributedNameRecord, ResolvedName, RegistryConfig } from './distributed-registry.js';
 
+// V2: Quantum-Resistant Registry
+export { DistributedRegistryV2 } from './distributed-registry-v2.js';
+export type { DistributedNameRecordAny, ResolvedNameAny } from './distributed-registry-v2.js';
+
 // PRODUCTION: Global IPNS Registry
 export { GlobalRegistryManager, recordToEntry, createEmptyRegistry, bootstrapRegistry, getOfficialRegistryIPNS } from './global-registry.js';
 export type { GlobalRegistry, GlobalNameEntry } from './global-registry.js';

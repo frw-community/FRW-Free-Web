@@ -9,6 +9,8 @@ import cors from 'cors';
 import type { DistributedNameRecord } from '@frw/ipfs';
 import { verifyProof, getRequiredDifficulty } from '@frw/name-registry';
 import { SignatureManager } from '@frw/crypto';
+import { V2RecordManager, createUnifiedResponse } from './v2-support.js';
+import type { DistributedNameRecordV2 } from '@frw/protocol-v2';
 
 interface IndexEntry {
   name: string;
@@ -22,6 +24,7 @@ interface IndexEntry {
 class BootstrapIndexNode {
   private ipfs: any;
   private index: Map<string, IndexEntry>;
+  private v2Manager: V2RecordManager;
   private app: express.Application;
   private nodeId: string;
   private lastPublished: number = 0;
@@ -44,6 +47,7 @@ class BootstrapIndexNode {
   constructor(nodeId: string) {
     this.nodeId = nodeId;
     this.index = new Map();
+    this.v2Manager = new V2RecordManager();
     this.app = express();
     this.ipfs = createIPFSClient({ url: this.IPFS_URL });
 
@@ -98,10 +102,13 @@ class BootstrapIndexNode {
 
     // Health check
     this.app.get('/health', (req, res) => {
+      const v2Stats = this.v2Manager.getStats();
       res.json({
         status: 'ok',
         nodeId: this.nodeId,
-        indexSize: this.index.size,
+        v1IndexSize: this.index.size,
+        v2IndexSize: v2Stats.totalV2Records,
+        pqSecureRecords: v2Stats.pqSecureRecords,
         lastPublished: this.lastPublished,
         uptime: process.uptime()
       });
@@ -122,27 +129,29 @@ class BootstrapIndexNode {
       });
     });
 
-    // Resolve single name
+    // Resolve single name (V1 or V2)
     this.app.get('/api/resolve/:name', (req, res): void => {
       const { name } = req.params;
-      const entry = this.index.get(name.toLowerCase());
-
-      if (!entry) {
-        res.status(404).json({
-          error: 'Name not found',
-          name
-        });
+      const lowerName = name.toLowerCase();
+      
+      // Try V2 first (newest format)
+      const v2Entry = this.v2Manager.getRecord(lowerName);
+      if (v2Entry) {
+        res.json(createUnifiedResponse(v2Entry, 2, this.nodeId));
+        return;
+      }
+      
+      // Fallback to V1
+      const v1Entry = this.index.get(lowerName);
+      if (v1Entry) {
+        res.json(createUnifiedResponse(v1Entry, 1, this.nodeId));
         return;
       }
 
-      res.json({
-        name: entry.name,
-        publicKey: entry.publicKey,
-        contentCID: entry.contentCID,
-        ipnsKey: entry.ipnsKey,
-        timestamp: entry.timestamp,
-        signature: entry.signature,
-        resolvedBy: this.nodeId
+      // Not found
+      res.status(404).json({
+        error: 'Name not found',
+        name
       });
     });
 
@@ -229,6 +238,57 @@ class BootstrapIndexNode {
       }
     });
 
+    // Submit V2 record (quantum-resistant)
+    this.app.post('/api/submit/v2', async (req, res): Promise<void> => {
+      try {
+        const record: DistributedNameRecordV2 = req.body;
+
+        // Validate basic structure
+        if (!record.name || !record.publicKey_dilithium3 || !record.did || !record.proof_v2) {
+          res.status(400).json({
+            error: 'Invalid V2 record: missing required fields'
+          });
+          return;
+        }
+
+        // Add to V2 index (verification happens inside)
+        const success = await this.v2Manager.addRecord(record);
+        
+        if (!success) {
+          res.status(400).json({
+            error: 'V2 record validation failed',
+            name: record.name
+          });
+          return;
+        }
+
+        // Broadcast via V2 pubsub
+        await this.ipfs.pubsub.publish(
+          this.v2Manager.getPubsubTopic(),
+          Buffer.from(JSON.stringify({
+            type: 'name-register-v2',
+            record,
+            submittedBy: this.nodeId,
+            timestamp: Date.now()
+          }))
+        );
+
+        res.json({
+          success: true,
+          name: record.name,
+          did: record.did,
+          message: 'V2 name registered and broadcasted'
+        });
+
+      } catch (error) {
+        res.status(500).json({
+          error: 'Failed to submit V2 name',
+          details: error instanceof Error ? error.message : 'Unknown'
+        });
+        return;
+      }
+    });
+
     // Get index CID (for IPFS fallback)
     this.app.get('/api/index/cid', (req, res) => {
       res.json({
@@ -256,11 +316,18 @@ class BootstrapIndexNode {
    */
   private async subscribeToPubsub(): Promise<void> {
     try {
+      // Subscribe to V1 updates
       await this.ipfs.pubsub.subscribe(this.PUBSUB_TOPIC, (msg: any) => {
         this.handlePubsubMessage(msg);
       });
+      console.log(`[Bootstrap] ✓ Subscribed to V1 pubsub: ${this.PUBSUB_TOPIC}`);
 
-      console.log(`[Bootstrap] ✓ Subscribed to pubsub: ${this.PUBSUB_TOPIC}`);
+      // Subscribe to V2 updates
+      await this.ipfs.pubsub.subscribe(this.v2Manager.getPubsubTopic(), (msg: any) => {
+        this.handleV2PubsubMessage(msg);
+      });
+      console.log(`[Bootstrap] ✓ Subscribed to V2 pubsub: ${this.v2Manager.getPubsubTopic()}`);
+
     } catch (error) {
       console.error('[Bootstrap] ✗ Failed to subscribe to pubsub:', error);
     }
@@ -310,12 +377,36 @@ class BootstrapIndexNode {
       }
 
     } catch (error) {
-      console.warn('[Bootstrap] Failed to parse pubsub message:', error);
+      console.error('[Bootstrap] Error handling pubsub message:', error);
     }
   }
 
   /**
-   * Validate record (POW + signature)
+   * Handle incoming V2 pubsub message
+   */
+  private async handleV2PubsubMessage(msg: any): Promise<void> {
+    try {
+      const data = JSON.parse(msg.data.toString());
+
+      if (data.type === 'name-register-v2' && data.record) {
+        const record: DistributedNameRecordV2 = data.record;
+        
+        // Verification happens inside addRecord
+        const success = await this.v2Manager.addRecord(record);
+        if (success) {
+          console.log(`[Bootstrap] 📥 Received V2 name via pubsub: ${record.name}`);
+        } else {
+          console.warn(`[Bootstrap] ⚠ Invalid V2 record rejected from pubsub: ${record.name}`);
+        }
+      }
+
+    } catch (error) {
+      console.error('[Bootstrap] Error handling V2 pubsub message:', error);
+    }
+  }
+
+  /**
+   * Validate V1 record
    */
   private validateRecord(record: DistributedNameRecord): boolean {
     // Check required fields

@@ -19,7 +19,7 @@ describe('SignatureManagerV2', () => {
       expect(signature.signature_ed25519).toBeInstanceOf(Uint8Array);
       expect(signature.signature_ed25519.length).toBe(64);
       expect(signature.signature_dilithium3).toBeInstanceOf(Uint8Array);
-      expect(signature.signature_dilithium3.length).toBe(3293);
+      expect(signature.signature_dilithium3.length).toBe(3309); // Actual ML-DSA-65 signature size
       expect(signature.algorithm).toBe('hybrid-v2');
       
       const valid = verifyV2(message, signature, keyPair);

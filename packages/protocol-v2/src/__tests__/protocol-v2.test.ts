@@ -32,6 +32,12 @@ describe('Protocol V2 - Integration Tests', () => {
       // Verify cryptographically
       const verification = await verifyRecordV2(record);
       
+      // Log errors if validation fails
+      if (!verification.valid) {
+        console.log('Verification errors:', verification.errors);
+        console.log('Checks:', verification.checks);
+      }
+      
       expect(verification.valid).toBe(true);
       expect(verification.pqSecure).toBe(true);
       expect(verification.errors).toHaveLength(0);

@@ -10,15 +10,16 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@noble/post-quantum": "^0.2.0",
     "@noble/hashes": "^1.4.0",
-    "tweetnacl": "^1.0.3",
-    "bs58": "^5.0.0"
+    "@noble/post-quantum": "^0.2.0",
+    "bs58": "^5.0.0",
+    "tweetnacl": "^1.0.3"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.14",
     "@types/node": "^20.0.0",
-    "typescript": "^5.3.0",
-    "jest": "^29.0.0",
-    "@types/jest": "^29.0.0"
+    "jest": "^29.7.0",
+    "ts-jest": "^29.4.5",
+    "typescript": "^5.3.0"
   }
 }

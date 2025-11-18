@@ -105,17 +105,17 @@ export function getRequiredDifficulty(name: string): DifficultyParams {
     };
   }
 
-  // 16+ char names: No PoW required
+  // 16+ char names: No PoW required (minimal work)
   return {
     leading_zeros: 0,
     memory_mib: 16,
-    iterations: 1
+    iterations: 2  // Argon2 requires minimum 2
   };
 }
 
 /**
  * Estimate time required for PoW completion
- * Based on typical CPU performance (~1000 Argon2id hashes/sec at 64 MiB)
+ * Based on typical CPU performance (~10 Argon2id hashes/sec at 128 MiB, 3 iterations)
  */
 export function estimateTime(params: DifficultyParams): {
   seconds: number;
@@ -124,14 +124,18 @@ export function estimateTime(params: DifficultyParams): {
   // Average attempts needed for N leading zeros: 16^N
   const avg_attempts = Math.pow(16, params.leading_zeros);
   
-  // Argon2id hashing speed (decreases with memory)
-  // Baseline: 1000 hashes/sec @ 64 MiB
-  const baseline_speed = 1000;
-  const baseline_memory = 64;
-  const speed_factor = baseline_memory / params.memory_mib;
-  const hashes_per_sec = baseline_speed * speed_factor / params.iterations;
+  // Argon2id hashing speed (realistic estimate)
+  // Baseline: ~10 hashes/sec @ 128 MiB, 3 iterations
+  const baseline_speed = 10;
+  const baseline_memory = 128;
+  const baseline_iterations = 3;
   
-  const seconds = Math.ceil(avg_attempts / hashes_per_sec);
+  // Adjust for memory and iterations
+  const memory_factor = baseline_memory / params.memory_mib;
+  const iteration_factor = baseline_iterations / params.iterations;
+  const hashes_per_sec = baseline_speed * memory_factor * iteration_factor;
+  
+  const seconds = Math.ceil(avg_attempts / Math.max(hashes_per_sec, 0.1));
   
   let description: string;
   if (seconds < 60) {

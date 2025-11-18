@@ -50,7 +50,7 @@ export class RecordManagerV2 {
       registered: now,
       expires,
       signature_ed25519: new Uint8Array(64),
-      signature_dilithium3: new Uint8Array(3293),
+      signature_dilithium3: new Uint8Array(3309), // Actual ML-DSA-65 size
       hash_sha256: new Uint8Array(32),
       hash_sha3: new Uint8Array(32),
       proof_v2: proof,
@@ -77,8 +77,8 @@ export class RecordManagerV2 {
     // Serialize canonical form
     const canonical = serializeCanonical(record);
     
-    // Sign with hybrid manager
-    const signature = this.signatureManager.sign(canonical, keyPair);
+    // Sign with hybrid manager (use record.registered as timestamp)
+    const signature = this.signatureManager.sign(canonical, keyPair, record.registered);
     
     // Update record
     record.signature_ed25519 = signature.signature_ed25519;
