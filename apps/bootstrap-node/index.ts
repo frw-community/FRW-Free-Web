@@ -11,6 +11,7 @@ import { verifyProof, getRequiredDifficulty } from '@frw/name-registry';
 import { SignatureManager } from '@frw/crypto';
 import { V2RecordManager, createUnifiedResponse } from './v2-support.js';
 import type { DistributedNameRecordV2 } from '@frw/protocol-v2';
+import { fromJSON } from '@frw/protocol-v2';
 
 interface IndexEntry {
   name: string;
@@ -241,24 +242,8 @@ class BootstrapIndexNode {
     // Submit V2 record (quantum-resistant)
     this.app.post('/api/submit/v2', async (req, res): Promise<void> => {
       try {
-        const rawRecord = req.body;
-
-        // Deserialize base64 strings back to Uint8Array
-        const record: DistributedNameRecordV2 = {
-          ...rawRecord,
-          publicKey_ed25519: Buffer.from(rawRecord.publicKey_ed25519, 'base64'),
-          publicKey_dilithium3: Buffer.from(rawRecord.publicKey_dilithium3, 'base64'),
-          signature_ed25519: Buffer.from(rawRecord.signature_ed25519, 'base64'),
-          signature_dilithium3: Buffer.from(rawRecord.signature_dilithium3, 'base64'),
-          hash_sha256: Buffer.from(rawRecord.hash_sha256, 'base64'),
-          hash_sha3: Buffer.from(rawRecord.hash_sha3, 'base64'),
-          previousHash_sha3: rawRecord.previousHash_sha3 ? Buffer.from(rawRecord.previousHash_sha3, 'base64') : null,
-          proof_v2: {
-            ...rawRecord.proof_v2,
-            nonce: BigInt(rawRecord.proof_v2.nonce),
-            hash: Buffer.from(rawRecord.proof_v2.hash, 'base64')
-          }
-        };
+        // Use official protocol deserialization
+        const record: DistributedNameRecordV2 = fromJSON(JSON.stringify(req.body));
 
         // Validate basic structure
         if (!record.name || !record.publicKey_dilithium3 || !record.did || !record.proof_v2) {
