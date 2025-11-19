@@ -11,9 +11,9 @@
  */
 export function getBootstrapUrls(): string[] {
   return [
-    'http://83.228.214.189:3100',  // Swiss Bootstrap #1
+    'http://83.228.213.240:3100',  // Swiss Bootstrap #3 (WORKING - V2 validated)
     'http://83.228.213.45:3100',   // Swiss Bootstrap #2
-    'http://83.228.213.240:3100',  // Swiss Bootstrap #3
+    'http://83.228.214.189:3100',  // Swiss Bootstrap #1
     'http://83.228.214.72:3100',   // Swiss Bootstrap #4
   ];
 }
@@ -31,6 +31,8 @@ export async function queryName(name: string): Promise<{
   contentCID: string;
   timestamp: number;
   signature: string;
+  version?: number;
+  pqSecure?: boolean;
 }> {
   // Try bootstrap nodes directly (fast HTTP queries)
   const bootstrapNodes = getBootstrapUrls();
@@ -43,20 +45,32 @@ export async function queryName(name: string): Promise<{
       });
       
       if (response.ok) {
-        const data = await response.json() as {
-          name: string;
-          publicKey: string;
-          contentCID: string;
-          timestamp: number;
-          signature: string;
-        };
-        return {
-          name: data.name,
-          publicKey: data.publicKey,
-          contentCID: data.contentCID,
-          timestamp: data.timestamp,
-          signature: data.signature,
-        };
+        const data = await response.json() as any;
+        
+        // Handle both V1 and V2 records
+        if (data.version === 2) {
+          // V2 record with quantum-resistant signatures
+          return {
+            name: data.name,
+            publicKey: data.publicKey_dilithium3 || data.publicKey_ed25519, // Use PQ key as primary
+            contentCID: data.contentCID,
+            timestamp: data.registered,
+            signature: data.signature_dilithium3 || data.signature_ed25519,
+            version: 2,
+            pqSecure: true
+          };
+        } else {
+          // V1 record (legacy)
+          return {
+            name: data.name,
+            publicKey: data.publicKey,
+            contentCID: data.contentCID,
+            timestamp: data.timestamp,
+            signature: data.signature,
+            version: 1,
+            pqSecure: false
+          };
+        }
       }
     } catch (error) {
       console.warn(`[Bootstrap] Failed to query ${node}:`, error);
