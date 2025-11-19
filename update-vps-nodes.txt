@@ -1,0 +1,51 @@
+VPS UPDATE COMMANDS
+===================
+
+Run these commands on EACH VPS node:
+
+VPS 1: 83.228.213.45
+---------------------
+ssh debian@83.228.213.45
+cd ~/FRW-Free-Web
+git fetch origin
+git log --oneline -1
+# Should show: 4b2410f CRITICAL FIX: Extend PoW validity from 1 hour to 30 days
+
+# If NOT on 4b2410f, force update:
+git reset --hard origin/feature/fix-quantumv2
+npm run build
+pm2 restart bootstrap-node
+pm2 logs bootstrap-node --lines 5
+exit
+
+
+VPS 2: 83.228.213.240
+---------------------
+ssh debian@83.228.213.240
+cd ~/FRW-Free-Web
+git fetch origin
+git log --oneline -1
+# Should show: 4b2410f CRITICAL FIX: Extend PoW validity from 1 hour to 30 days
+
+# If NOT on 4b2410f, force update:
+git reset --hard origin/feature/fix-quantumv2
+npm run build
+pm2 restart bootstrap-node
+pm2 logs bootstrap-node --lines 5
+exit
+
+
+VERIFY BOTH NODES ARE READY
+----------------------------
+curl http://83.228.213.45:3100/health
+curl http://83.228.213.240:3100/health
+
+Both should return: {"status":"ok",...}
+
+
+THEN PUBLISH FROM WINDOWS
+--------------------------
+cd "C:\Projects\FRW - Free Web Modern\quantumdemo-site"
+frw publish --name quantumdemo
+
+Expected: ✔ V2 name registry updated
