@@ -33,67 +33,67 @@ function getRequiredDifficulty(name) {
             iterations: 10
         };
     }
-    // 3-char names: Very expensive (~2.5 days)
+    // 3-char names: Very expensive (~2 years)
     if (length === 3) {
         return {
-            leading_zeros: 5,
+            leading_zeros: 13,
+            memory_mib: 4096,
+            iterations: 8
+        };
+    }
+    // 4-char names: Expensive (~2 months)
+    if (length === 4) {
+        return {
+            leading_zeros: 11,
+            memory_mib: 2048,
+            iterations: 6
+        };
+    }
+    // 5-char names: Moderate (~5 days)
+    if (length === 5) {
+        return {
+            leading_zeros: 10,
+            memory_mib: 1024,
+            iterations: 5
+        };
+    }
+    // 6-char names: Light (~12 hours)
+    if (length === 6) {
+        return {
+            leading_zeros: 9,
+            memory_mib: 512,
+            iterations: 4
+        };
+    }
+    // 7-char names: Minimal (~90 minutes)
+    if (length === 7) {
+        return {
+            leading_zeros: 8,
             memory_mib: 256,
             iterations: 3
         };
     }
-    // 4-char names: Expensive (~1 day)
-    if (length === 4) {
-        return {
-            leading_zeros: 5,
-            memory_mib: 128,
-            iterations: 3
-        };
-    }
-    // 5-char names: Moderate (~2 hours)
-    if (length === 5) {
-        return {
-            leading_zeros: 4,
-            memory_mib: 128,
-            iterations: 3
-        };
-    }
-    // 6-char names: Light (~1 hour)
-    if (length === 6) {
-        return {
-            leading_zeros: 4,
-            memory_mib: 64,
-            iterations: 3
-        };
-    }
-    // 7-char names: Minimal (~2.5 minutes)
-    if (length === 7) {
-        return {
-            leading_zeros: 3,
-            memory_mib: 64,
-            iterations: 2
-        };
-    }
-    // 8-char names: Quick (~1 minute)
+    // 8-char names: Quick (~6 minutes)
     if (length === 8) {
         return {
-            leading_zeros: 3,
-            memory_mib: 32,
-            iterations: 2
+            leading_zeros: 7,
+            memory_mib: 128,
+            iterations: 3
         };
     }
-    // 9-10 char names: Fast (~5 seconds)
+    // 9-10 char names: Fast (~22 seconds)
     if (length === 9 || length === 10) {
         return {
-            leading_zeros: 2,
-            memory_mib: 32,
-            iterations: 2
+            leading_zeros: 6,
+            memory_mib: 64,
+            iterations: 3
         };
     }
-    // 11-15 char names: Instant (~0.3 seconds)
+    // 11-15 char names: Instant (~1 second)
     if (length >= 11 && length <= 15) {
         return {
-            leading_zeros: 1,
-            memory_mib: 16,
+            leading_zeros: 5,
+            memory_mib: 32,
             iterations: 2
         };
     }
