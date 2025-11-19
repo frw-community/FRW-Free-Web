@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Safe Demo 2025</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            padding: 20px;
+        }
+        .container {
+            text-align: center;
+            padding: 60px 40px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+        }
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .shield {
+            font-size: 5em;
+            margin-bottom: 20px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-weight: bold;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            font-size: 1.2em;
+        }
+        .success {
+            background: rgba(74, 222, 128, 0.2);
+            border: 2px solid #4ade80;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+        .success h2 {
+            color: #4ade80;
+            margin-bottom: 15px;
+        }
+        p { font-size: 1.2em; line-height: 1.8; margin: 15px 0; }
+        .features {
+            margin-top: 30px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            text-align: left;
+        }
+        .features h3 { margin-bottom: 20px; text-align: center; }
+        ul { list-style: none; }
+        li { padding: 10px 0; font-size: 1.1em; }
+        li::before {
+            content: "✓ ";
+            color: #4ade80;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="shield">🛡️</div>
+        <h1>Quantum Safe Demo 2025</h1>
+        <div class="badge">V2 QUANTUM RESISTANT</div>
+        
+        <div class="success">
+            <h2>✅ END-TO-END TEST SUCCESSFUL!</h2>
+            <p><strong>Name:</strong> quantumsafedemo2025</p>
+            <p><strong>Protocol:</strong> FRW V2 Post-Quantum</p>
+            <p><strong>Registration Time:</strong> Instant (0 seconds)</p>
+            <p><strong>PoW:</strong> 0 leading zeros required (16+ chars)</p>
+        </div>
+        
+        <div class="features">
+            <h3>V2 Protocol Features Verified</h3>
+            <ul>
+                <li>ML-DSA-65 (NIST Dilithium3) quantum-safe signatures</li>
+                <li>Ed25519 hybrid classical signatures</li>
+                <li>Argon2id memory-hard Proof-of-Work</li>
+                <li>30-day PoW validity window</li>
+                <li>Official toJSON/fromJSON serialization</li>
+                <li>Distributed bootstrap node network</li>
+                <li>IPFS content-addressed storage</li>
+                <li>Real-time validation & verification</li>
+            </ul>
+        </div>
+        
+        <p style="margin-top: 30px; opacity: 0.8;">
+            Published: <span id="timestamp"></span>
+        </p>
+    </div>
+    
+    <script>
+        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+    </script>
+</body>
+</html>
