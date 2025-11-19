@@ -18,6 +18,7 @@ export default function ContentViewer({ url }: ContentViewerProps) {
   const [error, setError] = useState<string | null>(null);
   const [metadata, setMetadata] = useState<PageMetadata | null>(null);
   const [verified, setVerified] = useState<boolean>(false);
+  const [pqSecure, setPqSecure] = useState<boolean>(false);
   const [cid, setCid] = useState<string>('');
 
   useEffect(() => {
@@ -36,11 +37,12 @@ export default function ContentViewer({ url }: ContentViewerProps) {
         try {
           const data = await queryName(name);
           setMetadata({
-            version: '1.0',
+            version: data.version === 2 ? 'V2 (Quantum-Safe)' : 'V1',
             author: data.publicKey ? `@${data.publicKey.substring(0, 8)}...` : undefined,
             date: data.timestamp ? new Date(data.timestamp).toISOString() : undefined
           });
           setVerified(!!data.publicKey);
+          setPqSecure(data.pqSecure || false);
           setCid(data.contentCID);
 
           setLoading(false);
@@ -52,6 +54,7 @@ export default function ContentViewer({ url }: ContentViewerProps) {
       
       setMetadata(null);
       setVerified(false);
+      setPqSecure(false);
       setLoading(false);
       
     } catch (err) {
@@ -99,6 +102,7 @@ export default function ContentViewer({ url }: ContentViewerProps) {
           verified={verified}
           author={metadata.author}
           date={metadata.date}
+          pqSecure={pqSecure}
         />
       )}
       <iframe
