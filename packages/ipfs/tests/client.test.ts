@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach, jest } from '@jest/globals';
-import { IPFSClient } from '../src/client.js';
+import { IPFSClient } from '../src/client';
 
 // Mock the entire ipfs-http-client module at the module level
 jest.mock('ipfs-http-client', () => ({

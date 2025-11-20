@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach } from '@jest/globals';
-import { PermissionManager } from '../src/permissions.js';
+import { PermissionManager } from '../src/permissions';
 
 describe('PermissionManager', () => {
   let manager: PermissionManager;

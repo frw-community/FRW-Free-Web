@@ -1,5 +1,6 @@
 // Fast integration tests for Protocol V2
 
+import { describe, it, expect } from '@jest/globals';
 import { generateKeyPairV2 } from '@frw/crypto-pq';
 import { generatePOWV2 } from '@frw/pow-v2';
 import { createRecordV2, verifyRecordV2, RecordManagerV2 } from '../index';

@@ -1,5 +1,6 @@
 // Fast unit tests for difficulty calculation
 
+import { describe, it, expect } from '@jest/globals';
 import { getRequiredDifficulty, estimateTime, validateDifficulty, compareDifficulty } from '../difficulty-v2';
 
 describe('Difficulty V2', () => {

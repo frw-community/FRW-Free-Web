@@ -1,2 +1,2 @@
-export { VMSandbox } from './vm.js';
-export { PermissionManager } from './permissions.js';
+export { VMSandbox } from './vm';
+export { PermissionManager } from './permissions';

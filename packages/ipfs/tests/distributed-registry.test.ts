@@ -1,6 +1,6 @@
 // Tests for DistributedNameRegistry
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
-import { DistributedNameRegistry, createDistributedNameRecord } from '../src/distributed-registry.js';
+import { DistributedNameRegistry, createDistributedNameRecord } from '../src/distributed-registry';
 import { SignatureManager } from '@frw/crypto';
 import type { ProofOfWork } from '@frw/name-registry';
 

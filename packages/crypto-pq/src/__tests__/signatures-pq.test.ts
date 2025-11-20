@@ -1,5 +1,6 @@
 // Fast unit tests for hybrid signatures
 
+import { describe, it, expect, beforeAll } from '@jest/globals';
 import { generateKeyPairV2 } from '../keys-pq';
 import { signV2, verifyV2, signStringV2, verifyStringV2 } from '../signatures-pq';
 

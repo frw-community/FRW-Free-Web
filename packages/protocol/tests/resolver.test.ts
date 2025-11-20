@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach, jest } from '@jest/globals';
-import { FRWResolver } from '../src/resolver.js';
+import { FRWResolver } from '../src/resolver';
 import { SignatureManager } from '@frw/crypto';
 
 describe('FRWResolver', () => {

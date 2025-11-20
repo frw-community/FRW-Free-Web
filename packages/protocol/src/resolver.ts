@@ -1,7 +1,7 @@
 import type { FRWContent } from '@frw/common';
 import { ContentNotFoundError, ProtocolError } from '@frw/common';
 import { SignatureManager } from '@frw/crypto';
-import { FRWParser } from './parser.js';
+import { FRWParser } from './parser';
 
 interface IPFSClientLike {
   resolveName(name: string): Promise<string>;

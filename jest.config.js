@@ -18,7 +18,8 @@ module.exports = {
     '^@frw/storage$': '<rootDir>/packages/storage/src/index.ts',
     '^@frw/storage/(.*)$': '<rootDir>/packages/storage/src/$1',
     '^@frw/name-registry$': '<rootDir>/packages/name-registry/src/index.ts',
-    '^@frw/name-registry/(.*)$': '<rootDir>/packages/name-registry/src/$1'
+    '^@frw/name-registry/(.*)$': '<rootDir>/packages/name-registry/src/$1',
+    '^(\\.{1,2}/.*)\\.js$': '$1'
   },
   transform: {
     '^.+\\.ts$': ['ts-jest', {
