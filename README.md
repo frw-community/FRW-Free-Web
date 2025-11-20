@@ -78,9 +78,9 @@ FRW addresses several limitations of traditional web infrastructure:
 
 FRW V2 introduces post-quantum cryptography for long-term security against future quantum computing threats.
 
-### ✅ V2 Status: FULLY OPERATIONAL (November 2025)
+### V2 Status: Production Ready (November 2025)
 
-**Successful end-to-end test completed:** `frw://quantumsafedemo2025/` - Live on production bootstrap nodes with complete quantum-resistant signature verification.
+End-to-end testing complete. Name resolution operational on production bootstrap nodes with quantum-resistant signature verification.
 
 ### What's New in V2
 
@@ -110,7 +110,7 @@ frw publish ./mysite --name myquantumsafename2025
 frw migrate myoldname
 ```
 
-**💡 Tip:** Names with 16+ characters register instantly (0 seconds PoW). Shorter names require proof-of-work:
+**Note:** Names with 16+ characters register instantly (0 seconds PoW). Shorter names require proof-of-work:
 - 11-15 chars: ~1 second
 - 8-10 chars: ~10-30 seconds  
 - 5-7 chars: ~2-60 minutes
@@ -186,11 +186,11 @@ FRW offers two ways to browse decentralized content:
 | **Direct `frw://` URLs** | No (Chrome limitation) | Yes (Native support) |
 | **How to Browse** | Click icon or `frw`+`Tab` | Type `frw://name` directly |
 | **Installation** | Load unpacked extension | Install app |
-| **Easy to Use** | Very easy | Very easy |
-| **Recommended For** | Most users, quick access | Power users, native feel |
+| **Ease of Use** | Simple | Simple |
+| **Recommended For** | General use | Native protocol support |
 | **Auto-updates** | Manual reload | Via app installer |
 
-**Bottom line**: Chrome extension is easiest for most users. Use Electron browser if you want to type `frw://` URLs directly.
+**Recommendation**: Chrome extension for most users. Electron browser for direct `frw://` URL support.
 
 ## Installation
 
@@ -198,11 +198,11 @@ FRW offers two ways to browse decentralized content:
 
 #### Pre-built Binaries (Recommended)
 
-**FRW Chrome Extension** (Easiest - Recommended for most users!)
+**FRW Chrome Extension** (Recommended)
 - Browse FRW sites in Chrome, Edge, Brave, Opera, and all Chromium browsers
 - **Note**: Due to Chrome security restrictions, you cannot type `frw://` URLs directly in the address bar
 - **Use instead**: Click the extension icon OR type `frw` + `Tab` in address bar
-- No installation required - Just load the extension
+- No installation required - Load unpacked extension
 - See: [Chrome Extension Guide](apps/chrome-extension/README.md)
 
 **FRW Electron Browser** (For native `frw://` protocol support)
@@ -308,7 +308,7 @@ frw init
 **Step 3: Register Your Name**
 
 ```bash
-# Includes proof-of-work (may take 1-60 mins depending on name length)
+# Includes proof-of-work (duration depends on name length)
 frw register myname
 ```
 
@@ -347,15 +347,15 @@ cd ..
 **Step 5: Publish to the Network**
 
 ```bash
-# Publish your site (works on all platforms)
+# Publish your site
 frw publish ./mysite --name myname
 
-# Done! Your site is now at frw://myname/
+# Your site is now at frw://myname/
 ```
 
 ### Browsing FRW Sites
 
-**🌐 Chrome Extension (Easiest - Works on All Platforms!)**
+**Chrome Extension (Cross-Platform)**
 
 1. Load the extension in Chrome/Edge/Brave/Opera:
    ```bash
@@ -378,9 +378,9 @@ frw publish ./mysite --name myname
    - Type the name (e.g., `frw`)
    - Press `Enter`
 
-**⚠️ Important**: You **cannot** type `frw://name` directly in Chrome's address bar. This is a Chrome security restriction that prevents extensions from registering custom protocols. Use Method A or B above instead.
+**Important**: You cannot type `frw://name` directly in Chrome's address bar. This is a Chrome security restriction that prevents extensions from registering custom protocols. Use Method A or B above instead.
 
-**💡 For native `frw://` support**, use the Electron browser below.
+**For native `frw://` support**, use the Electron browser below.
 
 See full guide: [Chrome Extension README](apps/chrome-extension/README.md)
 
@@ -558,7 +558,7 @@ FRW uses proof-of-work to prevent name squatting without requiring payments or c
 | 11-15 chars | 5 zeros | 32 MiB | ~1 second | Recommended |
 | 16+ chars | 0 zeros | 16 MiB | Instant | Free |
 
-**✅ Tested:** `quantumsafedemo2025` (19 chars) registered in 0 seconds with V2 quantum-resistant signatures.
+**Tested:** `quantumsafedemo2025` (19 chars) registered in 0 seconds with V2 quantum-resistant signatures.
 
 **Why proof-of-work?**
 - No registration fees (free)
@@ -865,32 +865,32 @@ See [docs/DEVELOPMENT_WORKFLOW.md](docs/DEVELOPMENT_WORKFLOW.md) for detailed de
 ## Roadmap
 
 **Completed:**
-- [x] Core protocol implementation
-- [x] Proof-of-work name registration
-- [x] Bootstrap node architecture
-- [x] CLI publishing tool
-- [x] Electron browser
-- [x] Chrome extension for browsing
-- [x] Multi-layer name resolution
-- [x] DNS domain linking and verification
-- [x] V2 quantum-resistant upgrade **[NEW - Nov 2025]**
-- [x] Password-protected keys
-- [x] V1 to V2 migration tool
-- [x] V2 content publishing support **[COMPLETE]**
-- [x] V2 bootstrap node validation **[TESTED & WORKING]**
-- [x] Argon2id memory-hard PoW **[OPERATIONAL]**
-- [x] 30-day PoW validity window **[DEPLOYED]**
+- Core protocol implementation
+- Proof-of-work name registration
+- Bootstrap node architecture
+- CLI publishing tool
+- Electron browser
+- Chrome extension for browsing
+- Multi-layer name resolution
+- DNS domain linking and verification
+- V2 quantum-resistant upgrade (Nov 2025)
+- Password-protected keys
+- V1 to V2 migration tool
+- V2 content publishing support
+- V2 bootstrap node validation
+- Argon2id memory-hard PoW
+- 30-day PoW validity window
 
 **In Progress:**
-- [ ] Chrome extension V2 quantum-safe badge display
-- [ ] Mobile apps (iOS, Android)
+- Chrome extension V2 quantum-safe badge display
+- Mobile apps (iOS, Android)
 
 **Planned:**
-- [ ] Firefox extension
-- [ ] Content moderation tools
-- [ ] DHT-only mode (no bootstrap nodes)
-- [ ] IPNS integration for mutable content
-- [ ] WebRTC for direct peer connections
+- Firefox extension
+- Content moderation tools
+- DHT-only mode (no bootstrap nodes)
+- IPNS integration for mutable content
+- WebRTC for direct peer connections
 
 ## License
 

@@ -12,8 +12,8 @@ Node 1 (v1.0.0): POW difficulty for 8-char names = 6
 Node 2 (v1.1.0): POW difficulty for 8-char names = 5
 
 User registers "example" with difficulty=5 POW
-→ Node 2 accepts it ✅
-→ Node 1 rejects it ❌
+→ Node 2 accepts it (PASS)
+→ Node 1 rejects it (FAIL)
 
 Result: Inconsistent index!
 ```
@@ -107,7 +107,7 @@ Checking http://83.228.213.45:3100...
 "1.0.0"
 Checking http://83.228.213.240:3100...
 "1.0.0"
-# All same version ✅
+# All same version (PASS)
 ```
 
 ### Add Version to Health Endpoint
@@ -266,23 +266,23 @@ Keep a list of all node operators with:
 
 ### For Node Operators
 
-1. ✅ **Subscribe to security announcements**
-2. ✅ **Monitor GitHub for releases**
-3. ✅ **Test updates on staging first**
-4. ✅ **Update within 7 days of security releases**
-5. ✅ **Monitor logs after updates**
-6. ✅ **Have rollback plan ready**
-7. ✅ **Communicate any issues immediately**
+1. **Subscribe to security announcements**
+2. **Monitor GitHub for releases**
+3. **Test updates on staging first**
+4. **Update within 7 days of security releases**
+5. **Monitor logs after updates**
+6. **Have rollback plan ready**
+7. **Communicate any issues immediately**
 
 ### For Core Developers
 
-1. ✅ **Use semantic versioning**
-2. ✅ **Document breaking changes clearly**
-3. ✅ **Provide migration guides**
-4. ✅ **Give 7-day notice for critical updates**
-5. ✅ **Test backward compatibility**
-6. ✅ **Maintain changelog**
-7. ✅ **Coordinate major updates**
+1. **Use semantic versioning**
+2. **Document breaking changes clearly**
+3. **Provide migration guides**
+4. **Give 7-day notice for critical updates**
+5. **Test backward compatibility**
+6. **Maintain changelog**
+7. **Coordinate major updates**
 
 ---
 
@@ -298,7 +298,7 @@ async checkVersionCompatibility() {
     const health = await fetch(`${node}/health`).then(r => r.json());
     
     if (health.protocolVersion !== this.protocolVersion) {
-      console.warn(`⚠️  Version mismatch: ${node} is v${health.version}`);
+      console.warn(`WARNING: Version mismatch: ${node} is v${health.version}`);
     }
   }
 }

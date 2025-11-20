@@ -18,13 +18,13 @@ Bootstrap nodes are **optional** HTTP index servers that speed up name resolutio
 
 ## Features
 
-- ✅ **Real-time Updates** - IPFS pubsub subscriptions for instant sync
-- ✅ **Fast HTTP API** - REST endpoints with <100ms response time
-- ✅ **POW Verification** - Validates proof-of-work before accepting registrations
-- ✅ **Signature Verification** - Cryptographic validation of all records
-- ✅ **Auto-Sync** - Multiple nodes sync automatically via pubsub
-- ✅ **Stateless Design** - No database, restart anytime, zero downtime
-- ✅ **Security Hardened** - Rejects spam, validates all inputs
+- **Real-time Updates** - IPFS pubsub subscriptions for instant sync
+- **Fast HTTP API** - REST endpoints with <100ms response time
+- **POW Verification** - Validates proof-of-work before accepting registrations
+- **Signature Verification** - Cryptographic validation of all records
+- **Auto-Sync** - Multiple nodes sync automatically via pubsub
+- **Stateless Design** - No database, restart anytime, zero downtime
+- **Security Hardened** - Rejects spam, validates all inputs
 
 ## Quick Start (Local Development)
 

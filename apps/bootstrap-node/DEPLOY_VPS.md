@@ -1,29 +1,27 @@
-# [DESKTOP] FRW Bootstrap Node - VPS Deployment Guide
+# FRW Bootstrap Node - VPS Deployment Guide
 
-**Complete guide for deploying on your own servers**
-
----
-
-## [TARGET] Why Self-Hosted VPS?
-
-**TRUE Decentralization:**
-- [OK] **$0/month** - use existing infrastructure
-- [OK] **100% control** - no platform can shut you down
-- [OK] **Censorship-resistant** - government-proof
-- [OK] **FRW philosophy** - self-sovereign infrastructure
-- [OK] **No dependencies** - immune to platform changes
-
-**vs Cloud Platforms:**
-- Railway/Fly.io can ban accounts
-- Subject to ToS changes
-- Dependent on their uptime
-- Monthly recurring costs
-
-**Self-hosted = TRUE FRW spirit!** [STRONG]
+Complete guide for deploying on your own servers
 
 ---
 
-## [LIST] Prerequisites
+## Why Self-Hosted VPS
+
+**Decentralization Benefits:**
+- No monthly costs if using existing infrastructure
+- Full administrative control
+- Censorship-resistant operation
+- No third-party dependencies
+- Platform-independent
+
+**Cloud Platform Limitations:**
+- Account suspension risk
+- Terms of service restrictions
+- Platform uptime dependencies
+- Recurring operational costs
+
+---
+
+## Prerequisites
 
 ### For Linux VPS:
 - Ubuntu 20.04+ (or Debian/CentOS)
@@ -43,7 +41,7 @@
 
 ---
 
-## [LINUX] Linux VPS Deployment (15-20 min)
+## Linux VPS Deployment (15-20 min)
 
 ### Step 1: Connect
 ```bash
@@ -194,13 +192,13 @@ sudo certbot --nginx -d frw-bootstrap.your-domain.com
 curl https://frw-bootstrap.your-domain.com/health
 ```
 
-**[OK] Linux Node Ready!**
+**Linux Node Ready**
 
 **Your URL:** `http://YOUR-IP:3030` or `https://frw-bootstrap.your-domain.com`
 
 ---
 
-## [WINDOWS] Windows VPS Deployment (20-25 min)
+## Windows VPS Deployment (20-25 min)
 
 ### Step 1: Connect
 - RDP to your Windows VPS
@@ -346,13 +344,13 @@ Install-WindowsFeature -name Web-Http-Redirect
 # Similar to Nginx reverse proxy setup
 ```
 
-**[OK] Windows Node Ready!**
+**Windows Node Ready**
 
 **Your URL:** `http://YOUR-IP:3030`
 
 ---
 
-## [REFRESH] Update FRW Client Code
+## Update FRW Client Code
 
 **Edit:** `packages/ipfs/src/distributed-registry.ts`
 
@@ -380,7 +378,7 @@ npm run build
 
 ---
 
-## [TEST] Testing Multi-Node Setup
+## Testing Multi-Node Setup
 
 ```bash
 # Test all nodes
@@ -399,7 +397,7 @@ curl http://windows-vps-ip:3030/api/resolve/testmultinode
 
 ---
 
-## [CHART] Monitoring & Maintenance
+## Monitoring & Maintenance
 
 ### Linux (PM2)
 ```bash
@@ -442,7 +440,7 @@ Get-Service | Where-Object {$_.DisplayName -like "*FRW*" -or $_.DisplayName -lik
 
 ---
 
-## [TOOL] Troubleshooting
+## Troubleshooting
 
 ### IPFS Not Starting (Linux)
 ```bash
@@ -494,20 +492,20 @@ taskkill /PID <PID> /F
 
 ---
 
-## [MONEY] Cost Comparison
+## Cost Comparison
 
 | Setup | Monthly Cost | Control | Uptime | Setup Time |
 |-------|--------------|---------|--------|------------|
-| **Your Linux VPS** | $0 (paid) | 100% | You manage | 20 min |
-| **Your Windows VPS** | $0 (paid) | 100% | You manage | 25 min |
+| **Your Linux VPS** | $0 (existing) | Full | Self-managed | 20 min |
+| **Your Windows VPS** | $0 (existing) | Full | Self-managed | 25 min |
 | Railway | $5 | Limited | 99.9% | 10 min |
 | Fly.io | $5 | Limited | 99.9% | 10 min |
 
-**Best: Your VPS (Linux + Windows) = $0/month + 100% control!**
+**Recommended: Your VPS (Linux + Windows) = $0/month + full control**
 
 ---
 
-## [WORLD] Final Architecture
+## Final Architecture
 
 ```
 ┌──────────────────────────────────────┐
@@ -515,7 +513,7 @@ taskkill /PID <PID> /F
 │  Location: Europe/USA/Asia           │
 │  URL: http://your-linux-ip:3030      │
 │  Cost: $0 (already paid)             │
-│  Control: 100% [OK]                    │
+│  Control: Full                       │
 └──────────────────────────────────────┘
 
 ┌──────────────────────────────────────┐
@@ -523,27 +521,24 @@ taskkill /PID <PID> /F
 │  Location: Different continent       │
 │  URL: http://your-windows-ip:3030    │
 │  Cost: $0 (already paid)             │
-│  Control: 100% [OK]                    │
+│  Control: Full                       │
 └──────────────────────────────────────┘
 
-= 2 NODES, $0/MONTH, 100% DECENTRALIZED
-= TRUE FRW PHILOSOPHY [OK]
+= 2 NODES, $0/MONTH, FULLY DECENTRALIZED
 ```
 
 ---
 
-## [TARGET] Next Steps
+## Next Steps
 
-1. **Deploy on both VPS** (30-40 min total)
-2. **Update client code** with both URLs
-3. **Test globally** - have friend in another country test
-4. (Optional) **Add Railway/Fly as 3rd node** for extra redundancy
-5. **Launch!** [LAUNCH]
+1. Deploy on both VPS (30-40 min total)
+2. Update client code with both URLs
+3. Test globally from different networks
+4. (Optional) Add Railway/Fly as 3rd node for redundancy
+5. Complete deployment verification
 
 ---
 
-**YOU NOW HAVE UNSTOPPABLE INFRASTRUCTURE!** [STRONG]
+**Infrastructure Complete**
 
-No platform can shut you down. No government can censor you. TRUE decentralization achieved!
-
-**This is the FRW way!** [WORLD]
+Distributed node network operational. Content resolution available through multiple independent servers.
