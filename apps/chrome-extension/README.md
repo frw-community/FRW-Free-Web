@@ -105,7 +105,7 @@ chrome-extension/
 
 ### Bootstrap Nodes
 
-The extension queries 4 Swiss bootstrap nodes in parallel for 99.9% uptime:
+The extension queries 4 bootstrap nodes in parallel for 99.9% uptime:
 
 ```typescript
 const BOOTSTRAP_NODES = [

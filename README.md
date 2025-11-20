@@ -91,7 +91,7 @@ End-to-end testing complete. Name resolution operational on production bootstrap
 - **Backward Compatible** - V1 and V2 operate side-by-side
 - **Memory-Hard PoW** - Argon2id replaces SHA-256 for spam resistance
 - **Extended PoW Validity** - 30-day validity window (vs 1-hour in development)
-- **Distributed Validation** - Multiple Swiss bootstrap nodes verify quantum-safe signatures
+- **Distributed Validation** - Multiple bootstrap nodes verify quantum-safe signatures
 
 ### V2 Quick Start
 
@@ -675,11 +675,11 @@ FRW uses multiple community-run bootstrap nodes for redundancy:
 ```typescript
 // packages/ipfs/src/distributed-registry.ts
 private readonly bootstrapNodes = [
-  'http://83.228.214.189:3100',  // Switzerland #1
-  'http://83.228.213.45:3100',   // Switzerland #2
-  'http://83.228.213.240:3100',  // Switzerland #3
-  'http://83.228.214.72:3100',   // Switzerland #4
-  'http://localhost:3100'        // Local development
+  'http://83.228.214.189:3100',
+  'http://83.228.213.45:3100',
+  'http://83.228.213.240:3100',
+  'http://83.228.214.72:3100',
+  'http://localhost:3100'
 ];
 ```
 
@@ -880,9 +880,9 @@ See [docs/DEVELOPMENT_WORKFLOW.md](docs/DEVELOPMENT_WORKFLOW.md) for detailed de
 - V2 bootstrap node validation
 - Argon2id memory-hard PoW
 - 30-day PoW validity window
+- Chrome extension V2 quantum-safe verification badges
 
 **In Progress:**
-- Chrome extension V2 quantum-safe badge display
 - Mobile apps (iOS, Android)
 
 **Planned:**
@@ -928,20 +928,20 @@ See [GitHub Discussions](https://github.com/frw-community/frw-free-web-modern/di
 
 - **Version:** 2.0.0 (Quantum-Resistant)
 - **Released:** November 2025
-- **V2 Status:** Production ready - End-to-end tested November 19, 2025
+- **V2 Status:** Production ready - End-to-end tested November 20, 2025
 - **Codebase:** ~8,500 lines (core) + ~6,000 lines (documentation)
 - **Tests:** 73/73 passing (V1: 40/40, V2: 33/33)
-- **Bootstrap Nodes:** 4 active (Switzerland) - V2 validated
+- **Bootstrap Nodes:** 4 active - V2 validated
 - **Protected Names:** 95+ brands
 - **Platforms:** Windows, Linux, macOS
 - **Security:** NIST Level 3 Post-Quantum (ML-DSA-65)
-- **Live V2 Test:** frw://quantumsafedemo2025/ (production)
+- **Live V2 Test:** frw://cleancode20nov2025e2e/ (production)
 
 ---
 
 <div align="center">
 
-**Built with ❤️ by the FRW Community**
+**Built by the FRW Community**
 
 *Censorship-resistant • Decentralized • Owned by users*
 

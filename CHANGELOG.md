@@ -100,7 +100,7 @@ First major release with complete DNS domain linking, distributed name registry,
 - 95 protected brand names (google, microsoft, apple, etc.)
 - Complete Windows build system (CLI + Browser)
 - 15+ CLI commands for full site management
-- Community-first deployment with 4 Swiss bootstrap nodes
+- Community-first deployment with 4 bootstrap nodes
 
 ### Added
 
@@ -132,7 +132,7 @@ First major release with complete DNS domain linking, distributed name registry,
 - Bootstrap node application (apps/bootstrap-node) with HTTP API
 - Endpoints: /health, /api/resolve/:name, /api/index
 - Community-first deployment strategy (no single point of failure)
-- 4 Swiss VPS nodes configured by default
+- 4 VPS nodes configured by default
 
 #### Proof-of-Work Name Registration
 - Length-based difficulty system (1-2 chars: 15 zeros → 16+ chars: instant)
@@ -202,7 +202,7 @@ First major release with complete DNS domain linking, distributed name registry,
 ### Changed
 - Migrated from single directory structure to monorepo
 - Name resolution now uses multi-layer strategy (bootstrap → DHT → pubsub)
-- Bootstrap nodes deployed to 4 Swiss VPS for redundancy
+- Bootstrap nodes deployed to 4 VPS for redundancy
 - Protocol handler updated to use Electron's net.fetch
 - Simplified Electron startup to prevent double instance launch
 - README.md from French to English with comprehensive feature documentation
