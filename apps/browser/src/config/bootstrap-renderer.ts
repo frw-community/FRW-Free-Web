@@ -11,10 +11,10 @@
  */
 export function getBootstrapUrls(): string[] {
   return [
-    'http://83.228.213.240:3100',  // Swiss Bootstrap #3 (WORKING - V2 validated)
-    'http://83.228.213.45:3100',   // Swiss Bootstrap #2
-    'http://83.228.214.189:3100',  // Swiss Bootstrap #1
-    'http://83.228.214.72:3100',   // Swiss Bootstrap #4
+    'http://83.228.213.240:3100',
+    'http://83.228.213.45:3100',
+    'http://83.228.214.189:3100',
+    'http://83.228.214.72:3100'
   ];
 }
 

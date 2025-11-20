@@ -36,13 +36,13 @@ class BootstrapIndexNode {
   private readonly PUBSUB_TOPIC = 'frw/names/updates/v1';
   private readonly SYNC_TOPIC = 'frw/sync/requests/v1';
   
-  // BOOTSTRAP NODES - Foundation seed nodes for the network
+  // Bootstrap nodes - seed nodes for the network
   private readonly BOOTSTRAP_NODES = [
-    'http://83.228.214.189:3100',   // Swiss Bootstrap #1
-    'http://83.228.213.45:3100',    // Swiss Bootstrap #2
-    'http://83.228.213.240:3100',   // Swiss Bootstrap #3
-    'http://83.228.214.72:3100',    // Swiss Bootstrap #4
-    'http://localhost:3100'          // Local dev
+    'http://83.228.214.189:3100',
+    'http://83.228.213.45:3100',
+    'http://83.228.213.240:3100',
+    'http://83.228.214.72:3100',
+    'http://localhost:3100'
   ];
 
   constructor(nodeId: string) {

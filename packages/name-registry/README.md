@@ -105,8 +105,8 @@ frw domain verify example.com
 frw domain list
 
 # Shows all domains with verification status:
-# ✓ example.com -> frw://myname/ (Verified)
-# ⚠ test.com -> frw://test/ (Not verified)
+# example.com -> frw://myname/ (Verified)
+# test.com -> frw://test/ (Not verified)
 ```
 
 #### Get Domain Information

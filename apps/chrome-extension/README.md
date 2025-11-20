@@ -109,10 +109,10 @@ The extension queries 4 Swiss bootstrap nodes in parallel for 99.9% uptime:
 
 ```typescript
 const BOOTSTRAP_NODES = [
-  'http://83.228.214.189:3100',   // Swiss #1
-  'http://83.228.213.45:3100',    // Swiss #2
-  'http://83.228.213.240:3100',   // Swiss #3
-  'http://83.228.214.72:3100'     // Swiss #4
+  'http://83.228.214.189:3100',
+  'http://83.228.213.45:3100',
+  'http://83.228.213.240:3100',
+  'http://83.228.214.72:3100'
 ];
 ```
 

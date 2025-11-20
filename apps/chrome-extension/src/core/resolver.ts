@@ -35,7 +35,7 @@ export class FRWResolver {
   private readonly timeout: number;
   private readonly cacheTTL: number;
   
-  // Default bootstrap nodes - Swiss nodes from FRW foundation
+  // Default bootstrap nodes
   private static readonly DEFAULT_BOOTSTRAP_NODES = [
     'http://83.228.214.189:3100',
     'http://83.228.213.45:3100',

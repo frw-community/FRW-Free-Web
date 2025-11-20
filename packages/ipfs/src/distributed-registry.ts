@@ -394,11 +394,11 @@ export class DistributedNameRegistry {
     // Import from @frw/common when available
     // For now, return hardcoded list
     return [
-      'http://83.228.214.189:3100',  // Swiss Bootstrap #1
-      'http://83.228.213.45:3100',   // Swiss Bootstrap #2
-      'http://83.228.213.240:3100',  // Swiss Bootstrap #3
-      'http://83.228.214.72:3100',   // Swiss Bootstrap #4
-      'http://localhost:3100'         // Local dev
+      'http://83.228.214.189:3100',
+      'http://83.228.213.45:3100',
+      'http://83.228.213.240:3100',
+      'http://83.228.214.72:3100',
+      'http://localhost:3100'
     ];
   }
 
@@ -460,7 +460,7 @@ export class DistributedNameRegistry {
     // Current: Manual updates work fine, community can update via PR
     const INDEX_CIDS: string[] = [
       // Latest index CIDs from bootstrap nodes
-      // Check http://83.228.214.189:3100/api/index/cid for latest
+      // Check bootstrap node /api/index/cid for latest
       // Community can add more via pull request
       // 'QmXXX',  // Add CID here after bootstrap nodes publish first index
     ];

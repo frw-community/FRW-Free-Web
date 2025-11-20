@@ -1,8 +1,8 @@
 /**
  * Bootstrap Node Configuration
  * 
- * DEFAULT_NODES: Hardcoded foundation nodes (like Bitcoin seed nodes)
- * These are trusted, stable nodes maintained by the FRW foundation
+ * DEFAULT_NODES: Hardcoded default nodes (like Bitcoin seed nodes)
+ * These are stable nodes providing distributed name resolution
  * 
  * Users can override/extend via config file:
  * ~/.frw/config.json:
@@ -13,7 +13,7 @@
 
 export interface BootstrapConfig {
   /**
-   * Use default foundation nodes
+   * Use default nodes
    */
   useDefaults: boolean;
   
@@ -29,14 +29,14 @@ export interface BootstrapConfig {
 }
 
 /**
- * Foundation bootstrap nodes - hardcoded for reliability
- * These are maintained by FRW and provide 99.9% uptime
+ * Default bootstrap nodes - hardcoded for reliability
+ * Distributed nodes providing 99.9% uptime
  */
 export const DEFAULT_BOOTSTRAP_NODES = [
-  'http://83.228.214.189:3100',  // Swiss Bootstrap #1
-  'http://83.228.213.45:3100',   // Swiss Bootstrap #2
-  'http://83.228.213.240:3100',  // Swiss Bootstrap #3
-  'http://83.228.214.72:3100',   // Swiss Bootstrap #4
+  'http://83.228.214.189:3100',
+  'http://83.228.213.45:3100',
+  'http://83.228.213.240:3100',
+  'http://83.228.214.72:3100'
 ];
 
 /**

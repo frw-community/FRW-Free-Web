@@ -296,7 +296,7 @@ cat ~/.frw/keys/default-v2.json
 
 ### "PoW generation timeout"
 
-**Cause**: Name too short, PoW takes very long.
+**Cause**: Name too short, PoW computation time increases significantly.
 
 **Solution**: Names 16+ characters migrate instantly. Shorter names take longer.
 
