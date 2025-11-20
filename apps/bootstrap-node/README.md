@@ -272,14 +272,14 @@ HTTP_PORT=3100
 
 ### Implemented Protections
 
-- ✅ **Proof-of-Work Validation** - Rejects registrations without valid POW
-- ✅ **Signature Verification** - All records must be cryptographically signed
-- ✅ **Difficulty Enforcement** - Validates POW meets minimum difficulty for name length
-- ✅ **Timestamp Validation** - POW must be recent (< 1 hour old)
-- ✅ **Read-Only API** - No direct writes, only via verified pubsub
-- ✅ **Input Sanitization** - All inputs validated and sanitized
-- ✅ **CORS Headers** - Controlled cross-origin access
-- ✅ **Rate Limiting** - Prevents abuse (TODO: implement)
+- **Proof-of-Work Validation** - Rejects registrations without valid POW
+- **Signature Verification** - All records must be cryptographically signed
+- **Difficulty Enforcement** - Validates POW meets minimum difficulty for name length
+- **Timestamp Validation** - POW must be recent (< 1 hour old)
+- **Read-Only API** - No direct writes, only via verified pubsub
+- **Input Sanitization** - All inputs validated and sanitized
+- **CORS Headers** - Controlled cross-origin access
+- **Rate Limiting** - Prevents abuse (TODO: implement)
 
 ### Attack Resistance
 
@@ -294,11 +294,11 @@ HTTP_PORT=3100
 
 ### What Bootstrap Nodes DON'T Do
 
-- ❌ **Don't store private keys** - Only public data
-- ❌ **Don't control the network** - Just an index, not authority
-- ❌ **Don't prevent DHT access** - Users can bypass entirely
-- ❌ **Don't charge fees** - Free public service
-- ❌ **Don't censor** - Accept all valid POW registrations
+- **Don't store private keys** - Only public data
+- **Don't control the network** - Just an index, not authority
+- **Don't prevent DHT access** - Users can bypass entirely
+- **Don't charge fees** - Free public service
+- **Don't censor** - Accept all valid POW registrations
 
 ## Monitoring
 

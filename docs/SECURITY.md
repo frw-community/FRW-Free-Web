@@ -166,7 +166,7 @@ Result: Malicious node's spam is filtered out client-side
 **Why this works:**
 - Clients don't trust bootstrap nodes
 - Every result is verified cryptographically
-- Bootstrap nodes are just an index, not an authority
+- Bootstrap nodes are an index, not an authority
 
 ### Attack Scenario 3: Fake Content
 
@@ -219,8 +219,8 @@ async handlePubsubMessage(msg: any) {
     requiredDifficulty
   );
   if (!powValid) {
-    console.log(`[Bootstrap] ✗ Invalid POW for ${record.name}`);
-    return; // REJECTED
+    console.log(`[Bootstrap] REJECTED: Invalid POW for ${record.name}`);
+    return;
   }
   
   // 2. Validate signature
@@ -230,19 +230,19 @@ async handlePubsubMessage(msg: any) {
     record.publicKey
   );
   if (!signatureValid) {
-    console.log(`[Bootstrap] ✗ Invalid signature for ${record.name}`);
-    return; // REJECTED
+    console.log(`[Bootstrap] REJECTED: Invalid signature for ${record.name}`);
+    return;
   }
   
   // 3. Check POW timestamp (prevent replay of old POW)
   if (Date.now() - record.proof.timestamp > 3600000) { // 1 hour
-    console.log(`[Bootstrap] ✗ POW too old for ${record.name}`);
-    return; // REJECTED
+    console.log(`[Bootstrap] REJECTED: POW too old for ${record.name}`);
+    return;
   }
   
   // 4. All checks passed - add to index
   this.index.set(record.name, record);
-  console.log(`[Bootstrap] ✓ Added ${record.name}`);
+  console.log(`[Bootstrap] Added ${record.name}`);
 }
 ```
 

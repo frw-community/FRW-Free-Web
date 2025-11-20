@@ -114,8 +114,8 @@ You'll be prompted to:
 
 Output:
 ```
-✓ Quantum-resistant keypair generated
-✓ V2 keypair saved (encrypted)
+Quantum-resistant keypair generated
+V2 keypair saved (encrypted)
 
 Your V2 DID: did:frw:v2:abc123...
 Key file: ~/.frw/keys/default-v2.json

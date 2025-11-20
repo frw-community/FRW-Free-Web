@@ -45,7 +45,7 @@ async function init() {
   
   try {
     // Update title
-    document.title = `frw://${name}${path} - FRW Browser`;
+    document.title = `frw://${name}${path} - FRW Protocol`;
     nameDisplayEl.textContent = name;
     
     console.log(`[Viewer] Loading: frw://${name}${path}`);

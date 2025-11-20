@@ -27,7 +27,7 @@ frw register bob
 frw metrics bob
 
 # Expected Output:
-# ✔ Metrics collected
+# Metrics collected
 # Legitimacy Score: X.XX
 # Usage Score: X.XX
 ```
@@ -44,7 +44,7 @@ frw challenge create bob \
   --evidence ipfs://QmTestEvidence123
 
 # Expected Output:
-# ✔ Challenge created
+# Challenge created
 # Challenge ID: chal_xxxxx
 # Response Deadline: [30 days from now]
 # Evaluation Deadline: [44 days from now]
@@ -100,7 +100,7 @@ frw challenge respond chal_xxxxx \
   --evidence ipfs://QmBobEvidence456
 
 # Expected Output:
-# ✔ Response submitted
+# Response submitted
 # Status: under_evaluation
 # Evaluation Deadline: [date]
 ```

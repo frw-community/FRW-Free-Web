@@ -210,7 +210,7 @@ Get URL: `https://your-service.onrender.com`
 
 ## Option 3: Fly.io (10 min)
 
-**CLI-based, very fast**
+**CLI-based deployment**
 
 ### Install Fly CLI
 ```bash
@@ -338,9 +338,11 @@ http://your-server.com:3030
 ```typescript
 private async queryHTTPBootstrap(name: string): Promise<DistributedNameRecord | null> {
   const BOOTSTRAP_NODES = [
-    'https://bootstrap1.frw.network',  // Your primary
-    'https://bootstrap2.frw.network',  // Backup (optional)
-    'http://localhost:3030',           // Local dev
+    'http://83.228.214.189:3100',  // Switzerland #1
+    'http://83.228.213.45:3100',   // Switzerland #2
+    'http://83.228.213.240:3100',  // Switzerland #3
+    'http://83.228.214.72:3100',   // Switzerland #4
+    'http://localhost:3100',       // Local dev
   ];
   
   // ... rest of code
@@ -367,26 +369,31 @@ frw://yourname/
 
 ### Test Bootstrap API
 ```bash
-curl https://your-bootstrap-url.com/api/health
+# Test production nodes
+curl http://83.228.214.189:3100/health
+curl http://83.228.213.45:3100/health
 
 # Should return:
 {
   "status": "ok",
   "nodeId": "bootstrap-xxx",
-  "indexSize": 0,
-  "uptime": 123
+  "v1IndexSize": 19,
+  "v2IndexSize": 6,
+  "pqSecureRecords": 6,
+  "uptime": 86400
 }
 ```
 
 ### Test Name Resolution
 ```bash
-# After publishing a name
-curl https://your-bootstrap-url.com/api/resolve/testname
+# Test with actual registered name
+curl http://83.228.213.45:3100/api/resolve/e2etest20nov2025final
 
-# Should return:
+# Should return V2 record:
 {
-  "name": "testname",
-  "publicKey": "...",
+  "version": 2,
+  "name": "e2etest20nov2025final",
+  "publicKey_dilithium3": "...",
   "contentCID": "Qm...",
   ...
 }
@@ -396,23 +403,24 @@ curl https://your-bootstrap-url.com/api/resolve/testname
 
 ## Recommended Setup for Production
 
-**Deploy 2-3 bootstrap nodes for redundancy:**
+**Current production nodes (Switzerland):**
 
-1. **Primary**: Railway/Render (US/Europe)
-2. **Backup**: Fly.io (Asia/closest region)
-3. **Dev**: localhost:3030
-
-**Code:**
 ```typescript
 const BOOTSTRAP_NODES = [
-  'https://bootstrap-us.frw.network',
-  'https://bootstrap-eu.frw.network',
-  'https://bootstrap-asia.frw.network',
-  'http://localhost:3030',
+  'http://83.228.214.189:3100',  // Switzerland #1
+  'http://83.228.213.45:3100',   // Switzerland #2
+  'http://83.228.213.240:3100',  // Switzerland #3
+  'http://83.228.214.72:3100',   // Switzerland #4
+  'http://localhost:3100',       // Local dev
 ];
 ```
 
-**Result:** 99.99% uptime, < 200ms latency worldwide
+**Performance:**
+- 4 nodes for redundancy
+- Switzerland (central Europe) location
+- < 50ms latency within Europe
+- < 200ms latency worldwide
+- 99.9% uptime
 
 ---
 

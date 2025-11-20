@@ -112,7 +112,7 @@ Checking http://83.228.213.240:3100...
 
 ### Add Version to Health Endpoint
 
-Currently missing! Let's add it:
+Implementation example:
 
 ```typescript
 // apps/bootstrap-node/index.ts

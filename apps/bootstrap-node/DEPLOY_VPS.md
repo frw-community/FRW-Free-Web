@@ -357,16 +357,11 @@ Install-WindowsFeature -name Web-Http-Redirect
 ```typescript
 // Line ~334
 const BOOTSTRAP_NODES = [
-  'http://your-linux-vps-ip:3030',      // Your Linux VPS
-  'http://your-windows-vps-ip:3030',    // Your Windows VPS
-  'http://localhost:3030',              // Local dev
-];
-
-// Or with HTTPS:
-const BOOTSTRAP_NODES = [
-  'https://frw-bootstrap1.your-domain.com',  // Linux with Nginx
-  'http://your-windows-vps-ip:3030',         // Windows
-  'http://localhost:3030',
+  'http://83.228.214.189:3100',  // Switzerland #1
+  'http://83.228.213.45:3100',   // Switzerland #2
+  'http://83.228.213.240:3100',  // Switzerland #3
+  'http://83.228.214.72:3100',   // Switzerland #4
+  'http://localhost:3100',       // Local dev
 ];
 ```
 
