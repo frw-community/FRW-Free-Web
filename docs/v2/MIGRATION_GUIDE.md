@@ -104,22 +104,22 @@ frw migrate yourname --force
 ## What Gets Migrated
 
 ### Preserved
-- ✅ Content CID
-- ✅ IPNS key
-- ✅ Name ownership
-- ✅ Historical records
+- Content CID
+- IPNS key
+- Name ownership
+- Historical records
 
 ### Created New
-- ✅ V2 keypair (Dilithium3 + Ed25519)
-- ✅ V2 signatures
-- ✅ V2 proof of work
-- ✅ DID identifier
-- ✅ V2 record
+- V2 keypair (Dilithium3 + Ed25519)
+- V2 signatures
+- V2 proof of work
+- DID identifier
+- V2 record
 
 ### Not Changed
-- ✅ V1 record (remains active)
-- ✅ V1 keys (still work)
-- ✅ V1 clients (unaffected)
+- V1 record (remains active)
+- V1 keys (still work)
+- V1 clients (unaffected)
 
 ---
 

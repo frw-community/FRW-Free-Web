@@ -185,9 +185,9 @@ Browser resolves "amazon"
     └─ Gets signature: ...
 
 User sees:
-    ⚠️  Warning: This site is NOT verified
-    ⚠️  PublicKey: AttackerKey123...
-    ⚠️  Expected: AmazonOfficialKey...
+    WARNING: This site is NOT verified
+    PublicKey: AttackerKey123...
+    Expected: AmazonOfficialKey...
     
 User decision:
     - Trust out-of-band verification (Amazon's Twitter)
@@ -254,21 +254,21 @@ async handlePubsubMessage(msg: any) {
 ┌─────────────────────────────────────────┐
 │ What Bootstrap Nodes DO                 │
 ├─────────────────────────────────────────┤
-│ ✅ Verify POW meets difficulty          │
-│ ✅ Verify cryptographic signatures      │
-│ ✅ Check POW timestamp (anti-replay)    │
-│ ✅ Reject spam and invalid submissions  │
-│ ✅ Provide fast HTTP index (optional)   │
+│ + Verify POW meets difficulty          │
+│ + Verify cryptographic signatures      │
+│ + Check POW timestamp (anti-replay)    │
+│ + Reject spam and invalid submissions  │
+│ + Provide fast HTTP index (optional)   │
 └─────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────┐
 │ What Bootstrap Nodes DON'T DO           │
 ├─────────────────────────────────────────┤
-│ ❌ Control who can register names       │
-│ ❌ Prevent DHT access                   │
-│ ❌ Store private keys                   │
-│ ❌ Modify or censor content             │
-│ ❌ Act as certificate authority         │
+│ - Control who can register names       │
+│ - Prevent DHT access                   │
+│ - Store private keys                   │
+│ - Modify or censor content             │
+│ - Act as certificate authority         │
 └─────────────────────────────────────────┘
 ```
 

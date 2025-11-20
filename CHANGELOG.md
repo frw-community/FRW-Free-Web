@@ -82,12 +82,12 @@ Patch release with security improvements, performance optimizations, and compreh
 - All security-critical suites passing
 
 ### Verified Working
-- ✅ Browser runs successfully in development mode with DevTools
-- ✅ CLI commands functional (register, publish work end-to-end)
-- ✅ Name registration with proof-of-work (vaultline successfully registered)
-- ✅ Publishing to distributed network (3/4 bootstrap nodes accepting registrations)
-- ✅ IPFS integration operational
-- ✅ All package dependencies properly installed and built
+- Browser runs successfully in development mode with DevTools
+- CLI commands functional (register, publish work end-to-end)
+- Name registration with proof-of-work (vaultline successfully registered)
+- Publishing to distributed network (3/4 bootstrap nodes accepting registrations)
+- IPFS integration operational
+- All package dependencies properly installed and built
 
 ## [1.0.0] - 2025-11-15
 

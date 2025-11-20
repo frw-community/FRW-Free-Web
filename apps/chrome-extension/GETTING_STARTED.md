@@ -157,4 +157,4 @@ npm run build
 - Check the issues: https://github.com/frw-community/FRW-Free-Web/issues
 - Ask in discussions: https://github.com/frw-community/FRW-Free-Web/discussions
 
-Happy coding! 🚀
+Happy coding!

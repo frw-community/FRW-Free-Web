@@ -1,23 +1,23 @@
-# [LAUNCH] FRW Bootstrap Node - Deployment Guide
+# FRW Bootstrap Node - Deployment Guide
 
-**Deploy FRW Bootstrap Nodes for Global Decentralization**
+Deploy FRW Bootstrap Nodes for Global Decentralization
 
 ---
 
-## [TARGET] RECOMMENDED: Self-Hosted VPS (TRUE Decentralization)
+## RECOMMENDED: Self-Hosted VPS
 
-**Why VPS is best:**
-- [OK] **$0/month** (use existing servers)
-- [OK] **100% control** - no platform can ban you
-- [OK] **TRUE decentralization** - aligned with FRW philosophy
-- [OK] **No dependencies** - you own the infrastructure
-- [OK] **Can't be censored** - government-resistant
+**VPS Advantages:**
+- No monthly costs (use existing servers)
+- Full administrative control
+- Decentralized operation
+- No platform dependencies
+- Censorship-resistant
 
 **Alternative:** Cloud platforms (Railway/Fly.io) as backup nodes for convenience
 
 ---
 
-## [TARGET] Option 1: Your Own Linux VPS (RECOMMENDED - 15 min)
+## Option 1: Your Own Linux VPS (RECOMMENDED - 15 min)
 
 **Best for: True decentralization, zero monthly cost, full control**
 
@@ -187,11 +187,11 @@ HTTP:  http://your-vps-ip:3030
 HTTPS: https://your-domain.com  (if Nginx configured)
 ```
 
-**[OK] Node 1 Complete! 100% Self-Hosted!**
+**Node 1 Complete - Self-Hosted**
 
 ---
 
-## [TARGET] Option 2: Render.com (15 min)
+## Option 2: Render.com (15 min)
 
 **Also free tier, similar process**
 
@@ -208,7 +208,7 @@ Get URL: `https://your-service.onrender.com`
 
 ---
 
-## [TARGET] Option 3: Fly.io (10 min)
+## Option 3: Fly.io (10 min)
 
 **CLI-based, very fast**
 
@@ -247,7 +247,7 @@ const BOOTSTRAP_NODES = [
 
 ---
 
-## [TARGET] Option 4: Docker Local + ngrok (5 min - FASTEST)
+## Option 4: Docker Local + ngrok (5 min - FASTEST)
 
 **For immediate testing**
 
@@ -279,11 +279,11 @@ npm run build
 # Test from another machine/network
 ```
 
-**[WARNING] ngrok URL changes on restart - use for testing only**
+**WARNING:** ngrok URL changes on restart - use for testing only
 
 ---
 
-## [TARGET] Option 5: Your Own VPS (30 min)
+## Option 5: Your Own VPS (30 min)
 
 **If you have a server**
 
@@ -331,7 +331,7 @@ http://your-server.com:3030
 
 ---
 
-## [CHART] After Deploy - Update Client Code
+## After Deploy - Update Client Code
 
 ### Location: `packages/ipfs/src/distributed-registry.ts`
 
@@ -363,7 +363,7 @@ frw://yourname/
 
 ---
 
-## [TEST] Verify Deployment
+## Verify Deployment
 
 ### Test Bootstrap API
 ```bash
@@ -394,7 +394,7 @@ curl https://your-bootstrap-url.com/api/resolve/testname
 
 ---
 
-## [TARGET] Recommended Setup for Production
+## Recommended Setup for Production
 
 **Deploy 2-3 bootstrap nodes for redundancy:**
 
@@ -412,11 +412,11 @@ const BOOTSTRAP_NODES = [
 ];
 ```
 
-**Result:** 99.99% uptime, < 200ms latency worldwide!
+**Result:** 99.99% uptime, < 200ms latency worldwide
 
 ---
 
-## [MONEY] Cost
+## Cost
 
 | Service | Free Tier | Limits | Best For |
 |---------|-----------|--------|----------|
@@ -430,7 +430,7 @@ const BOOTSTRAP_NODES = [
 
 ---
 
-## [LAUNCH] FASTEST PATH (RIGHT NOW):
+## FASTEST PATH:
 
 ```bash
 # Terminal 1: Start bootstrap
@@ -453,8 +453,8 @@ npm run build
 # Should work globally!
 ```
 
-**Time:** 5 minutes to 100% global! [SUCCESS]
+**Time:** 5 minutes to global deployment
 
 ---
 
-**CHOOSE ONE AND LET'S FINISH THIS!** [HOT]
+**Select deployment method based on requirements**
