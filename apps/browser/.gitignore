@@ -1,0 +1,16 @@
+# Build output
+dist/
+dist-electron/
+
+# Release folders (but keep .exe files)
+release/*
+!release/*.exe
+release-v2/*
+!release-v2/*.exe
+
+# Development
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db

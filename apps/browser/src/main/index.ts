@@ -44,8 +44,9 @@ function createWindow() {
     mainWindow.loadURL('http://localhost:5173');
     mainWindow.webContents.openDevTools();
   } else {
-    // In production, load from built files
-    mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'));
+    // In production, load from built files (no asar packaging)
+    const appPath = app.getAppPath();
+    mainWindow.loadFile(path.join(appPath, 'dist-electron/index.html'));
   }
 
   mainWindow.on('closed', () => {
