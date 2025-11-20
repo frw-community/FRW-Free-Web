@@ -1,7 +1,7 @@
 {
   "name": "@frw/browser",
-  "version": "1.0.1",
-  "description": "FRW Browser - Decentralized web browser",
+  "version": "2.0.0",
+  "description": "FRW Browser V2 - Quantum-Resistant Decentralized Web Browser",
   "main": "dist/src/main/index.js",
   "type": "module",
   "scripts": {
@@ -29,6 +29,8 @@
     "@frw/ipfs": "1.0.1",
     "@frw/name-registry": "1.0.1",
     "@frw/protocol": "1.0.1",
+    "@frw/protocol-v2": "2.0.0",
+    "@frw/pow-v2": "2.0.0",
     "@types/node-fetch": "^2.6.13",
     "node-fetch": "^2.6.7",
     "react": "^18.2.0",
@@ -55,11 +57,13 @@
     "appId": "com.frw.browser",
     "productName": "FRW Browser",
     "npmRebuild": false,
+    "asar": false,
     "directories": {
-      "output": "release"
+      "output": "release-v2"
     },
     "files": [
-      "dist/**/*"
+      "dist/**/*",
+      "dist-electron/**/*"
     ],
     "win": {
       "target": [
