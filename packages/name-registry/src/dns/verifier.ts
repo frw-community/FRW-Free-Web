@@ -58,6 +58,8 @@ export class DNSVerifier {
                 this.timeout()
             ]);
             
+
+            
             if (!records || records.length === 0) {
                 return { found: false };
             }
