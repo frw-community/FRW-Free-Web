@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach } from '@jest/globals';
-import { FRWNamingSystem, NameRecord } from '../src/naming.js';
+import { FRWNamingSystem, NameRecord } from '../src/naming';
 import { SignatureManager } from '@frw/crypto';
 
 describe('FRWNamingSystem', () => {

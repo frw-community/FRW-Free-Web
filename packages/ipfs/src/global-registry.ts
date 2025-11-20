@@ -3,7 +3,7 @@
 
 import { create as createIPFSClient, IPFSHTTPClient } from 'ipfs-http-client';
 import { SignatureManager } from '@frw/crypto';
-import type { DistributedNameRecord } from './distributed-registry.js';
+import type { DistributedNameRecord } from './distributed-registry';
 
 /**
  * Global registry structure stored on IPFS and published via IPNS

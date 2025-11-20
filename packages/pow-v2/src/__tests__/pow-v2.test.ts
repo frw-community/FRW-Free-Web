@@ -1,5 +1,6 @@
 // FAST PoW tests (using long names for instant computation)
 
+import { describe, it, expect } from '@jest/globals';
 import { generatePOWV2, verifyPOWV2 } from '../index';
 
 describe('PoW V2 - Fast Tests', () => {

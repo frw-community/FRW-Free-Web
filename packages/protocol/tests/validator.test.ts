@@ -1,5 +1,5 @@
 import { describe, test, expect } from '@jest/globals';
-import { FRWValidator } from '../src/validator.js';
+import { FRWValidator } from '../src/validator';
 
 describe('FRWValidator', () => {
   describe('validatePage', () => {

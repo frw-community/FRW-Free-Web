@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach } from '@jest/globals';
-import { VMSandbox } from '../src/vm.js';
+import { VMSandbox } from '../src/vm';
 
 describe('VMSandbox', () => {
   let sandbox: VMSandbox;

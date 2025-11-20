@@ -1,5 +1,6 @@
 // Fast unit tests for post-quantum key generation
 
+import { describe, it, expect } from '@jest/globals';
 import { generateKeyPairV2, validateKeyPairV2, KeyManagerV2 } from '../keys-pq';
 
 describe('KeyManagerV2', () => {

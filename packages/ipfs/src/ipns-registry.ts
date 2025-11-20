@@ -3,7 +3,7 @@
 
 import { create as createIPFSClient, IPFSHTTPClient } from 'ipfs-http-client';
 import { SignatureManager } from '@frw/crypto';
-import type { NameRecord } from './dht.js';
+import type { NameRecord } from './dht';
 
 /**
  * Registry structure stored in IPNS
