@@ -15,7 +15,11 @@ export interface NameRecord {
   did?: string;
   publicKey_ed25519?: string;
   publicKey_dilithium3?: string;
+  signature_dilithium3?: string;
+  signature_ed25519?: string;
+  registered?: number;
   quantumSafe?: boolean;
+  pqSecure?: boolean;
 }
 
 export interface ResolverConfig {

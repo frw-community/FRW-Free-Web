@@ -107,10 +107,22 @@ async function init() {
  * Show verification badge
  */
 function showVerification(record: NameRecord) {
-  authorEl.textContent = `@${record.publicKey.substring(0, 8)}...`;
+  // Handle V2 records with different field names
+  const publicKey = record.publicKey_dilithium3 || record.publicKey;
+  const timestamp = record.version === 2 
+    ? (record as any).registered || record.timestamp 
+    : record.timestamp;
   
-  const date = new Date(record.timestamp);
+  authorEl.textContent = `@${publicKey.substring(0, 8)}...`;
+  
+  const date = new Date(timestamp);
   dateEl.textContent = date.toLocaleDateString();
+  
+  // Show quantum-safe indicator for V2 records
+  if (record.version === 2) {
+    verificationEl.classList.add('quantum-safe');
+    verificationEl.setAttribute('data-quantum', 'true');
+  }
 }
 
 /**

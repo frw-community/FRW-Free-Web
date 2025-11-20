@@ -57,6 +57,16 @@ body {
   opacity: 0.5;
 }
 
+/* Quantum-Safe Badge */
+.verification-badge.quantum-safe {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.verification-badge.quantum-safe .badge-label::after {
+  content: " 🛡️ Quantum-Safe";
+  font-weight: 600;
+}
+
 /* Loading State */
 .loading {
   display: flex;
