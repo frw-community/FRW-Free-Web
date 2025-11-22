@@ -2,13 +2,13 @@
   "name": "@frw/browser",
   "version": "2.0.0",
   "description": "FRW Browser V2 - Quantum-Resistant Decentralized Web Browser",
-  "main": "dist/src/main/index.js",
+  "main": "dist/main/index.js",
   "type": "module",
   "scripts": {
-    "start": "electron dist/src/main/index.js",
+    "start": "electron dist/main/index.js",
     "dev": "concurrently \"npm run dev:vite\" \"npm run dev:electron\"",
     "dev:vite": "vite",
-    "dev:electron": "wait-on http://localhost:5173 && npx tsc -p tsconfig.build.json && electron dist/src/main/index.js",
+    "dev:electron": "wait-on http://localhost:5173 && npx tsc -p tsconfig.build.json && electron dist/main/index.js",
     "build": "vite build && npx tsc -p tsconfig.build.json && electron-builder",
     "build:vite": "vite build",
     "build:electron": "npx tsc -p tsconfig.build.json",
@@ -63,7 +63,9 @@
     },
     "files": [
       "dist/**/*",
-      "dist-electron/**/*"
+      "dist-electron/**/*",
+      "node_modules/**/*",
+      "package.json"
     ],
     "win": {
       "target": [
