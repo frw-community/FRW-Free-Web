@@ -3,7 +3,7 @@ import { readFileSync } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';
 import { DistributedNameRegistry } from '@frw/ipfs';
-import { getBootstrapUrls } from '../config/bootstrap';
+import { getBootstrapUrls } from '../config/bootstrap.js';
 
 // Global registry instance (listens to pubsub for updates)
 let registry: DistributedNameRegistry | null = null;
