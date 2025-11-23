@@ -4,7 +4,8 @@ import { fileURLToPath } from 'url';
 import { registerFRWProtocol } from './protocol.js';
 import { setupIPC } from './ipc.js';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+// Use import.meta.url to compute current directory in ESM
+const currentDir = path.dirname(fileURLToPath(import.meta.url));
 
 // CRITICAL: Register frw:// as privileged BEFORE app is ready
 // This allows sub-resources (images, CSS, JS) to load properly
@@ -28,13 +29,13 @@ function createWindow() {
     width: 1200,
     height: 800,
     webPreferences: {
-      preload: path.join(__dirname, '../preload/index.js'),
+      preload: path.join(currentDir, '../preload/index.js'),
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: true
     },
     title: 'FRW Browser',
-    icon: path.join(__dirname, '../../assets/icon.png')
+    icon: path.join(currentDir, '../../assets/icon.png')
   });
 
   // Load the app
