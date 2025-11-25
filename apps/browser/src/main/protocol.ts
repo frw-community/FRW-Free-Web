@@ -2,21 +2,21 @@ import { protocol, net } from 'electron';
 import { readFileSync } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';
-import { DistributedNameRegistry } from '@frw/ipfs';
+import { DistributedRegistryV2 } from '@frw/ipfs';
 import { getBootstrapUrls } from '../config/bootstrap.js';
 
 // Global registry instance (listens to pubsub for updates)
-let registry: DistributedNameRegistry | null = null;
+let registry: DistributedRegistryV2 | null = null;
 
 // Initialize registry once
-function getRegistry(): DistributedNameRegistry {
+function getRegistry(): DistributedRegistryV2 {
   if (!registry) {
-    console.log('[FRW] Initializing distributed name registry...');
+    console.log('[FRW] Initializing distributed name registry (V2)...');
     const bootstrapNodes = [
       ...getBootstrapUrls(),           // All 4 Swiss bootstrap nodes
       'http://localhost:3100'          // Local dev (if running)
     ];
-    registry = new DistributedNameRegistry({
+    registry = new DistributedRegistryV2({
       ipfsUrl: 'http://localhost:5001',
       bootstrapNodes
     });
@@ -47,11 +47,11 @@ async function imageToDataUrl(imageUrl: string): Promise<string | null> {
       method: 'GET',
       signal: AbortSignal.timeout(10000)
     });
-    
+
     if (response.ok) {
       const buffer = await response.arrayBuffer();
       const base64 = Buffer.from(buffer).toString('base64');
-      
+
       // Detect mime type from URL
       const ext = imageUrl.split('.').pop()?.toLowerCase();
       let mimeType = 'image/png';
@@ -59,7 +59,7 @@ async function imageToDataUrl(imageUrl: string): Promise<string | null> {
       else if (ext === 'gif') mimeType = 'image/gif';
       else if (ext === 'svg') mimeType = 'image/svg+xml';
       else if (ext === 'webp') mimeType = 'image/webp';
-      
+
       return `data:${mimeType};base64,${base64}`;
     }
   } catch (error) {
@@ -71,26 +71,26 @@ async function imageToDataUrl(imageUrl: string): Promise<string | null> {
 // Helper to preload all images in HTML and convert to data URLs
 async function preloadImagesInHtml(html: string, cid: string, gateways: string[]): Promise<string> {
   console.log('[FRW Protocol] Preloading images...');
-  
+
   // Find all img src attributes
   const imgRegex = /<img[^>]+src=["']([^"']+)["']/gi;
   const matches = [...html.matchAll(imgRegex)];
-  
+
   if (matches.length === 0) {
     console.log('[FRW Protocol] No images found');
     return html;
   }
-  
+
   console.log('[FRW Protocol] Found', matches.length, 'images to preload');
-  
+
   for (const match of matches) {
     const originalSrc = match[1];
-    
+
     // Skip if already data URL or absolute URL
     if (originalSrc.startsWith('data:') || originalSrc.startsWith('http')) {
       continue;
     }
-    
+
     // Try each gateway to fetch the image
     let dataUrl: string | null = null;
     for (const gateway of gateways) {
@@ -102,13 +102,13 @@ async function preloadImagesInHtml(html: string, cid: string, gateways: string[]
         break;
       }
     }
-    
+
     // Replace src with data URL
     if (dataUrl) {
       html = html.replace(match[0], match[0].replace(originalSrc, dataUrl));
     }
   }
-  
+
   console.log('[FRW Protocol] ✓ All images preloaded');
   return html;
 }
@@ -116,10 +116,10 @@ async function preloadImagesInHtml(html: string, cid: string, gateways: string[]
 export function registerFRWProtocol() {
   protocol.registerBufferProtocol('frw', async (request, callback) => {
     let identifier = ''; // Declare outside try block for error handler access
-    
+
     try {
       console.log('[FRW Protocol] Loading:', request.url);
-      
+
       // Parse frw://name/ URL
       const urlMatch = request.url.match(/^frw:\/\/([^\/]+)(\/.*)?$/);
       if (!urlMatch) {
@@ -131,16 +131,16 @@ export function registerFRWProtocol() {
 
       const [, parsedIdentifier, path] = urlMatch;
       identifier = parsedIdentifier;
-      
+
       console.log('[FRW Protocol] Identifier:', identifier);
-      
+
       // Try distributed resolution first
       let cid: string | null = null;
-      
+
       try {
         const reg = getRegistry();
         const resolved = await reg.resolveName(identifier);
-        
+
         if (resolved) {
           cid = resolved.record.contentCID;
           console.log('[FRW Protocol] ✓ Resolved via distributed registry:', cid);
@@ -150,17 +150,17 @@ export function registerFRWProtocol() {
       } catch (error) {
         console.warn('[FRW Protocol] Distributed resolution failed:', error);
       }
-      
+
       // Fallback to local config if distributed resolution failed
       if (!cid) {
         const config = getConfigFallback();
         cid = config.sites[identifier] || null;
-        
+
         if (cid) {
           console.log('[FRW Protocol] ✓ Resolved via local config (fallback):', cid);
         }
       }
-      
+
       if (!cid) {
         const errorHtml = `
 <!DOCTYPE html>
@@ -175,7 +175,7 @@ export function registerFRWProtocol() {
         `;
         return callback({ data: Buffer.from(errorHtml), mimeType: 'text/html' });
       }
-      
+
       // Try to fetch from IPFS - try local first, then public gateways
       const gateways = [
         'http://localhost:8080',           // Local IPFS gateway (fastest)
@@ -183,31 +183,31 @@ export function registerFRWProtocol() {
         'https://cloudflare-ipfs.com',     // Public gateway #2 (fast CDN)
         'https://dweb.link'                // Public gateway #3
       ];
-      
+
       console.log('[FRW Protocol] ========================================');
       console.log('[FRW Protocol] Attempting IPFS fetch');
       console.log('[FRW Protocol] CID:', cid);
-      
+
       for (const gateway of gateways) {
         // Default to /index.html if no path specified, otherwise use the path as-is
         const resourcePath = path || '/index.html';
         const ipfsUrl = `${gateway}/ipfs/${cid}${resourcePath}`;
         console.log('[FRW Protocol] Trying gateway:', ipfsUrl);
-        
+
         try {
-          const response = await net.fetch(ipfsUrl, { 
+          const response = await net.fetch(ipfsUrl, {
             method: 'GET',
             // Timeout after 5 seconds per gateway
             signal: AbortSignal.timeout(5000)
           });
-          
+
           console.log('[FRW Protocol] Response status:', response.status);
           console.log('[FRW Protocol] Response OK:', response.ok);
-          
+
           if (response.ok) {
             // Detect content type from path
             const mimeType = getMimeType(resourcePath);
-            
+
             // For images and binary, use arrayBuffer, for text use text()
             if (mimeType.startsWith('image/')) {
               const buffer = await response.arrayBuffer();
@@ -219,12 +219,12 @@ export function registerFRWProtocol() {
             } else {
               let content = await response.text();
               console.log('[FRW Protocol] ✅ SUCCESS! Content fetched from', gateway, ':', content.length, 'bytes');
-              
+
               // For HTML files, preload all images and convert to data URLs
               if (mimeType === 'text/html') {
                 content = await preloadImagesInHtml(content, cid, gateways);
               }
-              
+
               callback({
                 data: Buffer.from(content),
                 mimeType: mimeType
@@ -239,9 +239,9 @@ export function registerFRWProtocol() {
           continue; // Try next gateway
         }
       }
-      
+
       console.error('[FRW Protocol] ❌ All gateways failed');
-      
+
       // Fallback: Show test page with real data
       let html = `
 <!DOCTYPE html>
@@ -324,10 +324,10 @@ export function registerFRWProtocol() {
         data: Buffer.from(html),
         mimeType: 'text/html'
       });
-      
+
     } catch (error) {
       console.error('[FRW Protocol] Error:', error);
-      
+
       let errorHtml = `
 <!DOCTYPE html>
 <html>
@@ -338,7 +338,7 @@ export function registerFRWProtocol() {
 </body>
 </html>
       `;
-      
+
       callback({
         data: Buffer.from(errorHtml),
         mimeType: 'text/html'

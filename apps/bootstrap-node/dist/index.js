@@ -58,7 +58,7 @@ class BootstrapIndexNode {
         // Sync with other nodes on startup
         await this.syncWithNetwork();
         // Start HTTP server
-        this.app.listen(this.HTTP_PORT, () => {
+        this.app.listen(this.HTTP_PORT, '0.0.0.0', () => {
             console.log(`[Bootstrap] ✓ HTTP server listening on port ${this.HTTP_PORT}`);
         });
         // Periodic index publishing

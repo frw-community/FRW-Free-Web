@@ -21,13 +21,13 @@ const MIME_TYPES: Record<string, string> = {
 
 export async function serveCommand(directory: string = '.', options: ServeOptions): Promise<void> {
   const port = parseInt(options.port);
-  
+
   logger.section('FRW Preview Server');
 
   const server = createServer(async (req, res) => {
     try {
       let filePath = join(directory, req.url || '/');
-      
+
       // Check if path is directory
       try {
         const stats = await stat(filePath);
@@ -62,7 +62,7 @@ export async function serveCommand(directory: string = '.', options: ServeOption
     }
   });
 
-  server.listen(port, () => {
+  server.listen(port, '0.0.0.0', () => {
     logger.success(`Server running on http://localhost:${port}`);
     logger.info(`Serving: ${directory}`);
     logger.info('');

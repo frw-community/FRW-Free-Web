@@ -29,13 +29,13 @@ class BootstrapIndexNode {
   private app: express.Application;
   private nodeId: string;
   private lastPublished: number = 0;
-  
+
   private readonly IPFS_URL = process.env.IPFS_URL || 'http://localhost:5001';
   private readonly HTTP_PORT = parseInt(process.env.HTTP_PORT || '3100');
   private readonly PUBLISH_INTERVAL = 3600000; // 1 hour
   private readonly PUBSUB_TOPIC = 'frw/names/updates/v1';
   private readonly SYNC_TOPIC = 'frw/sync/requests/v1';
-  
+
   // Bootstrap nodes - seed nodes for the network
   private readonly BOOTSTRAP_NODES = [
     'http://83.228.214.189:3100',
@@ -74,12 +74,12 @@ class BootstrapIndexNode {
 
     // Subscribe to pubsub
     await this.subscribeToPubsub();
-    
+
     // Sync with other nodes on startup
     await this.syncWithNetwork();
 
     // Start HTTP server
-    this.app.listen(this.HTTP_PORT, () => {
+    this.app.listen(this.HTTP_PORT, '0.0.0.0', () => {
       console.log(`[Bootstrap] ✓ HTTP server listening on port ${this.HTTP_PORT}`);
     });
 
@@ -134,14 +134,14 @@ class BootstrapIndexNode {
     this.app.get('/api/resolve/:name', (req, res): void => {
       const { name } = req.params;
       const lowerName = name.toLowerCase();
-      
+
       // Try V2 first (newest format)
       const v2Entry = this.v2Manager.getRecord(lowerName);
       if (v2Entry) {
         res.json(createUnifiedResponse(v2Entry, 2, this.nodeId));
         return;
       }
-      
+
       // Fallback to V1
       const v1Entry = this.index.get(lowerName);
       if (v1Entry) {
@@ -178,7 +178,7 @@ class BootstrapIndexNode {
           });
           return;
         }
-        
+
         // Verify POW difficulty matches name requirements
         const requiredDifficulty = getRequiredDifficulty(record.name);
         if (record.proof.difficulty < requiredDifficulty) {
@@ -194,7 +194,7 @@ class BootstrapIndexNode {
           const message = `${record.name}:${record.publicKey}:${record.contentCID}:${record.version}:${record.registered}`;
           const publicKeyBytes = SignatureManager.decodePublicKey(record.publicKey);
           const signatureValid = SignatureManager.verify(message, record.signature, publicKeyBytes);
-          
+
           if (!signatureValid) {
             res.status(400).json({
               error: 'Invalid signature',
@@ -255,7 +255,7 @@ class BootstrapIndexNode {
 
         // Add to V2 index (verification happens inside)
         const success = await this.v2Manager.addRecord(record);
-        
+
         if (!success) {
           res.status(400).json({
             error: 'V2 record validation failed',
@@ -350,35 +350,35 @@ class BootstrapIndexNode {
 
       if (data.type === 'name-register' && data.record) {
         const record: DistributedNameRecord = data.record;
-        
+
         // CRITICAL: Verify POW before accepting from pubsub
         if (!this.validateRecord(record)) {
           console.warn(`[Bootstrap] ⚠ Invalid record rejected from pubsub: ${record.name}`);
           return;
         }
-        
+
         this.addToIndex(record);
         console.log(`[Bootstrap] 📥 Received name via pubsub: ${record.name}`);
       }
-      
+
       if (data.type === 'name-update' && data.record) {
         const record: DistributedNameRecord = data.record;
-        
+
         // CRITICAL: Verify POW before accepting update
         if (!this.validateRecord(record)) {
           console.warn(`[Bootstrap] ⚠ Invalid update rejected from pubsub: ${record.name}`);
           return;
         }
-        
+
         this.addToIndex(record); // addToIndex handles updates too
         console.log(`[Bootstrap] 📥 Received update via pubsub: ${record.name}`);
       }
-      
+
       if (data.type === 'sync-request' && data.requesterId !== this.nodeId) {
         // Another node wants our index
         this.sendIndexSnapshot(data.requesterId);
       }
-      
+
       if (data.type === 'index-snapshot' && data.nodeId !== this.nodeId) {
         // Received index from another node
         this.mergeIndex(data.names);
@@ -398,7 +398,7 @@ class BootstrapIndexNode {
 
       if (data.type === 'name-register-v2' && data.record) {
         const record: DistributedNameRecordV2 = data.record;
-        
+
         // Verification happens inside addRecord
         const success = await this.v2Manager.addRecord(record);
         if (success) {
@@ -421,19 +421,19 @@ class BootstrapIndexNode {
     if (!record.name || !record.publicKey || !record.signature || !record.proof) {
       return false;
     }
-    
+
     // Verify Proof of Work
     const powValid = verifyProof(record.name, record.publicKey, record.proof);
     if (!powValid) {
       return false;
     }
-    
+
     // Verify POW difficulty
     const requiredDifficulty = getRequiredDifficulty(record.name);
     if (record.proof.difficulty < requiredDifficulty) {
       return false;
     }
-    
+
     // Verify signature
     try {
       const message = `${record.name}:${record.publicKey}:${record.contentCID}:${record.version}:${record.registered}`;
@@ -443,14 +443,14 @@ class BootstrapIndexNode {
       return false;
     }
   }
-  
+
   /**
    * Add name to index (or update if exists)
    */
   private addToIndex(record: DistributedNameRecord): void {
     const key = record.name.toLowerCase();
     const existing = this.index.get(key);
-    
+
     // Only update if timestamp is newer or doesn't exist
     if (!existing || record.registered >= existing.timestamp) {
       const entry: IndexEntry = {
@@ -507,19 +507,19 @@ class BootstrapIndexNode {
       console.error('[Bootstrap] ✗ Failed to publish index:', error);
     }
   }
-  
+
   /**
    * Sync with other nodes on startup
    */
   private async syncWithNetwork(): Promise<void> {
     console.log('[Bootstrap] 🔄 Requesting sync from network...');
-    
+
     try {
       // Subscribe to sync responses
       await this.ipfs.pubsub.subscribe(this.SYNC_TOPIC, (msg: any) => {
         this.handlePubsubMessage(msg);
       });
-      
+
       // Request index from other nodes
       await this.ipfs.pubsub.publish(
         this.SYNC_TOPIC,
@@ -529,11 +529,11 @@ class BootstrapIndexNode {
           timestamp: Date.now()
         }))
       );
-      
+
       // Also try HTTP sync with known bootstrap nodes
       for (const nodeUrl of this.BOOTSTRAP_NODES) {
         if (nodeUrl.includes('localhost')) continue; // Skip self
-        
+
         try {
           const response = await fetch(`${nodeUrl}/api/names`);
           if (response.ok) {
@@ -555,12 +555,12 @@ class BootstrapIndexNode {
           // Node might be offline, continue
         }
       }
-      
+
     } catch (error) {
       console.warn('[Bootstrap] Sync failed (will operate independently):', error);
     }
   }
-  
+
   /**
    * Send our index to a requesting node
    */
@@ -574,28 +574,28 @@ class BootstrapIndexNode {
         nameCount: this.index.size,
         names: Object.fromEntries(this.index)
       };
-      
+
       await this.ipfs.pubsub.publish(
         this.SYNC_TOPIC,
         Buffer.from(JSON.stringify(snapshot))
       );
-      
+
       console.log(`[Bootstrap] 📤 Sent index snapshot to ${requesterId} (${this.index.size} names)`);
     } catch (error) {
       console.warn('[Bootstrap] Failed to send index snapshot:', error);
     }
   }
-  
+
   /**
    * Merge received index into ours
    */
   private mergeIndex(names: Record<string, IndexEntry>): void {
     let newCount = 0;
     let updatedCount = 0;
-    
+
     for (const [key, entry] of Object.entries(names)) {
       const existing = this.index.get(key);
-      
+
       if (!existing) {
         this.index.set(key, entry);
         newCount++;
@@ -604,7 +604,7 @@ class BootstrapIndexNode {
         updatedCount++;
       }
     }
-    
+
     if (newCount > 0 || updatedCount > 0) {
       console.log(`[Bootstrap] 📥 Merged index: +${newCount} new, ${updatedCount} updated (${this.index.size} total)`);
     }
