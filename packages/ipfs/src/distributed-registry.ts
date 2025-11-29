@@ -550,7 +550,7 @@ export class DistributedNameRegistry {
    */
   private async initializePubsub(): Promise<void> {
     try {
-      await this.ipfs.pubsub.subscribe(this.PUBSUB_TOPIC, (msg) => {
+      await this.ipfs.pubsub.subscribe(this.PUBSUB_TOPIC, (msg: any) => {
         this.handlePubsubMessage(msg);
       });
       
