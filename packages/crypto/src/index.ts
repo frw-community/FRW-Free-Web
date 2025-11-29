@@ -1,2 +1,2 @@
-export { SignatureManager } from './signatures';
-export { KeyManager } from './keys';
+export { SignatureManager } from './signatures.js';
+export { KeyManager } from './keys.js';
