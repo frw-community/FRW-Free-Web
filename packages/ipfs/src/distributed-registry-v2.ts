@@ -1,7 +1,7 @@
 // FRW Distributed Registry V2 Integration
 // Adds quantum-resistant V2 support while maintaining V1 compatibility
 
-import type { DistributedNameRecord, ResolvedName, RegistryConfig } from './distributed-registry';
+import type { DistributedNameRecord, ResolvedName, RegistryConfig } from './distributed-registry.js';
 import type { DistributedNameRecordV2, ResolvedNameV2 } from '@frw/protocol-v2';
 import { RecordVerifierV2, serializeFull, deserializeFull } from '@frw/protocol-v2';
 import { create as createIPFSClient, IPFSHTTPClient } from 'ipfs-http-client';
@@ -294,7 +294,7 @@ export class DistributedRegistryV2 {
    */
   async subscribeToUpdates(callback: (record: DistributedNameRecordV2) => void): Promise<void> {
     try {
-      await this.ipfs.pubsub.subscribe(this.PUBSUB_TOPIC_V2, (msg) => {
+      await this.ipfs.pubsub.subscribe(this.PUBSUB_TOPIC_V2, (msg: any) => {
         try {
           const record = deserializeFull(msg.data);
           this.cacheV2Record(record);

@@ -1,4 +1,4 @@
-import { METADATA_FIELDS } from './constants';
+import { METADATA_FIELDS } from './constants.js';
 
 export function isValidFRWURL(url: string): boolean {
   return /^frw:\/\/[a-zA-Z0-9]+\/.*$/.test(url);

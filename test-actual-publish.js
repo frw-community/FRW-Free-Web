@@ -114,6 +114,39 @@ async function testActualPublish() {
     console.log('The record validates correctly!');
     console.log('If VPS is still rejecting, they need to pull latest code.');
   }
+
+  // 8. Attempt submission to VPS nodes
+  console.log('\n--- Testing Submission to VPS Nodes ---\n');
+  const nodes = [
+    'http://83.228.213.240:3100',
+    'http://83.228.213.45:3100',
+    'http://83.228.214.189:3100'
+  ];
+
+  for (const node of nodes) {
+    console.log(`Submitting to ${node}...`);
+    try {
+      const response = await fetch(`${node}/api/submit/v2`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: recordJSON
+      });
+
+      if (response.ok) {
+        console.log(`✓ SUCCESS: ${node} accepted the record!`);
+        const result = await response.json();
+        console.log('  Response:', result);
+      } else {
+        console.log(`✗ FAILED: ${node} rejected the record (Status: ${response.status})`);
+        const text = await response.text();
+        console.log('  Reason:', text);
+      }
+    } catch (err) {
+      console.log(`✗ ERROR: Could not connect to ${node}`);
+      console.log('  Error:', err.message);
+    }
+    console.log('');
+  }
 }
 
 testActualPublish().catch(err => {

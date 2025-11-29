@@ -212,7 +212,7 @@ export class SharedRegistryManager {
     try {
       console.log('[SharedRegistry] Subscribing to updates...');
       
-      await this.ipfs.pubsub.subscribe(this.PUBSUB_TOPIC, (msg) => {
+      await this.ipfs.pubsub.subscribe(this.PUBSUB_TOPIC, (msg: any) => {
         this.handleUpdate(msg);
       });
       
