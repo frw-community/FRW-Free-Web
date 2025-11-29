@@ -1,4 +1,4 @@
-import type { FRWErrorCode } from './types';
+import type { FRWErrorCode } from './types.js';
 
 export class FRWError extends Error {
   constructor(
