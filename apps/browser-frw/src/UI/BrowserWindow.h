@@ -34,6 +34,11 @@ public:
     void RemoveFavorite(const std::string& url);
     std::vector<Favorite> GetFavorites() const;
 
+    // Chrome-style features
+    void ShowChromeMenu();
+    void CreateNewTab();
+    void SwitchToTab(int tabIndex);
+
     // Menu management
     void CreateMenuBar();
     void ShowSettings();
