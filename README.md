@@ -242,6 +242,8 @@ npm run package:win
 
 cd ..\browser
 npm run build
+
+npm run dev #really important for running the browser
 ```
 
 ### Linux / macOS
