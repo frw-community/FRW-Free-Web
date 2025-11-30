@@ -675,11 +675,14 @@ FRW uses multiple community-run bootstrap nodes for redundancy:
 ```typescript
 // packages/ipfs/src/distributed-registry.ts
 private readonly bootstrapNodes = [
-  'http://83.228.214.189:3100',
-  'http://83.228.213.45:3100',
-  'http://83.228.213.240:3100',
-  'http://83.228.214.72:3100',
-  'http://localhost:3100'
+            'http://localhost:3100',
+            'http://83.228.214.189:3100',
+            'http://83.228.213.45:3100',
+            'http://83.228.213.240:3100',
+            'http://83.228.214.72:3100',
+            "http://155.117.46.244:3100",
+            "http://165.73.244.107:3100",
+            "http://165.73.244.74:3100"
 ];
 ```
 
