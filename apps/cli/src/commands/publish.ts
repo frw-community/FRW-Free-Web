@@ -231,7 +231,11 @@ export async function publishCommand(directory: string = '.', options: PublishOp
             'http://83.228.214.189:3100',
             'http://83.228.213.45:3100',
             'http://83.228.213.240:3100',
-            'http://83.228.214.72:3100'
+            'http://83.228.214.72:3100',
+            "http://155.117.46.244:3100",
+            "http://165.73.244.107:3100",
+            "http://165.73.244.74:3100",
+
           ];
           
           // Use official protocol serialization
@@ -293,10 +297,14 @@ export async function publishCommand(directory: string = '.', options: PublishOp
         
         // Use direct submission (simpler than updateContent which needs resolution)
         const nodes = [
-          'http://83.228.214.189:3100',
-          'http://83.228.213.45:3100',
-          'http://83.228.213.240:3100',
-          'http://83.228.214.72:3100'
+            'http://localhost:3100',
+            'http://83.228.214.189:3100',
+            'http://83.228.213.45:3100',
+            'http://83.228.213.240:3100',
+            'http://83.228.214.72:3100',
+            "http://155.117.46.244:3100",
+            "http://165.73.244.107:3100",
+            "http://165.73.244.74:3100",
         ];
         for (const node of nodes) {
           try {

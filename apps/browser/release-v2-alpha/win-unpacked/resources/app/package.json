@@ -1,0 +1,24 @@
+{
+  "name": "@frw/browser",
+  "version": "2.0.0",
+  "description": "FRW Browser V2 - Quantum-Resistant Decentralized Web Browser",
+  "main": "dist/main/index.js",
+  "type": "module",
+  "author": "FRW Community",
+  "license": "MIT",
+  "dependencies": {
+    "@frw/common": "1.0.1",
+    "@frw/crypto": "1.0.1",
+    "@frw/crypto-pq": "2.0.0",
+    "@frw/ipfs": "1.0.1",
+    "@frw/name-registry": "1.0.1",
+    "@frw/protocol": "1.0.1",
+    "@frw/protocol-v2": "2.0.0",
+    "@frw/pow-v2": "2.0.0",
+    "@types/node-fetch": "^2.6.13",
+    "node-fetch": "^2.6.7",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "zustand": "^4.4.7"
+  }
+}
