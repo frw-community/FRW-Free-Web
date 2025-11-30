@@ -75,9 +75,13 @@ public:
     void CreateAddressBar() {
 #ifdef _WIN32
         hwndAddress = CreateWindowExW(WS_EX_CLIENTEDGE, L"EDIT", L"",
-                                     WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL,
+                                     WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | WS_TABSTOP,
                                      150, 2, 400, 24, hwnd, (HMENU)200,
                                      GetModuleHandle(NULL), NULL);
+        
+        // Set default text and give it focus
+        SetWindowTextW(hwndAddress, L"frw://home");
+        SetFocus(hwndAddress);
 #endif
     }
 
@@ -156,6 +160,19 @@ void BrowserWindow::Create() {
                 case WM_SIZE:
                     window->pImpl->UpdateLayout();
                     return 0;
+                case WM_KEYDOWN:
+                    if (wParam == VK_RETURN && GetFocus() == window->pImpl->hwndAddress) {
+                        // User pressed Enter in address bar
+                        wchar_t buffer[1024];
+                        GetWindowTextW(window->pImpl->hwndAddress, buffer, 1024);
+                        std::wstring url(buffer);
+                        std::string urlStr(url.begin(), url.end());
+                        if (!urlStr.empty()) {
+                            window->LoadURL(urlStr);
+                        }
+                        return 0;
+                    }
+                    break;
                 case WM_COMMAND:
                     if (LOWORD(wParam) == 101) window->GoBack();
                     else if (LOWORD(wParam) == 102) window->GoForward();
@@ -165,6 +182,20 @@ void BrowserWindow::Create() {
                     else if (LOWORD(wParam) == 300) {
                         // Show favorites menu
                         window->ShowFavoritesMenu();
+                    } else if (LOWORD(wParam) == 200) {
+                        // Address bar - handle focus events
+                        if (HIWORD(wParam) == EN_CHANGE) {
+                            // Text changed, could update suggestions here
+                        } else if (HIWORD(wParam) == EN_KILLFOCUS) {
+                            // User left the address bar, load the URL
+                            wchar_t buffer[1024];
+                            GetWindowTextW(window->pImpl->hwndAddress, buffer, 1024);
+                            std::wstring url(buffer);
+                            std::string urlStr(url.begin(), url.end());
+                            if (!urlStr.empty()) {
+                                window->LoadURL(urlStr);
+                            }
+                        }
                     } else {
                         // Handle menu commands through MenuManager
                         // MenuManager will process the command ID

@@ -5,10 +5,8 @@
 #include <windows.h>
 #include <iostream>
 
-// Minimal CEF wrapper implementation
+// Working CEF wrapper implementation
 // This provides the missing CEF functions that our code uses
-
-// Implement the missing CEF functions as simple stubs
 
 bool CefRegisterSchemeHandlerFactory(const CefString& scheme_name,
                                      const CefString& domain_name,

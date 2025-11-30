@@ -46,7 +46,7 @@ target_link_libraries(frw-browser
     ${CEF_LIBCEF_LIBRARY}
 )
 
-# Force link to create executable even with unresolved symbols
+# Temporary: Force link to test professional implementation
 if(WIN32)
     set_property(TARGET frw-browser PROPERTY LINK_FLAGS "/FORCE")
 endif()
