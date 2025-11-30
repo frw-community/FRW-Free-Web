@@ -114,12 +114,7 @@ ipfs init
 # Configure IPFS to bind only to localhost (prevents network interference)
 ipfs config Addresses.API "/ip4/127.0.0.1/tcp/5001"
 ipfs config Addresses.Gateway "/ip4/127.0.0.1/tcp/8080"
-
-# CRITICAL: Disable external swarm listening to prevent network interference
-ipfs config --json Addresses.Swarm '["/ip4/127.0.0.1/tcp/4001", "/ip4/127.0.0.1/udp/4001/quic-v1", "/ip6/::1/tcp/4001", "/ip6/::1/udp/4001/quic-v1"]'
-
-# Reset address filters to default
-ipfs config --json Swarm.AddrFilters null
+ipfs config Swarm.AddrFilters '["/ip4/0.0.0.0/tcp/0"]'
 
 # Enable CORS for API access (localhost only)
 ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["http://localhost:5001", "http://127.0.0.1:5001"]'
@@ -136,23 +131,6 @@ nohup ipfs daemon --migrate=true > /dev/null 2>&1 &
 # Verify IPFS is running without breaking network
 sleep 5
 curl -s http://127.0.0.1:5001/api/v1/version || echo "IPFS not responding"
-
-# If IPFS failed to start, check logs and try alternative
-if ! curl -s http://127.0.0.1:5001/api/v1/version > /dev/null; then
-    echo "IPFS failed to start, checking logs..."
-    tail -20 ~/.ipfs/repo.log 2>/dev/null || echo "No log file found"
-    
-    echo "Trying alternative IPFS startup..."
-    # Kill any existing IPFS processes
-    pkill -f "ipfs daemon" || true
-    
-    # Start IPFS without migration flag
-    nohup ipfs daemon > /dev/null 2>&1 &
-    sleep 10
-    
-    # Check again
-    curl -s http://127.0.0.1:5001/api/v1/version || echo "IPFS still not responding"
-fi
 
 # Test external connectivity still works
 ping -c 3 8.8.8.8
@@ -297,7 +275,7 @@ ping -c 3 8.8.8.8
 
 # If external connectivity is broken, stop IPFS and reconfigure:
 pm2 stop ipfs-daemon
-ipfs config --json Swarm.AddrFilters '["/ip4/0.0.0.0/tcp"]'
+ipfs config Swarm.AddrFilters '["/ip4/0.0.0.0/tcp/0"]'
 pm2 start ipfs-daemon
 
 # Save PM2 configuration
@@ -393,7 +371,7 @@ pkill -f "ipfs daemon"
 # Reset IPFS config to localhost only
 ipfs config Addresses.API "/ip4/127.0.0.1/tcp/5001"
 ipfs config Addresses.Gateway "/ip4/127.0.0.1/tcp/8080"
-ipfs config --json Swarm.AddrFilters '["/ip4/0.0.0.0/tcp"]'
+ipfs config Swarm.AddrFilters '["/ip4/0.0.0.0/tcp/0"]'
 
 # Restart IPFS
 pm2 start ipfs-daemon
