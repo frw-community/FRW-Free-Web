@@ -2,6 +2,42 @@
 
 This guide provides step-by-step instructions for deploying FRW bootstrap nodes on Debian and Ubuntu servers.
 
+Update ---
+# On your VPS
+cd ~/FRW-Free-Web
+
+# Pull the latest changes with new bootstrap IPs
+git pull origin main
+rm -rf /apps/browser
+
+# Rebuild with new configuration
+npm run clean
+npm install
+npm run build
+
+# Restart services with new configuration
+pm2 restart bootstrap-node
+pm2 restart ipfs-daemon
+
+---
+needed for a node 
+      # Start IPFS daemon first
+      pm2 start "ipfs daemon" --name "ipfs-daemon"
+
+      # Wait for IPFS to start
+      sleep 10
+
+      # Start the bootstrap node
+      pm2 start npm --name "bootstrap-node" -- run start:bootstrap
+
+      # Check status
+      pm2 status
+
+      # Save the configuration
+      pm2 save
+      pm2 startup
+-----------------
+
 ## Table of Contents
 
 - [Prerequisites](#prerequisites)
