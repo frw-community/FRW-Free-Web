@@ -9,6 +9,7 @@
     "dev": "concurrently \"npm run dev:vite\" \"npm run dev:electron\"",
     "dev:vite": "vite",
     "dev:electron": "wait-on http://localhost:5173 && npx tsc -p tsconfig.build.json && electron dist/main/index.js",
+    "debug": "electron --inspect=5858 --remote-debugging-port=9222 dist/main/index.js",
     "build": "vite build && npx tsc -p tsconfig.build.json && electron-builder",
     "build:vite": "vite build",
     "build:electron": "npx tsc -p tsconfig.build.json",
