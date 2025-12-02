@@ -99,28 +99,88 @@ The core data unit is the `DistributedNameRecordV2`.
 | `signature_dilithium3` | `Uint8Array` | 3309-byte signature. |
 | `hash_sha3` | `Uint8Array` | 32-byte SHA3-256 hash of the canonical record. |
 
+#### 4.2.1. Canonical Serialization (Signature Input)
+
+To ensure consistent signature verification, the record MUST be serialized into a deterministic "Canonical Form" before signing. This form excludes the signatures themselves and variable fields like `providers` or `dnslink`.
+
+**Serialization Format:** CBOR (RFC 8949) with Deterministic Encoding (Section 4.2).
+
+**Canonical Object Fields (MUST be serialized in this order):**
+1.  `version` (Integer): Protocol version.
+2.  `name` (String): UTF-8 encoded name.
+3.  `publicKey_dilithium3` (Byte String): 1952-byte key.
+4.  `contentCID` (String): IPFS CID.
+5.  `recordVersion` (Integer): Sequence number.
+6.  `registered` (Integer): Unix timestamp (ms).
+7.  `expires` (Integer): Unix timestamp (ms).
+8.  `previousHash_sha3` (Byte String or Null): 32-byte hash.
+
+**Note:** The field keys are string literals matching the property names above.
+
+#### 4.2.2. Full Record Format (Wire Format)
+
+The full record for storage and transmission includes the canonical fields plus the signatures and metadata.
+
+**Additional Fields:**
+*   `publicKey_ed25519` (Byte String)
+*   `did` (String)
+*   `ipnsKey` (String)
+*   `signature_ed25519` (Byte String)
+*   `signature_dilithium3` (Byte String)
+*   `hash_sha3` (Byte String)
+*   `proof_v2` (Map): Contains `nonce`, `timestamp`, `difficulty`, `hash`, etc.
+
 ### 4.3. Proof of Work (PoW)
 
-To mitigate quantum speedup (Grover's algorithm reduces search space by square root), V2 enforces memory-hard constraints using Argon2id.
+To mitigate quantum speedup, V2 enforces memory-hard constraints using Argon2id.
 
-**Difficulty Scaling:**
-Difficulty scales inversely with name length. Shorter names consume significantly more resources.
+#### 4.3.1. PoW Algorithm
 
-| Name Length | Memory (MiB) | Iterations | Leading Zeros | Est. Classical Time |
-| :--- | :--- | :--- | :--- | :--- |
-| 1 char | 8192 | 10 | 12 | ~1000 years |
-| 2 chars | 8192 | 10 | 10 | ~62 years |
-| 3 chars | 4096 | 8 | 8 | ~2 years |
-| 4 chars | 2048 | 6 | 7 | ~2 months |
-| ... | ... | ... | ... | ... |
-| 11-15 chars | 32 | 2 | 1 | ~1 second |
+The PoW `hash` is computed as follows:
+
+1.  **Salt Construction:**
+    `Salt = SHA3-256( UTF8(name) || publicKey_dilithium3 )`
+    *   `||` denotes concatenation.
+
+2.  **Input Construction:**
+    `Input = BigEndian64(nonce) || BigEndian64(timestamp)`
+    *   `nonce` is a 64-bit unsigned integer.
+    *   `timestamp` is a 64-bit unsigned integer (ms).
+
+3.  **Argon2id Hashing:**
+    `ArgonHash = Argon2id( Input, Salt, Parameters )`
+    *   `Parameters`: Derived from name length (see 4.3.2).
+    *   `Parallelism`: 4 lanes.
+    *   `Hash Length`: 32 bytes.
+
+4.  **Final Hash:**
+    `PoW_Hash = SHA3-256( ArgonHash )`
+
+The `PoW_Hash` MUST meet the difficulty target (leading zeros) derived from the name length.
+
+#### 4.3.2. Difficulty Scaling
+Difficulty scales inversely with name length.
+
+| Name Length | Memory (MiB) | Iterations | Leading Zeros |
+| :--- | :--- | :--- | :--- |
+| 1 | 8192 | 10 | 12 |
+| 2 | 8192 | 10 | 10 |
+| 3 | 4096 | 8 | 8 |
+| 4 | 2048 | 6 | 7 |
+| 5 | 1024 | 5 | 6 |
+| 6 | 512 | 4 | 5 |
+| 7 | 256 | 3 | 4 |
+| 8 | 128 | 3 | 3 |
+| 9-10 | 64 | 3 | 2 |
+| 11-15 | 32 | 2 | 1 |
+| 16+ | 16 | 2 | 0 |
 
 ### 4.4. Networking & Distribution
 
 #### 4.4.1. Resolution Flow
 1.  **L1 Cache:** In-memory check (TTL 5 minutes).
 2.  **Bootstrap Nodes:** HTTP query to trusted peers (`GET /api/resolve/:name`).
-3.  **DHT Lookup:** Query IPFS DHT for key `frw/v2/names/<name>`.
+3.  **DHT Lookup:** Query IPFS DHT for key `/frw/names/v2/<name>`.
 
 #### 4.4.2. Propagation
 *   **Storage:** Records are serialized via CBOR and stored on IPFS.
@@ -140,6 +200,75 @@ The protocol supports two distinct client modes:
 *   **Target:** Browser Extensions, Mobile Apps.
 *   **Behavior:** Delegates resolution to trusted Bootstrap Nodes via HTTPS. Trusts the record structure returned by the node.
 *   **Implementation:** HTTP fetcher (see `apps/chrome-extension`).
+
+### 4.6. HTTP API (Bootstrap Nodes)
+
+Bootstrap nodes MUST expose the following endpoints:
+
+**GET /api/resolve/{name}**
+
+*   **Response (200 OK):** JSON representation of `DistributedNameRecordV2`.
+    *   Binary fields (keys, signatures) are Base64 encoded.
+    *   BigInt fields (nonce) are Strings.
+
+```json
+{
+  "name": "example",
+  "contentCID": "Qm...",
+  "publicKey_dilithium3": "Base64...",
+  "signature_dilithium3": "Base64...",
+  "proof_v2": { ... }
+}
+```
+
+### 4.7. DNS Verification (Domain Linking)
+
+To prevent namespace collisions and squatting of high-value traditional domains (e.g., "google", "bank"), the protocol enforces DNS Verification for names present in the **Reserved List**.
+
+**Mechanism:**
+Registrants of reserved names MUST prove ownership of the corresponding ICANN DNS domain by publishing a specific TXT record.
+
+**DNS TXT Record Format:**
+*   **Host:** `_frw.<domain>` (preferred) or `<domain>` (root).
+*   **Value:** `frw-key=<base58_public_key>`
+
+**Verification Logic:**
+Registry nodes MUST reject registrations for reserved names if the DNS verification fails. Verification is performed at registration time and MAY be re-verified periodically.
+
+### 4.8. Dispute Resolution (Challenge System)
+
+V2 includes an on-chain dispute resolution mechanism to handle trademark infringements, squatting, and malicious content.
+
+**Challenge Lifecycle:**
+1.  **Initiation:** Challenger submits a `Challenge` object with a bond (minimum 1,000,000 units) and evidence.
+    *   *State Transition:* `Active` -> `Challenged`
+2.  **Response:** Name owner has **30 days** to submit a `ChallengeResponse` with a counter-bond and counter-evidence.
+    *   *State Transition:* `Challenged` -> `Under_Evaluation`
+    *   *Failure to Respond:* Challenger wins by default.
+3.  **Resolution:** After a **14-day** evaluation period, the challenge is resolved based on metrics (Phase 1) or community vote (Phase 2).
+    *   *State Transition:* `Under_Evaluation` -> `Resolved`
+
+**Resolution Metrics (Phase 1):**
+*   **Usage Score:** Derived from query volume, uptime, and content longevity.
+*   **Threshold:** A score difference of >20% is required to overturn ownership.
+
+### 4.9. Anti-Abuse Mechanisms
+
+#### 4.9.1. Rate Limiting
+Nodes SHOULD implement adaptive rate limiting to prevent ledger spam. Limits are tiered based on the signer's **Reputation Score**.
+
+| Tier | Reputation | Daily Limit |
+| :--- | :--- | :--- |
+| Platinum | 750+ | 50 |
+| Gold | 500+ | 35 |
+| Silver | 250+ | 25 |
+| Standard | <100 | 10 |
+
+#### 4.9.2. Reputation System
+Reputation is a local metric calculated by nodes based on:
+*   Age of identity (DID).
+*   History of valid PoW submissions.
+*   Outcome of challenges (winning increases score, losing decreases).
 
 ## 5. Security Considerations
 
