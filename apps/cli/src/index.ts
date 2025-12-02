@@ -216,6 +216,16 @@ program
   .action(lookupCommand);
 
 program
+  .command('resolve <name>')
+  .description('Alias for lookup')
+  .action(lookupCommand);
+
+program
+  .command('get <name>')
+  .description('Alias for lookup')
+  .action(lookupCommand);
+
+program
   .command('list')
   .description('List all registered names')
   .action(listNamesCommand);
