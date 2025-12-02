@@ -1,15 +1,3 @@
----
-title: "Free Resilient Web (FRW) Protocol V2 - Quantum-Resistant Distributed Web"
-abbrev: "FRW-V2"
-docname: "FRW-RFC-002"
-date: 2025-12-02
-category: std
-ipr: trust200902
-area: Internet
-workgroup: FRW Core Team
-keyword: ["quantum", "distributed", "web", "pqc", "ipfs", "dilithium"]
----
-
 # Free Resilient Web (FRW) Protocol V2 - Quantum-Resistant Distributed Web
 
 ## Abstract
