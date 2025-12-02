@@ -8,7 +8,11 @@ cd ~/FRW-Free-Web
 
 # Pull the latest changes with new bootstrap IPs
 git pull origin main
+
+git stash
+
 rm -rf /apps/browser
+rm -rf /apps/browser-frw
 
 # Rebuild with new configuration
 npm run clean
