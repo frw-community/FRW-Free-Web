@@ -357,16 +357,15 @@ Install-WindowsFeature -name Web-Http-Redirect
 ```typescript
 // Line ~334
 const BOOTSTRAP_NODES = [
-  'http://83.228.214.189:3100',  // Switzerland #1
-  'http://83.228.213.45:3100',   // Switzerland #2
-  'http://83.228.213.240:3100',  // Switzerland #3
-  'http://83.228.214.72:3100',   // Switzerland #4
-              'http://localhost:3100',
-           
-            "http://155.117.46.244:3100",
-            "http://165.73.244.107:3100",
-            "http://165.73.244.74:3100",
-  'http://localhost:3100',       // Local dev
+    'http://83.228.214.189:3100',  // Switzerland #1
+    'http://83.228.213.45:3100',   // Switzerland #2
+    'http://83.228.213.240:3100',  // Switzerland #3
+    'http://83.228.214.72:3100',   // Switzerland #4
+    'http://localhost:3100',
+    "http://155.117.46.244:3100",
+    "http://165.73.244.107:3100",
+    "http://165.73.244.74:3100",
+    "https://217.216.32.99:3100" 
 ];
 ```
 
@@ -374,7 +373,7 @@ const BOOTSTRAP_NODES = [
 ```bash
 cd C:\Projects\FRW - Free Web Modern
 npm run build
-```
+```§
 
 ---
 
