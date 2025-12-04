@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2025-12-04
+
+Major release introducing **Self-Healing Network Infrastructure** and centralized bootstrap configuration. This update ensures the FRW network remains resilient even if hardcoded IP addresses change.
+
+### Added
+- **Node Discovery Protocol (V2.1)** - Gossip-based peer discovery for bootstrap nodes
+- **Dynamic Mesh Networking** - Bootstrap nodes now automatically discover and peer with each other
+- **CLI: `regenerate-pow`** - New command to update Proof-of-Work when difficulty settings change
+- **CLI: `api/nodes` Endpoint** - Clients can now discover the full network topology dynamically
+- **Documentation** - Full specification of V2.1 Protocol in `FRW-RFC-002.md`
+
+### Changed
+- **Network Configuration** - All CLI commands now use a centralized `BOOTSTRAP_NODES` constant
+- **Bootstrap Logic** - Nodes use `node-discovery.ts` to maintain an active peer list instead of relying solely on hardcoded seeds
+- **VPS Deployment** - Added support for new high-capacity VPS (`217.216.32.99`)
+- **Registry Sync** - Synchronization now occurs across the entire discovered mesh, not just static peers
+
+### Resilience
+- **Self-Healing** - New nodes automatically join the mesh by contacting *any* existing peer
+- **Partition Resistance** - The network can survive the loss of multiple seed nodes as long as the mesh remains connected
+- **Legacy Support** - Fully backward compatible with V2.0 clients (which just see a static list)
+
 ## [2.0.0] - 2025-11-18
 
 Major release introducing post-quantum cryptography for long-term security.

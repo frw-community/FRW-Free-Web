@@ -1,3 +1,15 @@
+---
+title: "Free Resilient Web (FRW) Protocol V2 - Quantum-Resistant Distributed Web"
+abbrev: "FRW-V2"
+docname: "FRW-RFC-002"
+date: 2025-12-02
+category: std
+ipr: trust200902
+area: Internet
+workgroup: FRW Core Team
+keyword: ["quantum", "distributed", "web", "pqc", "ipfs", "dilithium"]
+---
+
 # Free Resilient Web (FRW) Protocol V2 - Quantum-Resistant Distributed Web
 
 ## Abstract
@@ -99,88 +111,28 @@ The core data unit is the `DistributedNameRecordV2`.
 | `signature_dilithium3` | `Uint8Array` | 3309-byte signature. |
 | `hash_sha3` | `Uint8Array` | 32-byte SHA3-256 hash of the canonical record. |
 
-#### 4.2.1. Canonical Serialization (Signature Input)
-
-To ensure consistent signature verification, the record MUST be serialized into a deterministic "Canonical Form" before signing. This form excludes the signatures themselves and variable fields like `providers` or `dnslink`.
-
-**Serialization Format:** CBOR (RFC 8949) with Deterministic Encoding (Section 4.2).
-
-**Canonical Object Fields (MUST be serialized in this order):**
-1.  `version` (Integer): Protocol version.
-2.  `name` (String): UTF-8 encoded name.
-3.  `publicKey_dilithium3` (Byte String): 1952-byte key.
-4.  `contentCID` (String): IPFS CID.
-5.  `recordVersion` (Integer): Sequence number.
-6.  `registered` (Integer): Unix timestamp (ms).
-7.  `expires` (Integer): Unix timestamp (ms).
-8.  `previousHash_sha3` (Byte String or Null): 32-byte hash.
-
-**Note:** The field keys are string literals matching the property names above.
-
-#### 4.2.2. Full Record Format (Wire Format)
-
-The full record for storage and transmission includes the canonical fields plus the signatures and metadata.
-
-**Additional Fields:**
-*   `publicKey_ed25519` (Byte String)
-*   `did` (String)
-*   `ipnsKey` (String)
-*   `signature_ed25519` (Byte String)
-*   `signature_dilithium3` (Byte String)
-*   `hash_sha3` (Byte String)
-*   `proof_v2` (Map): Contains `nonce`, `timestamp`, `difficulty`, `hash`, etc.
-
 ### 4.3. Proof of Work (PoW)
 
-To mitigate quantum speedup, V2 enforces memory-hard constraints using Argon2id.
+To mitigate quantum speedup (Grover's algorithm reduces search space by square root), V2 enforces memory-hard constraints using Argon2id.
 
-#### 4.3.1. PoW Algorithm
+**Difficulty Scaling:**
+Difficulty scales inversely with name length. Shorter names consume significantly more resources.
 
-The PoW `hash` is computed as follows:
-
-1.  **Salt Construction:**
-    `Salt = SHA3-256( UTF8(name) || publicKey_dilithium3 )`
-    *   `||` denotes concatenation.
-
-2.  **Input Construction:**
-    `Input = BigEndian64(nonce) || BigEndian64(timestamp)`
-    *   `nonce` is a 64-bit unsigned integer.
-    *   `timestamp` is a 64-bit unsigned integer (ms).
-
-3.  **Argon2id Hashing:**
-    `ArgonHash = Argon2id( Input, Salt, Parameters )`
-    *   `Parameters`: Derived from name length (see 4.3.2).
-    *   `Parallelism`: 4 lanes.
-    *   `Hash Length`: 32 bytes.
-
-4.  **Final Hash:**
-    `PoW_Hash = SHA3-256( ArgonHash )`
-
-The `PoW_Hash` MUST meet the difficulty target (leading zeros) derived from the name length.
-
-#### 4.3.2. Difficulty Scaling
-Difficulty scales inversely with name length.
-
-| Name Length | Memory (MiB) | Iterations | Leading Zeros |
-| :--- | :--- | :--- | :--- |
-| 1 | 8192 | 10 | 12 |
-| 2 | 8192 | 10 | 10 |
-| 3 | 4096 | 8 | 8 |
-| 4 | 2048 | 6 | 7 |
-| 5 | 1024 | 5 | 6 |
-| 6 | 512 | 4 | 5 |
-| 7 | 256 | 3 | 4 |
-| 8 | 128 | 3 | 3 |
-| 9-10 | 64 | 3 | 2 |
-| 11-15 | 32 | 2 | 1 |
-| 16+ | 16 | 2 | 0 |
+| Name Length | Memory (MiB) | Iterations | Leading Zeros | Est. Classical Time |
+| :--- | :--- | :--- | :--- | :--- |
+| 1 char | 8192 | 10 | 12 | ~1000 years |
+| 2 chars | 8192 | 10 | 10 | ~62 years |
+| 3 chars | 4096 | 8 | 8 | ~2 years |
+| 4 chars | 2048 | 6 | 7 | ~2 months |
+| ... | ... | ... | ... | ... |
+| 11-15 chars | 32 | 2 | 1 | ~1 second |
 
 ### 4.4. Networking & Distribution
 
 #### 4.4.1. Resolution Flow
 1.  **L1 Cache:** In-memory check (TTL 5 minutes).
 2.  **Bootstrap Nodes:** HTTP query to trusted peers (`GET /api/resolve/:name`).
-3.  **DHT Lookup:** Query IPFS DHT for key `/frw/names/v2/<name>`.
+3.  **DHT Lookup:** Query IPFS DHT for key `frw/v2/names/<name>`.
 
 #### 4.4.2. Propagation
 *   **Storage:** Records are serialized via CBOR and stored on IPFS.
@@ -200,75 +152,6 @@ The protocol supports two distinct client modes:
 *   **Target:** Browser Extensions, Mobile Apps.
 *   **Behavior:** Delegates resolution to trusted Bootstrap Nodes via HTTPS. Trusts the record structure returned by the node.
 *   **Implementation:** HTTP fetcher (see `apps/chrome-extension`).
-
-### 4.6. HTTP API (Bootstrap Nodes)
-
-Bootstrap nodes MUST expose the following endpoints:
-
-**GET /api/resolve/{name}**
-
-*   **Response (200 OK):** JSON representation of `DistributedNameRecordV2`.
-    *   Binary fields (keys, signatures) are Base64 encoded.
-    *   BigInt fields (nonce) are Strings.
-
-```json
-{
-  "name": "example",
-  "contentCID": "Qm...",
-  "publicKey_dilithium3": "Base64...",
-  "signature_dilithium3": "Base64...",
-  "proof_v2": { ... }
-}
-```
-
-### 4.7. DNS Verification (Domain Linking)
-
-To prevent namespace collisions and squatting of high-value traditional domains (e.g., "google", "bank"), the protocol enforces DNS Verification for names present in the **Reserved List**.
-
-**Mechanism:**
-Registrants of reserved names MUST prove ownership of the corresponding ICANN DNS domain by publishing a specific TXT record.
-
-**DNS TXT Record Format:**
-*   **Host:** `_frw.<domain>` (preferred) or `<domain>` (root).
-*   **Value:** `frw-key=<base58_public_key>`
-
-**Verification Logic:**
-Registry nodes MUST reject registrations for reserved names if the DNS verification fails. Verification is performed at registration time and MAY be re-verified periodically.
-
-### 4.8. Dispute Resolution (Challenge System)
-
-V2 includes an on-chain dispute resolution mechanism to handle trademark infringements, squatting, and malicious content.
-
-**Challenge Lifecycle:**
-1.  **Initiation:** Challenger submits a `Challenge` object with a bond (minimum 1,000,000 units) and evidence.
-    *   *State Transition:* `Active` -> `Challenged`
-2.  **Response:** Name owner has **30 days** to submit a `ChallengeResponse` with a counter-bond and counter-evidence.
-    *   *State Transition:* `Challenged` -> `Under_Evaluation`
-    *   *Failure to Respond:* Challenger wins by default.
-3.  **Resolution:** After a **14-day** evaluation period, the challenge is resolved based on metrics (Phase 1) or community vote (Phase 2).
-    *   *State Transition:* `Under_Evaluation` -> `Resolved`
-
-**Resolution Metrics (Phase 1):**
-*   **Usage Score:** Derived from query volume, uptime, and content longevity.
-*   **Threshold:** A score difference of >20% is required to overturn ownership.
-
-### 4.9. Anti-Abuse Mechanisms
-
-#### 4.9.1. Rate Limiting
-Nodes SHOULD implement adaptive rate limiting to prevent ledger spam. Limits are tiered based on the signer's **Reputation Score**.
-
-| Tier | Reputation | Daily Limit |
-| :--- | :--- | :--- |
-| Platinum | 750+ | 50 |
-| Gold | 500+ | 35 |
-| Silver | 250+ | 25 |
-| Standard | <100 | 10 |
-
-#### 4.9.2. Reputation System
-Reputation is a local metric calculated by nodes based on:
-*   Age of identity (DID).
-*   History of valid PoW submissions.
-*   Outcome of challenges (winning increases score, losing decreases).
 
 ## 5. Security Considerations
 
@@ -298,3 +181,163 @@ This document has no IANA actions.
 *   [RFC2119] Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP 14, RFC 2119, March 1997.
 *   [FIPS-204] NIST, "Module-Lattice-Based Digital Signature Standard", FIPS 204, August 2024.
 *   [RFC9106] Biryukov, A., et al., "Argon2 Memory-Hard Function for Password Hashing and Proof-of-Work Applications", RFC 9106, September 2021.
+
+
+-------------------------------------------------------------------------------------------------
+
+
+# Free Resilient Web (FRW) Protocol V2.1 - Quantum-Resistant Distributed Web
+
+## Abstract
+
+This document specifies Version 2.1 of the Free Resilient Web (FRW) Protocol. It builds upon the quantum-resistant foundations of V2 (Hybrid Cryptography, Argon2id PoW) and introduces a dynamic, gossip-based Node Discovery protocol. This ensures the bootstrap network is self-healing and resilient to IP address changes without requiring client-side updates.
+
+## Status of This Document
+
+This document specifies a Free Resilient Web (FRW) Standards Track protocol for the community, and requests discussion and suggestions for improvements. Distribution of this document is unlimited.
+
+## Copyright Notice
+
+Copyright (c) 2025 Free Resilient Web Community. All rights reserved.
+
+## Table of Contents
+
+1.  [Introduction](#1-introduction)
+2.  [Architecture](#2-architecture)
+3.  [Cryptography (V2 Core)](#3-cryptography-v2-core)
+4.  [Data Structures](#4-data-structures)
+5.  [Proof of Work](#5-proof-of-work)
+6.  [Node Discovery Protocol (V2.1)](#6-node-discovery-protocol-v21)
+7.  [Networking & Distribution](#7-networking--distribution)
+8.  [Security Considerations](#8-security-considerations)
+9.  [Migration Path](#9-migration-path)
+
+---
+
+## 1. Introduction
+
+The Free Resilient Web (FRW) Protocol maps human-readable names to content-addressable storage (IPFS) hashes using a distributed, permissionless registry. 
+
+**Version 2.1** focuses on **Network Resilience**. While V2 secured the *data* against quantum threats, V2.1 secures the *infrastructure* against censorship and partition by enabling bootstrap nodes to dynamically discover and peer with each other.
+
+## 2. Architecture
+
+The FRW Network consists of a dynamic mesh of nodes:
+
+1.  **Registrars:** Users who generate keys and publish records.
+2.  **Bootstrap Mesh (V2.1):** A self-organizing network of validator nodes. They maintain a shared state of active peers via GossipSub and provide HTTP gateways for light clients.
+3.  **Resolvers:** Clients that query the mesh or the DHT to resolve names.
+
+## 3. Cryptography (V2 Core)
+
+*Unchanged from V2.0*
+
+*   **Signing:** Hybrid Ed25519 + ML-DSA-65 (Dilithium3).
+*   **Hashing:** SHA3-256.
+*   **DID:** `did:frw:v2:<hash>`
+
+## 4. Data Structures
+
+*Unchanged from V2.0*
+
+The core unit is `DistributedNameRecordV2`, serialized via deterministic CBOR.
+
+## 5. Proof of Work
+
+*Unchanged from V2.0*
+
+*   **Algorithm:** Argon2id (Memory-Hard).
+*   **Purpose:** Sybil resistance and anti-spam.
+
+## 6. Node Discovery Protocol (V2.1)
+
+V2.1 introduces a specialized PubSub protocol for bootstrap node discovery, eliminating the reliance on static configuration files.
+
+### 6.1. Discovery Topic
+
+Nodes MUST subscribe to the IPFS PubSub topic:
+`frw/admin/nodes`
+
+### 6.2. Message Format
+
+Messages are JSON-encoded and verified by the receiver.
+
+**Type: `node-hello`**
+Announces a node's presence to the network.
+
+```json
+{
+  "type": "node-hello",
+  "url": "http://217.216.32.99:3100",
+  "version": "2.1.0",
+  "timestamp": 1764874231292
+}
+```
+
+### 6.3. Node Behavior
+
+1.  **Initialization:**
+    *   Node starts with a small seed list of peers (e.g., 83.228.214.189).
+    *   Connects to the IPFS swarm.
+    *   Subscribes to `frw/admin/nodes`.
+
+2.  **Announcement (Heartbeat):**
+    *   Every **60 seconds**, the node publishes a `node-hello` message.
+    *   This serves as both a discovery signal and a liveness check.
+
+3.  **Learning:**
+    *   Upon receiving a `node-hello`, the node verifies the `url` via a `GET /health` check.
+    *   If valid, the URL is added to the local **Active Peer Set**.
+    *   This set is used for network synchronization operations (e.g., fetching the registry index).
+
+### 6.4. Client Interaction
+
+Clients (CLI, Browser) can discover the full mesh by querying any known node:
+
+**GET /api/nodes**
+
+**Response:**
+```json
+{
+  "nodes": [
+    "http://83.228.214.189:3100",
+    "http://217.216.32.99:3100",
+    ...
+  ]
+}
+```
+
+This allows light clients to "spider" the network and find a working gateway even if their hardcoded bootstrap list is partially offline.
+
+## 7. Networking & Distribution
+
+### 7.1. Resolution Flow (Updated)
+1.  **L1 Cache:** Memory (5 min TTL).
+2.  **Dynamic Mesh Query:** Client queries a random node from its discovered list.
+3.  **DHT Fallback:** If mesh fails, query IPFS DHT.
+
+### 7.2. Registry Sync
+Nodes use the **Active Peer Set** (from Section 6) to request registry updates (`frw/sync/requests/v1`), ensuring that new data propagates to all discovered nodes, not just hardcoded ones.
+
+## 8. Security Considerations
+
+### 8.1. Gossip Spam
+*   **Threat:** Malicious node flooding `frw/admin/nodes`.
+*   **Mitigation:** Nodes MUST rate-limit incoming announcements per PeerID. Invalid URLs (failing `/health`) result in the sender being ignored for 1 hour.
+
+### 8.2. Malicious Bootstrapping
+*   **Threat:** A new node learns only from malicious peers.
+*   **Mitigation:** The client CLI retains a hardcoded "Genesis List" of trusted community nodes that cannot be overwritten by gossip, ensuring a root of trust.
+
+## 9. Migration Path
+
+*   **V2.0 Nodes:** Can interoperate with V2.1 nodes for name resolution but will not participate in dynamic discovery.
+*   **Upgrade:** Operators update to V2.1 software; the node automatically joins the gossip mesh.
+
+---
+
+## 10. References
+
+*   [RFC2119] Key words for use in RFCs to Indicate Requirement Levels
+*   [FIPS-204] NIST Module-Lattice-Based Digital Signature Standard
+*   [RFC9106] Argon2 Memory-Hard Function
