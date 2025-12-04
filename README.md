@@ -95,19 +95,18 @@ End-to-end testing complete. Name resolution operational on production bootstrap
 
 ### V2 Quick Start
 
+V2 is now the default standard. All commands use quantum-resistant cryptography automatically.
+
 ```bash
 # Create quantum-resistant identity
-frw init-v2
+frw init
 
 # Register with V2 (quantum-safe)
 # For instant registration, use 16+ character names (no PoW required)
-frw register-v2 myquantumsafename2025
+frw register myquantumsafename2025
 
 # Publish content with V2 signatures
 frw publish ./mysite --name myquantumsafename2025
-
-# Migrate existing V1 name to V2
-frw migrate myoldname
 ```
 
 **Note:** Names with 16+ characters register instantly (0 seconds PoW). Shorter names require proof-of-work:
@@ -116,7 +115,7 @@ frw migrate myoldname
 - 5-7 chars: ~2-60 minutes
 - 3-4 chars: ~days/months (premium names)
 
-**Learn more:** [V2 Documentation](docs/v2/README.md) • [Migration Guide](docs/v2/MIGRATION_GUIDE.md)
+**Learn more:** [V2 Documentation](docs/v2/README.md)
 
 ---
 
@@ -675,7 +674,7 @@ User settings stored in `~/.frw/config.json`:
 FRW uses multiple community-run bootstrap nodes for redundancy:
 
 ```typescript
-// packages/ipfs/src/distributed-registry.ts
+// packages/common/src/config/bootstrap-config.ts
 private readonly bootstrapNodes = [
             'http://localhost:3100',
             'http://83.228.214.189:3100',

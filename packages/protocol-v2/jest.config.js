@@ -9,6 +9,9 @@ module.exports = {
     '!src/**/*.test.ts',
     '!src/**/__tests__/**'
   ],
+  moduleNameMapper: {
+    '^(\\.{1,2}/.*)\\.js$': '$1'
+  },
   transform: {
     '^.+\\.tsx?$': ['ts-jest', {
       tsconfig: {

@@ -105,7 +105,7 @@ npm install -g .
 ### Create Quantum-Resistant Identity
 
 ```bash
-frw init-v2
+frw init
 ```
 
 You'll be prompted to:
@@ -125,12 +125,12 @@ Security: 128-bit Post-Quantum
 ### Register a Name
 
 ```bash
-frw register-v2 myname
+frw register myname
 ```
 
 For instant registration, use names 16+ characters long:
 ```bash
-frw register-v2 my-quantum-secure-name
+frw register my-quantum-secure-name
 ```
 
 ### Migrate from V1
@@ -149,7 +149,7 @@ This preserves your content and creates a V2 record while keeping V1 active.
 
 ### V2 Identity Management
 
-#### `frw init-v2`
+#### `frw init`
 Create a new quantum-resistant identity.
 
 **Options:**
@@ -157,15 +157,15 @@ Create a new quantum-resistant identity.
 
 **Example:**
 ```bash
-frw init-v2
-frw init-v2 --force
+frw init
+frw init --force
 ```
 
 ---
 
 ### V2 Name Registration
 
-#### `frw register-v2 <name>`
+#### `frw register <name>`
 Register a name with quantum-resistant signatures.
 
 **Options:**
@@ -173,8 +173,8 @@ Register a name with quantum-resistant signatures.
 
 **Example:**
 ```bash
-frw register-v2 myname
-frw register-v2 myname --key /path/to/v2-key.json
+frw register myname
+frw register myname --key /path/to/v2-key.json
 ```
 
 **Proof of Work Time Estimates:**
