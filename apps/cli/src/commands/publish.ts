@@ -231,28 +231,36 @@ export async function publishCommand(directory: string = '.', options: PublishOp
           // Use official protocol serialization
           const recordJSON = toJSON(recordV2);
           
-          let submitted = false;
-          for (const node of nodes) {
+          spinner.text = `Pushing to ${nodes.length} bootstrap nodes...`;
+          
+          const pushPromises = nodes.map(async (node) => {
             try {
               const response = await fetch(`${node}/api/submit/v2`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: recordJSON
+                body: recordJSON,
+                signal: AbortSignal.timeout(5000)
               });
+              
               if (response.ok) {
-                spinner.succeed('V2 name registry updated');
-                submitted = true;
-                break;
+                return true;
               } else {
                 const errorText = await response.text();
                 logger.debug(`Bootstrap node ${node} rejected V2 record: ${errorText}`);
+                return false;
               }
             } catch (err) {
               logger.debug(`Bootstrap node ${node} unreachable: ${err}`);
+              return false;
             }
-          }
-          
-          if (!submitted) {
+          });
+
+          const results = await Promise.all(pushPromises);
+          const successCount = results.filter(s => s).length;
+
+          if (successCount > 0) {
+            spinner.succeed(`V2 registry updated on ${successCount}/${nodes.length} nodes`);
+          } else {
             spinner.warn('V2 registry update failed - content still published to IPFS');
           }
         }
