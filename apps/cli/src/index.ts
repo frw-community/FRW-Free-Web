@@ -24,6 +24,7 @@ import { configureCommand, configShowCommand } from './commands/configure.js';
 import { domainAddCommand, domainVerifyCommand, domainListCommand, domainRemoveCommand, domainInfoCommand } from './commands/domain.js';
 import { bootstrapRegistryCommand } from './commands/bootstrap-registry.js';
 import { lookupCommand, listNamesCommand, infoCommand } from './commands/lookup.js';
+import { regeneratePowCommand } from './commands/regenerate-pow.js';
 
 const program = new Command();
 
@@ -76,6 +77,11 @@ program
   .description('Register name with V2 quantum-resistant signature (Dilithium3)')
   .option('-k, --key <path>', 'Path to V2 private key')
   .action(registerV2Command);
+
+program
+  .command('regenerate-pow <name>')
+  .description('Regenerate Proof of Work for a name (useful if difficulty changes)')
+  .action(regeneratePowCommand);
 
 program
   .command('migrate <name>')

@@ -3,18 +3,7 @@ import ora from 'ora';
 import { DistributedNameRegistry } from '@frw/ipfs';
 import { logger } from '../utils/logger.js';
 import { fetch } from 'undici';
-
-// Hardcoded bootstrap nodes (consistent with register.ts)
-const BOOTSTRAP_NODES = [
-  'http://83.228.214.189:3100',
-  'http://83.228.213.45:3100',
-  'http://83.228.213.240:3100',
-  'http://83.228.214.72:3100',
-  'http://localhost:3100',
-  "http://155.117.46.244:3100",
-  "http://165.73.244.107:3100",
-  "http://165.73.244.74:3100"
-];
+import { BOOTSTRAP_NODES } from '../utils/constants.js';
 
 export async function lookupCommand(name: string): Promise<void> {
   const spinner = ora(`Resolving "${name}"...`).start();

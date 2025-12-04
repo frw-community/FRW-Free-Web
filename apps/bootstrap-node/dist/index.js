@@ -5,6 +5,9 @@
 import { create as createIPFSClient } from 'ipfs-http-client';
 import express from 'express';
 import cors from 'cors';
+import fs from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { verifyProof, getRequiredDifficulty } from '@frw/name-registry';
 import { SignatureManager } from '@frw/crypto';
 import { V2RecordManager, createUnifiedResponse } from './v2-support.js';
@@ -16,6 +19,10 @@ class BootstrapIndexNode {
     app;
     nodeId;
     lastPublished = 0;
+    dataDir;
+    V1_INDEX_FILE;
+    persistTimer = null;
+    loadPromise;
     IPFS_URL = process.env.IPFS_URL || 'http://localhost:5001';
     HTTP_PORT = parseInt(process.env.HTTP_PORT || '3100');
     PUBLISH_INTERVAL = 3600000; // 1 hour
@@ -30,6 +37,7 @@ class BootstrapIndexNode {
         "http://155.117.46.244:3100",
         "http://165.73.244.107:3100",
         "http://165.73.244.74:3100",
+        "http://217.216.32.99:3100",
         'http://localhost:3100'
     ];
     constructor(nodeId) {
@@ -38,12 +46,18 @@ class BootstrapIndexNode {
         this.v2Manager = new V2RecordManager();
         this.app = express();
         this.ipfs = createIPFSClient({ url: this.IPFS_URL });
+        const __filename = fileURLToPath(import.meta.url);
+        const __dirname = path.dirname(__filename);
+        this.dataDir = process.env.FRWB_DATA_DIR || path.join(__dirname, 'data');
+        this.V1_INDEX_FILE = path.join(this.dataDir, 'v1-names.json');
+        this.loadPromise = this.loadIndexFromDisk();
         this.setupExpress();
     }
     /**
      * Start the bootstrap node
      */
     async start() {
+        await this.loadPromise;
         console.log(`[Bootstrap] Starting FRW Bootstrap Node: ${this.nodeId}`);
         console.log(`[Bootstrap] IPFS: ${this.IPFS_URL}`);
         console.log(`[Bootstrap] HTTP: ${this.HTTP_PORT}`);
@@ -91,8 +105,7 @@ class BootstrapIndexNode {
                 uptime: process.uptime()
             });
         });
-        // Get all names
-        this.app.get('/api/names', (req, res) => {
+        const listHandler = (req, res) => {
             const names = Array.from(this.index.entries()).map(([name, entry]) => ({
                 name,
                 publicKey: entry.publicKey,
@@ -103,7 +116,10 @@ class BootstrapIndexNode {
                 count: names.length,
                 names
             });
-        });
+        };
+        // Get all names
+        this.app.get('/api/names', listHandler);
+        this.app.get('/api/list', listHandler);
         // Resolve single name (V1 or V2)
         this.app.get('/api/resolve/:name', (req, res) => {
             const { name } = req.params;
@@ -126,8 +142,7 @@ class BootstrapIndexNode {
                 name
             });
         });
-        // Submit new name (backup to pubsub)
-        this.app.post('/api/submit', async (req, res) => {
+        const submitHandler = async (req, res) => {
             try {
                 const record = req.body;
                 // Validate record
@@ -197,7 +212,10 @@ class BootstrapIndexNode {
                 });
                 return;
             }
-        });
+        };
+        // Submit new name (backup to pubsub)
+        this.app.post('/api/submit', submitHandler);
+        this.app.post('/api/register', submitHandler);
         // Submit V2 record (quantum-resistant)
         this.app.post('/api/submit/v2', async (req, res) => {
             try {
@@ -395,7 +413,50 @@ class BootstrapIndexNode {
             };
             this.index.set(key, entry);
             console.log(`[Bootstrap] ✓ ${existing ? 'Updated' : 'Added'} index: ${record.name} (${this.index.size} total)`);
+            this.schedulePersist();
         }
+    }
+    schedulePersist() {
+        if (this.persistTimer) {
+            clearTimeout(this.persistTimer);
+        }
+        this.persistTimer = setTimeout(() => {
+            this.saveIndexToDisk().catch(error => {
+                console.error('[Bootstrap] Failed to persist index:', error);
+            });
+        }, 200);
+    }
+    async ensureDataDir() {
+        try {
+            await fs.mkdir(this.dataDir, { recursive: true });
+        }
+        catch (error) {
+            console.error('[Bootstrap] Failed to create data directory:', error);
+        }
+    }
+    async loadIndexFromDisk() {
+        await this.ensureDataDir();
+        try {
+            const raw = await fs.readFile(this.V1_INDEX_FILE, 'utf8');
+            const parsed = JSON.parse(raw);
+            Object.entries(parsed).forEach(([key, entry]) => {
+                this.index.set(key.toLowerCase(), entry);
+            });
+            console.log(`[Bootstrap] ✓ Loaded ${this.index.size} names from disk`);
+        }
+        catch (error) {
+            if (error?.code !== 'ENOENT') {
+                console.warn('[Bootstrap] Failed to load index from disk:', error);
+            }
+            else {
+                console.log('[Bootstrap] No existing index found on disk (fresh start)');
+            }
+        }
+    }
+    async saveIndexToDisk() {
+        await this.ensureDataDir();
+        const snapshot = JSON.stringify(Object.fromEntries(this.index), null, 2);
+        await fs.writeFile(this.V1_INDEX_FILE, snapshot, 'utf8');
     }
     /**
      * Publish index to IPFS
