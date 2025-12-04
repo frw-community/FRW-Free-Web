@@ -41,6 +41,43 @@ needed for a node
       pm2 save
       pm2 startup
 -----------------
+# 1. System Update & Essentials
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y curl git build-essential systemd-timesyncd
+
+# 2. Fix Time Sync (Crucial for V2 PoW)
+sudo systemctl enable systemd-timesyncd
+sudo systemctl start systemd-timesyncd
+sudo timedatectl set-ntp true
+
+# 3. Install Node.js v20
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+sudo npm install -g pm2 typescript
+
+# 4. Install & Config IPFS
+wget https://dist.ipfs.tech/kubo/v0.29.0/kubo_v0.29.0_linux-amd64.tar.gz
+tar -xvzf kubo_v0.29.0_linux-amd64.tar.gz
+cd kubo
+sudo bash install.sh
+ipfs init --profile server
+ipfs config --json Pubsub.Enabled true
+ipfs config --json Experimental.Libp2pStreamMounting true
+
+# 5. Clone & Build FRW Node
+cd ~
+git clone https://github.com/frw-community/FRW-Free-Web.git
+cd FRW-Free-Web§
+npm install
+npm run build  # Builds ALL packages correctly
+
+# 6. Start Services
+pm2 start "ipfs daemon --enable-pubsub-experiment" --name ipfs
+pm2 start apps/bootstrap-node/dist/index.js --name bootstrap-node
+pm2 save
+pm2 startup
+---
+
 
 ## Table of Contents
 
@@ -72,268 +109,98 @@ needed for a node
 
 ## Installation on Debian/Ubuntu
 
-### 1. Update System Packages
+### 1. One-Command Setup (Recommended)
+
+You can run this entire block on a fresh Debian/Ubuntu server to set up everything automatically.
 
 ```bash
-# Update package lists
-sudo apt update
+# 1. System Update & Essentials
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y curl git build-essential systemd-timesyncd
 
-# Upgrade existing packages
-sudo apt upgrade -y
+# 2. Fix Time Sync (Crucial for V2 PoW)
+# Ensures server clock matches network time to validate timestamps
+sudo systemctl enable systemd-timesyncd
+sudo systemctl start systemd-timesyncd
+sudo timedatectl set-ntp true
 
-# Install essential tools
-sudo apt install -y curl wget git build-essential
-```
-
-### 2. Install Node.js (Latest LTS)
-
-```bash
-# Download and install Node.js 20.x LTS
+# 3. Install Node.js v20
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-
-# Install Node.js
 sudo apt install -y nodejs
+sudo npm install -g pm2 typescript
 
-# Verify installation
-node --version
-npm --version
-```
-
-### 3. Install PM2 Process Manager
-
-```bash
-# Install PM2 globally
-sudo npm install -g pm2
-
-# Verify PM2 installation
-pm2 --version
-```
-
-## IPFS Installation
-
-### Option 1: Kubo (Go IPFS) - Recommended
-
-Kubo is the official Go implementation of IPFS and is more stable for production use.
-
-```bash
-# Download latest Kubo version
-cd /tmp
+# 4. Install & Config IPFS (Kubo)
 wget https://dist.ipfs.tech/kubo/v0.29.0/kubo_v0.29.0_linux-amd64.tar.gz
-
-# Extract and install
-tar xzvf kubo_v0.29.0_linux-amd64.tar.gz
+tar -xvzf kubo_v0.29.0_linux-amd64.tar.gz
 cd kubo
+sudo bash install.sh
+ipfs init --profile server
+# Enable PubSub for mesh networking
+ipfs config --json Pubsub.Enabled true
+ipfs config --json Experimental.Libp2pStreamMounting true
 
-# Install system-wide
-sudo ./install.sh
-
-# Cleanup
-cd /..
-rm -rf kubo kubo_v0.29.0_linux-amd64.tar.gz
-
-# Verify installation
-ipfs --version
-```
-
-### Option 2: JS-IPFS (Node.js based)
-
-```bash
-# Install IPFS via npm
-sudo npm install -g ipfs
-
-# Verify installation
-npx ipfs --version
-```
-
-### Initialize and Configure IPFS
-
-```bash
-# Initialize IPFS repository
-ipfs init
-
-# Configure IPFS to bind only to localhost (prevents network interference)
-ipfs config Addresses.API "/ip4/127.0.0.1/tcp/5001"
-ipfs config Addresses.Gateway "/ip4/127.0.0.1/tcp/8080"
-ipfs config Swarm.AddrFilters '["/ip4/0.0.0.0/tcp/0"]'
-
-# Enable CORS for API access (localhost only)
-ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["http://localhost:5001", "http://127.0.0.1:5001"]'
-ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["PUT", "POST", "GET"]'
-
-# Optional: Limit bandwidth to prevent network saturation
-ipfs config --json Swarm.Limit.ConnsInbound 50
-ipfs config --json Swarm.Limit.ConnsOutbound 50
-ipfs config --json Swarm.Limit.ConnsPerPeer 5
-
-# Start IPFS daemon (background)
-nohup ipfs daemon --migrate=true > /dev/null 2>&1 &
-
-# Verify IPFS is running without breaking network
-sleep 5
-curl -s http://127.0.0.1:5001/api/v1/version || echo "IPFS not responding"
-
-# Test external connectivity still works
-ping -c 3 8.8.8.8
-curl -s https://api.github.com/users/github | head -1
-```
-
-## FRW Bootstrap Node Setup
-
-### 1. Clone the Repository
-
-```bash
-# Navigate to home directory
+# 5. Clone & Build FRW Node
 cd ~
-
-# Clone the FRW repository
-git clone https://github.com/your-org/FRW-Free-Web.git
-
-# Enter the project directory
+git clone https://github.com/frw-community/FRW-Free-Web.git
 cd FRW-Free-Web
-```
-
-### 2. Install Dependencies
-
-```bash
-# Install project dependencies
 npm install
-
-# Verify installation
-npm --version
-```
-
-### 3. Build the Project
-
-```bash
-# Clean previous builds
-npm run clean
-
-# Build all packages
+# Build all packages in correct order
 npm run build
 
-# Verify build success
-ls -la apps/bootstrap-node/dist/
-```
-
-### 4. Configure Bootstrap Node
-
-```bash
-# Copy example configuration
-cp frw.config.example.json frw.config.json
-
-# Edit configuration (optional)
-nano frw.config.json
-```
-
-Key configuration options:
-```json
-{
-  "bootstrap": {
-    "nodeId": "bootstrap-$(date +%s%N | cut -b1-13)",
-    "httpPort": 3100,
-    "ipfsApi": "/ip4/127.0.0.1/tcp/5001"
-  },
-  "network": {
-    "bootstrapNodes": [
-      "83.228.213.240:3100",
-      "83.228.213.45:3100",
-      "83.228.214.189:3100",
-      "83.228.214.72:3100",
-      "165.73.244.107:3100",
-      "165.73.244.74:3100",
-      "155.117.46.244:3100"
-    ]
-  }
-}
-```
-
-## Firewall Configuration
-
-### Ubuntu (UFW)
-
-```bash
-# Allow SSH (to maintain access)
-sudo ufw allow ssh
-
-# Allow bootstrap node port
-sudo ufw allow 3100/tcp
-
-# Allow IPFS API port (if needed)
-sudo ufw allow 5001/tcp
-
-# Enable firewall
-sudo ufw --force enable
-
-# Check status
-sudo ufw status
-```
-
-### Debian (iptables)
-
-```bash
-# Create firewall rules
-sudo iptables -A INPUT -i lo -j ACCEPT
-sudo iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
-sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
-sudo iptables -A INPUT -p tcp --dport 3100 -j ACCEPT
-sudo iptables -A INPUT -p tcp --dport 5001 -j ACCEPT
-sudo iptables -A INPUT -j DROP
-
-# Save rules
-sudo iptables-save | sudo tee /etc/iptables/rules.v4
-sudo apt install -y iptables-persistent
-```
-
-### Cloud Provider Firewall
-
-If using a cloud provider (AWS, DigitalOcean, Vultr, etc.), also configure their firewall:
-
-- Open port 22 (SSH)
-- Open port 3100 (Bootstrap Node)
-- Open port 5001 (IPFS API - optional)
-
-## Process Management with PM2
-
-### 1. Start IPFS Daemon
-
-```bash
-# Stop any existing IPFS processes
-pkill -f "ipfs daemon" || true
-
-# Start IPFS with PM2 (localhost only, network-safe)
-pm2 start "ipfs daemon" --name "ipfs-daemon" -- --migrate=true --enable-pubsub-experiment
-
-# Wait for IPFS to start
-sleep 10
-
-# Verify IPFS is running locally
-curl -s http://127.0.0.1:5001/api/v1/version
-
-# IMPORTANT: Test that external connectivity still works
-curl -s https://api.github.com/users/github | head -1
-ping -c 3 8.8.8.8
-
-# If external connectivity is broken, stop IPFS and reconfigure:
-pm2 stop ipfs-daemon
-ipfs config Swarm.AddrFilters '["/ip4/0.0.0.0/tcp/0"]'
-pm2 start ipfs-daemon
-
-# Save PM2 configuration
+# 6. Start Services
+pm2 start "ipfs daemon --enable-pubsub-experiment" --name ipfs
+pm2 start apps/bootstrap-node/dist/index.js --name bootstrap-node
 pm2 save
-
-# Setup PM2 to start on boot
 pm2 startup
-sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u $USER --hp $HOME
 ```
 
-### 2. Start Bootstrap Node
+### 2. Manual Installation Steps
 
+If you prefer to run steps individually:
+
+#### System Preparation
 ```bash
-# Start bootstrap node with PM2
-pm2 start npm --name "bootstrap-node" -- run start:bootstrap
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y curl git build-essential systemd-timesyncd
 
-# Save PM2 configuration
+# Verify Time Sync (Required)
+timedatectl status
+```
+
+#### Node.js Setup
+```bash
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+sudo npm install -g pm2 typescript
+```
+
+#### IPFS Setup
+```bash
+wget https://dist.ipfs.tech/kubo/v0.29.0/kubo_v0.29.0_linux-amd64.tar.gz
+tar -xvzf kubo_v0.29.0_linux-amd64.tar.gz
+cd kubo
+sudo bash install.sh
+ipfs init --profile server
+ipfs config --json Pubsub.Enabled true
+```
+
+#### FRW Node Setup
+```bash
+cd ~
+git clone https://github.com/frw-community/FRW-Free-Web.git
+cd FRW-Free-Web
+npm install
+
+# Build Project (Root build handles dependencies correctly)
+npm run build
+```
+
+#### Start Services
+```bash
+pm2 start "ipfs daemon --enable-pubsub-experiment" --name ipfs
+pm2 start apps/bootstrap-node/dist/index.js --name bootstrap-node
 pm2 save
+pm2 startup
 ```
 
 ### 3. Monitor Processes
