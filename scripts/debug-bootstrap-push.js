@@ -6,6 +6,9 @@ const fetch = require('node-fetch');
 
 // IPs to test (Updated nodes)
 const NODES = [
+  'http://155.117.46.244:3100',
+  'http://165.73.244.107:3100',
+  'http://165.73.244.74:3100',
   'http://83.228.214.189:3100'
 ];
 
@@ -14,9 +17,10 @@ async function debugPush() {
   
   const keyManager = new KeyManagerV2();
   const keyPair = await keyManager.generateKeyPair();
-  const name = 'debug-' + Date.now();
+  // Use LONG name (21 chars) to test Instant PoW
+  const name = 'debug-instant-test-' + Date.now(); // ~25 chars
   
-  console.log(`Generating record for ${name}...`);
+  console.log(`Generating record for ${name} (${name.length} chars)...`);
   const proof = await generatePOWV2(name, keyPair.publicKey_dilithium3);
   const recordManager = new RecordManagerV2();
   
