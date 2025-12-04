@@ -9,6 +9,7 @@ import { ProofOfWorkGenerator, getRequiredDifficulty } from '@frw/name-registry'
 import { createRecordV2, toJSON } from '@frw/protocol-v2';
 import { config } from '../utils/config.js';
 import { logger } from '../utils/logger.js';
+import { BOOTSTRAP_NODES } from '../utils/constants.js';
 
 interface PublishOptions {
   name?: string;
@@ -226,17 +227,7 @@ export async function publishCommand(directory: string = '.', options: PublishOp
           );
           
           // Submit to V2 bootstrap endpoints
-          const nodes = [
-            'http://localhost:3100',
-            'http://83.228.214.189:3100',
-            'http://83.228.213.45:3100',
-            'http://83.228.213.240:3100',
-            'http://83.228.214.72:3100',
-            "http://155.117.46.244:3100",
-            "http://165.73.244.107:3100",
-            "http://165.73.244.74:3100",
-
-          ];
+          const nodes = BOOTSTRAP_NODES;
           
           // Use official protocol serialization
           const recordJSON = toJSON(recordV2);
@@ -286,26 +277,11 @@ export async function publishCommand(directory: string = '.', options: PublishOp
         
         // Submit to bootstrap nodes
         const registry = new DistributedNameRegistry({
-          bootstrapNodes: [
-            'http://83.228.214.189:3100',
-            'http://83.228.213.45:3100',
-            'http://83.228.213.240:3100',
-            'http://83.228.214.72:3100',
-            'http://localhost:3100'
-          ]
+          bootstrapNodes: BOOTSTRAP_NODES
         });
         
         // Use direct submission (simpler than updateContent which needs resolution)
-        const nodes = [
-            'http://localhost:3100',
-            'http://83.228.214.189:3100',
-            'http://83.228.213.45:3100',
-            'http://83.228.213.240:3100',
-            'http://83.228.214.72:3100',
-            "http://155.117.46.244:3100",
-            "http://165.73.244.107:3100",
-            "http://165.73.244.74:3100",
-        ];
+        const nodes = BOOTSTRAP_NODES;
         for (const node of nodes) {
           try {
             const response = await fetch(`${node}/api/submit`, {

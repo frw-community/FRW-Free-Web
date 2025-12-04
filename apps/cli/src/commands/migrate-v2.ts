@@ -8,6 +8,7 @@ import { DistributedNameRegistry } from '@frw/ipfs';
 import { DistributedRegistryV2 } from '@frw/ipfs';
 import { config } from '../utils/config.js';
 import { logger } from '../utils/logger.js';
+import { BOOTSTRAP_NODES } from '../utils/constants.js';
 import inquirer from 'inquirer';
 
 interface MigrateV2Options {
@@ -114,16 +115,7 @@ export async function migrateV2Command(name: string, options: MigrateV2Options):
   let v1IpnsKey = '';
   try {
     const registry = new DistributedNameRegistry({
-      bootstrapNodes: [
-        'http://83.228.214.189:3100',
-        'http://83.228.213.45:3100',
-        'http://83.228.213.240:3100',
-        'http://83.228.214.72:3100',
-        'http://localhost:3100',
-        "http://155.117.46.244:3100",
-        "http://165.73.244.107:3100",
-        "http://165.73.244.74:3100"
-      ]
+      bootstrapNodes: BOOTSTRAP_NODES
     });
     
     const resolved = await registry.resolveName(name);
@@ -230,16 +222,7 @@ export async function migrateV2Command(name: string, options: MigrateV2Options):
   spinner.start('Publishing to V2 network...');
   try {
     const registryV2 = new DistributedRegistryV2({
-      bootstrapNodes: [
-        'http://83.228.214.189:3100',
-        'http://83.228.213.45:3100',
-        'http://83.228.213.240:3100',
-        'http://83.228.214.72:3100',
-        'http://localhost:3100',
-        "http://155.117.46.244:3100",
-        "http://165.73.244.107:3100",
-        "http://165.73.244.74:3100"
-      ]
+      bootstrapNodes: BOOTSTRAP_NODES
     });
     
     await registryV2.registerV2(record);

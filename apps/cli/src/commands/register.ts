@@ -4,6 +4,7 @@ import { KeyManager, SignatureManager } from '@frw/crypto';
 import { FRWNamingSystem } from '@frw/protocol';
 import { config } from '../utils/config.js';
 import { logger } from '../utils/logger.js';
+import { BOOTSTRAP_NODES } from '../utils/constants.js';
 import inquirer from 'inquirer';
 import { DNSVerifier, requiresDNSVerification, ProofOfWorkGenerator, getRequiredDifficulty } from '@frw/name-registry';
 import { DistributedNameRegistry, createDistributedNameRecord } from '@frw/ipfs';
@@ -196,16 +197,7 @@ export async function registerCommand(name: string, options: RegisterOptions): P
   spinner.start('Publishing to global distributed network...');
   try {
     const registry = new DistributedNameRegistry({
-      bootstrapNodes: [
-        'http://83.228.214.189:3100',
-        'http://83.228.213.45:3100',
-        'http://83.228.213.240:3100',
-        'http://83.228.214.72:3100',
-        'http://localhost:3100',
-        "http://155.117.46.244:3100",
-        "http://165.73.244.107:3100",
-        "http://165.73.244.74:3100"
-      ]
+      bootstrapNodes: BOOTSTRAP_NODES
     });
     await registry.registerName(record);
     spinner.succeed('✓ Published to global network!');

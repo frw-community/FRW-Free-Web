@@ -8,6 +8,7 @@ import { config } from '../utils/config.js';
 import { logger } from '../utils/logger.js';
 import inquirer from 'inquirer';
 import { getRequiredDifficulty, estimateTime } from '@frw/pow-v2';
+import { BOOTSTRAP_NODES } from '../utils/constants.js';
 
 interface RegisterV2Options {
   key?: string;
@@ -132,17 +133,7 @@ export async function registerV2Command(name: string, options: RegisterV2Options
   spinner.start('Publishing to global V2 network (quantum-resistant)...');
   try {
     const registry = new DistributedRegistryV2({
-      bootstrapNodes: [
-             'http://localhost:3100',
-            'http://83.228.214.189:3100',
-            'http://83.228.213.45:3100',
-            'http://83.228.213.240:3100',
-            'http://83.228.214.72:3100',
-            "http://155.117.46.244:3100",
-            "http://165.73.244.107:3100",
-            "http://165.73.244.74:3100",
-        'http://localhost:3100'
-      ]
+      bootstrapNodes: BOOTSTRAP_NODES
     });
     
     await registry.registerV2(record);
