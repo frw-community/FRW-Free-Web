@@ -167,117 +167,24 @@ class BootstrapIndexNode {
       });
     });
 
-    // Resolve single name (V1 or V2)
+    // Resolve single name (V2 Only)
     this.app.get('/api/resolve/:name', (req, res): void => {
       const { name } = req.params;
       const lowerName = name.toLowerCase();
 
-      // Try V2 first (newest format)
+      // Only resolve V2 (Quantum-Resistant) records
       const v2Entry = this.v2Manager.getRecord(lowerName);
       if (v2Entry) {
         res.json(createUnifiedResponse(v2Entry, 2, this.nodeId));
         return;
       }
 
-      // Fallback to V1
-      const v1Entry = this.index.get(lowerName);
-      if (v1Entry) {
-        res.json(createUnifiedResponse(v1Entry, 1, this.nodeId));
-        return;
-      }
-
       // Not found
       res.status(404).json({
-        error: 'Name not found',
+        error: 'Name not found (V1 is deprecated)',
         name
       });
     });
-
-    const submitHandler = async (req: express.Request, res: express.Response): Promise<void> => {
-      try {
-        const record: DistributedNameRecord = req.body;
-
-        // Validate record
-        if (!record.name || !record.publicKey || !record.signature || !record.proof) {
-          res.status(400).json({
-            error: 'Invalid record: missing required fields'
-          });
-          return;
-        }
-
-        // CRITICAL: Verify Proof of Work
-        const powValid = verifyProof(record.name, record.publicKey, record.proof);
-        if (!powValid) {
-          res.status(400).json({
-            error: 'Invalid proof of work',
-            name: record.name
-          });
-          return;
-        }
-
-        // Verify POW difficulty matches name requirements
-        const requiredDifficulty = getRequiredDifficulty(record.name);
-        if (record.proof.difficulty < requiredDifficulty) {
-          res.status(400).json({
-            error: `Insufficient POW difficulty: expected ${requiredDifficulty}, got ${record.proof.difficulty}`,
-            name: record.name
-          });
-          return;
-        }
-
-        // CRITICAL: Verify cryptographic signature
-        try {
-          const message = `${record.name}:${record.publicKey}:${record.contentCID}:${record.version}:${record.registered}`;
-          const publicKeyBytes = SignatureManager.decodePublicKey(record.publicKey);
-          const signatureValid = SignatureManager.verify(message, record.signature, publicKeyBytes);
-
-          if (!signatureValid) {
-            res.status(400).json({
-              error: 'Invalid signature',
-              name: record.name
-            });
-            return;
-          }
-        } catch (error) {
-          res.status(400).json({
-            error: 'Signature verification failed',
-            details: error instanceof Error ? error.message : 'Unknown'
-          });
-          return;
-        }
-
-        // Add to index (now that it's fully validated)
-        this.addToIndex(record);
-
-        // Broadcast via pubsub
-        await this.ipfs.pubsub.publish(
-          this.PUBSUB_TOPIC,
-          Buffer.from(JSON.stringify({
-            type: 'name-register',
-            record,
-            submittedBy: this.nodeId,
-            timestamp: Date.now()
-          }))
-        );
-
-        res.json({
-          success: true,
-          name: record.name,
-          message: 'Name registered and broadcasted'
-        });
-
-      } catch (error) {
-        res.status(500).json({
-          error: 'Failed to submit name',
-          details: error instanceof Error ? error.message : 'Unknown'
-        });
-        return;
-      }
-    };
-
-    // Submit new name (backup to pubsub)
-    this.app.post('/api/submit', submitHandler);
-    this.app.post('/api/register', submitHandler);
 
     // Submit V2 record (quantum-resistant)
     this.app.post('/api/submit/v2', async (req, res): Promise<void> => {
@@ -364,12 +271,6 @@ class BootstrapIndexNode {
    */
   private async subscribeToPubsub(): Promise<void> {
     try {
-      // Subscribe to V1 updates
-      await this.ipfs.pubsub.subscribe(this.PUBSUB_TOPIC, (msg: any) => {
-        this.handlePubsubMessage(msg);
-      });
-      console.log(`[Bootstrap] ✓ Subscribed to V1 pubsub: ${this.PUBSUB_TOPIC}`);
-
       // Subscribe to V2 updates
       await this.ipfs.pubsub.subscribe(this.v2Manager.getPubsubTopic(), (msg: any) => {
         this.handleV2PubsubMessage(msg);
@@ -378,54 +279,6 @@ class BootstrapIndexNode {
 
     } catch (error) {
       console.error('[Bootstrap] ✗ Failed to subscribe to pubsub:', error);
-    }
-  }
-
-  /**
-   * Handle incoming pubsub message
-   */
-  private handlePubsubMessage(msg: any): void {
-    try {
-      const data = JSON.parse(msg.data.toString());
-
-      if (data.type === 'name-register' && data.record) {
-        const record: DistributedNameRecord = data.record;
-
-        // CRITICAL: Verify POW before accepting from pubsub
-        if (!this.validateRecord(record)) {
-          console.warn(`[Bootstrap] ⚠ Invalid record rejected from pubsub: ${record.name}`);
-          return;
-        }
-
-        this.addToIndex(record);
-        console.log(`[Bootstrap] 📥 Received name via pubsub: ${record.name}`);
-      }
-
-      if (data.type === 'name-update' && data.record) {
-        const record: DistributedNameRecord = data.record;
-
-        // CRITICAL: Verify POW before accepting update
-        if (!this.validateRecord(record)) {
-          console.warn(`[Bootstrap] ⚠ Invalid update rejected from pubsub: ${record.name}`);
-          return;
-        }
-
-        this.addToIndex(record); // addToIndex handles updates too
-        console.log(`[Bootstrap] 📥 Received update via pubsub: ${record.name}`);
-      }
-
-      if (data.type === 'sync-request' && data.requesterId !== this.nodeId) {
-        // Another node wants our index
-        this.sendIndexSnapshot(data.requesterId);
-      }
-
-      if (data.type === 'index-snapshot' && data.nodeId !== this.nodeId) {
-        // Received index from another node
-        this.mergeIndex(data.names);
-      }
-
-    } catch (error) {
-      console.error('[Bootstrap] Error handling pubsub message:', error);
     }
   }
 
@@ -450,61 +303,6 @@ class BootstrapIndexNode {
 
     } catch (error) {
       console.error('[Bootstrap] Error handling V2 pubsub message:', error);
-    }
-  }
-
-  /**
-   * Validate V1 record
-   */
-  private validateRecord(record: DistributedNameRecord): boolean {
-    // Check required fields
-    if (!record.name || !record.publicKey || !record.signature || !record.proof) {
-      return false;
-    }
-
-    // Verify Proof of Work
-    const powValid = verifyProof(record.name, record.publicKey, record.proof);
-    if (!powValid) {
-      return false;
-    }
-
-    // Verify POW difficulty
-    const requiredDifficulty = getRequiredDifficulty(record.name);
-    if (record.proof.difficulty < requiredDifficulty) {
-      return false;
-    }
-
-    // Verify signature
-    try {
-      const message = `${record.name}:${record.publicKey}:${record.contentCID}:${record.version}:${record.registered}`;
-      const publicKeyBytes = SignatureManager.decodePublicKey(record.publicKey);
-      return SignatureManager.verify(message, record.signature, publicKeyBytes);
-    } catch {
-      return false;
-    }
-  }
-
-  /**
-   * Add name to index (or update if exists)
-   */
-  private addToIndex(record: DistributedNameRecord): void {
-    const key = record.name.toLowerCase();
-    const existing = this.index.get(key);
-
-    // Only update if timestamp is newer or doesn't exist
-    if (!existing || record.registered >= existing.timestamp) {
-      const entry: IndexEntry = {
-        name: record.name,
-        publicKey: record.publicKey,
-        contentCID: record.contentCID,
-        ipnsKey: record.ipnsKey,
-        timestamp: record.registered,
-        signature: record.signature
-      };
-
-      this.index.set(key, entry);
-      console.log(`[Bootstrap] ✓ ${existing ? 'Updated' : 'Added'} index: ${record.name} (${this.index.size} total)`);
-      this.schedulePersist();
     }
   }
 
@@ -599,21 +397,6 @@ class BootstrapIndexNode {
     console.log('[Bootstrap] 🔄 Requesting sync from network...');
 
     try {
-      // Subscribe to sync responses
-      await this.ipfs.pubsub.subscribe(this.SYNC_TOPIC, (msg: any) => {
-        this.handlePubsubMessage(msg);
-      });
-
-      // Request index from other nodes
-      await this.ipfs.pubsub.publish(
-        this.SYNC_TOPIC,
-        Buffer.from(JSON.stringify({
-          type: 'sync-request',
-          requesterId: this.nodeId,
-          timestamp: Date.now()
-        }))
-      );
-
       // Also try HTTP sync with known bootstrap nodes
       const nodes = this.discovery.getNodes();
       for (const nodeUrl of nodes) {

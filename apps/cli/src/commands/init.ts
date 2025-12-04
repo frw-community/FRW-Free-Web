@@ -2,7 +2,7 @@ import { mkdir, writeFile } from 'fs/promises';
 import { existsSync } from 'fs';
 import inquirer from 'inquirer';
 import ora from 'ora';
-import { SignatureManager, KeyManager } from '@frw/crypto';
+import { KeyManagerV2 } from '@frw/crypto-pq';
 import { config, getConfigPath, getKeysPath } from '../utils/config.js';
 import { logger } from '../utils/logger.js';
 
@@ -11,7 +11,7 @@ interface InitOptions {
 }
 
 export async function initCommand(options: InitOptions): Promise<void> {
-  logger.section('FRW Initialization');
+  logger.section('FRW Initialization (Quantum-Resistant)');
 
   const configPath = getConfigPath();
   const keysPath = getKeysPath();
@@ -45,10 +45,14 @@ export async function initCommand(options: InitOptions): Promise<void> {
     throw error;
   }
 
-  // Generate keypair
-  spinner.start('Generating Ed25519 keypair...');
-  const keyPair = SignatureManager.generateKeyPair();
-  const publicKeyEncoded = SignatureManager.encodePublicKey(keyPair.publicKey);
+  // Generate V2 keypair (Dilithium3 + Ed25519 hybrid)
+  spinner.start('Generating quantum-resistant keypair (Dilithium3 + Ed25519)...');
+  logger.info('');
+  logger.info('This may take 10-30 seconds...');
+  
+  const keyManager = new KeyManagerV2();
+  const keyPair = await keyManager.generateKeyPair();
+  
   spinner.succeed('Keypair generated');
 
   // Ask for key name
@@ -97,23 +101,22 @@ export async function initCommand(options: InitOptions): Promise<void> {
 
   // Export keypair
   spinner.start('Saving keypair...');
-  const exported = KeyManager.exportKeyPair(keyPair, password);
+  const exported = keyManager.exportKeyPair(keyPair, password);
   const keyPath = `${keysPath}/${keyName}.json`;
   
   await writeFile(keyPath, JSON.stringify(exported, null, 2));
   spinner.succeed('Keypair saved');
 
   // Update config
-  config.set('defaultKeyPath', keyPath);
+  config.set('defaultKeyPathV2', keyPath); // Use standard key path for V2
 
   logger.section('Initialization Complete');
-  logger.success('FRW has been initialized successfully!');
+  logger.success('FRW identity created (Post-Quantum Secure)!');
   logger.info('');
-  logger.info('Your public key: ' + logger.code(publicKeyEncoded));
+  logger.info('Your DID: ' + logger.code(keyPair.did));
   logger.info('Key file: ' + keyPath);
   logger.info('');
   logger.info('Next steps:');
   logger.info('  1. Register a name: ' + logger.code('frw register myname'));
-  logger.info('  2. Create a page: ' + logger.code('mkdir my-site && cd my-site'));
-  logger.info('  3. Publish: ' + logger.code('frw publish'));
+  logger.info('  2. Publish content: ' + logger.code('frw publish'));
 }

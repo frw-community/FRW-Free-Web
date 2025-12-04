@@ -3,14 +3,11 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import { initCommand } from './commands/init.js';
-import { initV2Command } from './commands/init-v2.js';
 import { publishCommand } from './commands/publish.js';
 import { verifyCommand } from './commands/verify.js';
 import { serveCommand } from './commands/serve.js';
 import { keysCommand } from './commands/keys.js';
 import { registerCommand } from './commands/register.js';
-import { registerV2Command } from './commands/register-v2.js';
-import { migrateV2Command } from './commands/migrate-v2.js';
 import { verifyDnsCommand } from './commands/verify-dns.js';
 import { ipfsStatusCommand } from './commands/ipfs-status.js';
 import { 
@@ -55,41 +52,20 @@ program
 
 program
   .command('init')
-  .description('Initialize FRW configuration and generate keypair')
+  .description('Initialize FRW configuration and generate keypair (Quantum-Resistant)')
   .option('-f, --force', 'Overwrite existing configuration')
   .action(initCommand);
 
 program
-  .command('init-v2')
-  .description('Initialize V2 quantum-resistant identity (Dilithium3)')
-  .option('-f, --force', 'Overwrite existing V2 keypair')
-  .action(initV2Command);
-
-program
   .command('register <name>')
-  .description('Register a human-readable name')
+  .description('Register a human-readable name (Quantum-Resistant)')
   .option('-k, --key <path>', 'Path to private key')
-  .option('--verify-dns', 'Verify DNS ownership for official status')
   .action(registerCommand);
-
-program
-  .command('register-v2 <name>')
-  .description('Register name with V2 quantum-resistant signature (Dilithium3)')
-  .option('-k, --key <path>', 'Path to V2 private key')
-  .action(registerV2Command);
 
 program
   .command('regenerate-pow <name>')
   .description('Regenerate Proof of Work for a name (useful if difficulty changes)')
   .action(regeneratePowCommand);
-
-program
-  .command('migrate <name>')
-  .description('Migrate V1 name to V2 quantum-resistant (preserves content)')
-  .option('--v1-key <path>', 'Path to V1 private key')
-  .option('--v2-key <path>', 'Path to V2 private key')
-  .option('-f, --force', 'Force re-migration')
-  .action(migrateV2Command);
 
 program
   .command('publish [directory]')
