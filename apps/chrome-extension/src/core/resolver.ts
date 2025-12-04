@@ -60,19 +60,22 @@ export class FRWResolver {
    * Resolve name to CID using bootstrap nodes
    */
   async resolveName(name: string): Promise<NameRecord | null> {
+    // Sanitize name (remove trailing slash, lowercase)
+    const cleanName = name.trim().replace(/\/$/, '').toLowerCase();
+
     // Check cache first
-    const cached = this.getFromCache(name);
+    const cached = this.getFromCache(cleanName);
     if (cached) {
-      console.log(`[Resolver] Cache hit: ${name}`);
+      console.log(`[Resolver] Cache hit: ${cleanName}`);
       return cached;
     }
     
-    console.log(`[Resolver] Resolving: ${name}`);
+    console.log(`[Resolver] Resolving: ${cleanName}`);
     
     // Try each bootstrap node
     for (const node of this.bootstrapNodes) {
       try {
-        const url = `${node}/api/resolve/${encodeURIComponent(name)}`;
+        const url = `${node}/api/resolve/${encodeURIComponent(cleanName)}`;
         console.log(`[Resolver] Querying: ${url}`);
         
         const controller = new AbortController();
@@ -90,14 +93,14 @@ export class FRWResolver {
         
         if (response.ok) {
           const data = await response.json() as NameRecord;
-          console.log(`[Resolver] Resolved: ${name} -> ${data.contentCID}`);
+          console.log(`[Resolver] Resolved: ${cleanName} -> ${data.contentCID}`);
           
           // Cache the result
-          this.cacheRecord(name, data);
+          this.cacheRecord(cleanName, data);
           
           return data;
         } else if (response.status === 404) {
-          console.log(`[Resolver] Name not found: ${name}`);
+          console.log(`[Resolver] Name not found: ${cleanName}`);
           // Try next bootstrap node
           continue;
         } else {

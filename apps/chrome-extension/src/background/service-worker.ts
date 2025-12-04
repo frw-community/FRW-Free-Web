@@ -40,7 +40,12 @@ async function handleFRWUrl(frwUrl: string, tabId?: number) {
       return;
     }
     
-    const [, name, path] = match;
+    const [, rawName, path] = match;
+    
+    // Sanitize name: decode URI components and remove trailing slashes
+    // This handles cases like "frw://pussycat%2F" -> "pussycat/" -> "pussycat"
+    const name = decodeURIComponent(rawName).replace(/\/$/, '');
+    
     const viewerUrl = chrome.runtime.getURL(
       `viewer/viewer.html?name=${encodeURIComponent(name)}&path=${encodeURIComponent(path || '/')}`
     );
