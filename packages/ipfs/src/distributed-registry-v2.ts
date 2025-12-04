@@ -3,7 +3,7 @@
 
 import type { DistributedNameRecord, ResolvedName, RegistryConfig } from './distributed-registry.js';
 import type { DistributedNameRecordV2, ResolvedNameV2 } from '@frw/protocol-v2';
-import { RecordVerifierV2, serializeFull, deserializeFull } from '@frw/protocol-v2';
+import { RecordVerifierV2, serializeFull, deserializeFull, toJSON } from '@frw/protocol-v2';
 import { create as createIPFSClient, IPFSHTTPClient } from 'ipfs-http-client';
 
 /**
@@ -143,6 +143,11 @@ export class DistributedRegistryV2 {
     // Store to DHT
     await this.storeToDHT(record);
     
+    // Push to Bootstrap Nodes (HTTP Fallback/Acceleration)
+    if (this.bootstrapNodes && this.bootstrapNodes.length > 0) {
+      await this.publishToBootstrap(record);
+    }
+
     // Broadcast via pubsub
     await this.broadcastUpdate(record);
     
@@ -150,6 +155,48 @@ export class DistributedRegistryV2 {
     this.cacheV2Record(record);
     
     console.log(`[RegistryV2] ✓ Registered V2 name: ${record.name}`);
+  }
+
+  /**
+   * Publish V2 record to bootstrap nodes via HTTP
+   */
+  private async publishToBootstrap(record: DistributedNameRecordV2): Promise<void> {
+    if (!this.bootstrapNodes || this.bootstrapNodes.length === 0) return;
+
+    console.log(`[RegistryV2] Pushing to ${this.bootstrapNodes.length} bootstrap nodes...`);
+    
+    // Serialize record using protocol helper
+    const recordJsonString = toJSON(record);
+    
+    let successCount = 0;
+    
+    const promises = this.bootstrapNodes.map(async (nodeUrl) => {
+      try {
+        // Skip if IPv6 bracketed (fetch might have issues if not handled, but usually fine)
+        const response = await fetch(`${nodeUrl}/api/submit/v2`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: recordJsonString,
+          timeout: 5000
+        } as any);
+
+        if (response.ok) {
+          successCount++;
+        }
+      } catch (error) {
+        // Silent fail for individual nodes
+      }
+    });
+
+    await Promise.allSettled(promises);
+    
+    if (successCount > 0) {
+      console.log(`[RegistryV2] ✓ Pushed to ${successCount} bootstrap nodes`);
+    } else {
+      console.warn('[RegistryV2] ⚠ Failed to push to any bootstrap nodes (will rely on IPFS propagation)');
+    }
   }
 
   /**

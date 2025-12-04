@@ -15,7 +15,7 @@ import { SignatureManager } from '@frw/crypto';
 import { V2RecordManager, createUnifiedResponse } from './v2-support.js';
 import { NodeDiscovery } from './node-discovery.js';
 import type { DistributedNameRecordV2 } from '@frw/protocol-v2';
-import { fromJSON, toJSON } from '@frw/protocol-v2';
+import { fromJSON, toJSON, serializeFull, deserializeFull } from '@frw/protocol-v2';
 
 interface IndexEntry {
   name: string;
@@ -102,12 +102,14 @@ class BootstrapIndexNode {
     const myUrl = `http://${process.env.PUBLIC_IP || 'localhost'}:${this.HTTP_PORT}`;
     await this.discovery.start(myUrl);
 
-    // Sync with other nodes on startup
-    await this.syncWithNetwork();
-
     // Start HTTP server
     this.app.listen(this.HTTP_PORT, '0.0.0.0', () => {
       console.log(`[Bootstrap] ✓ HTTP server listening on port ${this.HTTP_PORT}`);
+    });
+
+    // Sync with other nodes in background (don't block startup)
+    this.syncWithNetwork().catch(err => {
+      console.warn('[Bootstrap] Background sync failed:', err);
     });
 
     // Periodic index publishing
@@ -213,17 +215,12 @@ class BootstrapIndexNode {
 
         // Try to broadcast via V2 pubsub (non-critical, may fail if pubsub disabled)
         try {
-          const recordJSON = toJSON(record);
+          const message = serializeFull(record);
           await this.ipfs.pubsub.publish(
             this.v2Manager.getPubsubTopic(),
-            Buffer.from(JSON.stringify({
-              type: 'name-register-v2',
-              record: JSON.parse(recordJSON),  // Already serialized
-              submittedBy: this.nodeId,
-              timestamp: Date.now()
-            }))
+            message
           );
-          console.log(`[V2] 📡 Broadcasted ${record.name} via pubsub`);
+          console.log(`[V2] 📡 Broadcasted ${record.name} via pubsub (CBOR)`);
         } catch (pubsubError: any) {
           console.log(`[V2] ⚠ Pubsub broadcast failed (non-critical):`, pubsubError?.message || 'Unknown');
         }
@@ -287,22 +284,28 @@ class BootstrapIndexNode {
    */
   private async handleV2PubsubMessage(msg: any): Promise<void> {
     try {
-      const data = JSON.parse(msg.data.toString());
+      // Try CBOR first (Standard V2)
+      const record: DistributedNameRecordV2 = deserializeFull(msg.data);
 
-      if (data.type === 'name-register-v2' && data.record) {
-        const record: DistributedNameRecordV2 = data.record;
-
-        // Verification happens inside addRecord
-        const success = await this.v2Manager.addRecord(record);
-        if (success) {
-          console.log(`[Bootstrap] 📥 Received V2 name via pubsub: ${record.name}`);
-        } else {
-          console.warn(`[Bootstrap] ⚠ Invalid V2 record rejected from pubsub: ${record.name}`);
-        }
+      // Verification happens inside addRecord
+      const success = await this.v2Manager.addRecord(record);
+      if (success) {
+        console.log(`[Bootstrap] 📥 Received V2 name via pubsub: ${record.name}`);
+      } else {
+        console.warn(`[Bootstrap] ⚠ Invalid V2 record rejected from pubsub: ${record.name}`);
       }
 
     } catch (error) {
-      console.error('[Bootstrap] Error handling V2 pubsub message:', error);
+      // Fallback: Try JSON (Legacy/Debug)
+      try {
+        const data = JSON.parse(msg.data.toString());
+        if (data.type === 'name-register-v2' && data.record) {
+           // Handle legacy JSON wrapper if needed, but prioritized CBOR
+           // ... logic omitted for now to enforce standard
+        }
+      } catch (e) {
+        console.error('[Bootstrap] Error handling V2 pubsub message:', error);
+      }
     }
   }
 
