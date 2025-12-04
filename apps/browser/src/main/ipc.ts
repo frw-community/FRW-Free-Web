@@ -98,13 +98,8 @@ export function setupIPC() {
         
         return { valid: isValid, version: 2, did };
       } else {
-        // V1 verification (Ed25519 only)
-        const publicKey = typeof publicKeyOrRecord === 'string' 
-          ? publicKeyOrRecord 
-          : (publicKeyOrRecord.record?.publicKey || publicKeyOrRecord.publicKey);
-        const publicKeyBytes = SignatureManager.decodePublicKey(publicKey);
-        const isValid = SignatureManager.verifyPage(content, publicKeyBytes);
-        return { valid: isValid, version: 1 };
+        // V1 verification is deprecated
+        return { valid: false, error: 'V1 signatures are no longer supported. Please upgrade to V2 (Quantum-Resistant).' };
       }
     } catch (error) {
       return { valid: false, error: error instanceof Error ? error.message : 'Unknown error' };

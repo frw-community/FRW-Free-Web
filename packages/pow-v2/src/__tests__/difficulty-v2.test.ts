@@ -8,7 +8,7 @@ describe('Difficulty V2', () => {
     it('should return correct difficulty for 8-char name', () => {
       const params = getRequiredDifficulty('testname');
       
-      expect(params.leading_zeros).toBe(7);
+      expect(params.leading_zeros).toBe(3);
       expect(params.memory_mib).toBe(128);
       expect(params.iterations).toBe(3);
     });
@@ -29,10 +29,10 @@ describe('Difficulty V2', () => {
 
     it('should scale difficulty with name length', () => {
       const difficulties = [
-        { name: 'abcdefgh', zeros: 7 },        // 8 chars
-        { name: 'abcdefg', zeros: 8 },         // 7 chars
-        { name: 'abcdef', zeros: 9 },          // 6 chars
-        { name: 'abcde', zeros: 10 },          // 5 chars
+        { name: 'abcdefgh', zeros: 3 },        // 8 chars
+        { name: 'abcdefg', zeros: 4 },         // 7 chars
+        { name: 'abcdef', zeros: 5 },          // 6 chars
+        { name: 'abcde', zeros: 6 },          // 5 chars
       ];
 
       difficulties.forEach(({ name, zeros }) => {

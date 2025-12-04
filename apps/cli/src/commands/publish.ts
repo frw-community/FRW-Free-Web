@@ -4,8 +4,7 @@ import ora from 'ora';
 import inquirer from 'inquirer';
 import { KeyManager, SignatureManager } from '@frw/crypto';
 import { KeyManagerV2, SignatureManagerV2 } from '@frw/crypto-pq';
-import { IPFSClient, DistributedNameRegistry, createDistributedNameRecord } from '@frw/ipfs';
-import { ProofOfWorkGenerator, getRequiredDifficulty } from '@frw/name-registry';
+import { IPFSClient } from '@frw/ipfs';
 import { createRecordV2, toJSON } from '@frw/protocol-v2';
 import { config } from '../utils/config.js';
 import { logger } from '../utils/logger.js';
@@ -104,13 +103,13 @@ export async function publishCommand(directory: string = '.', options: PublishOp
 <meta name="frw-signature-ed25519" content="${Buffer.from(signature.signature_ed25519).toString('base64')}">
 </head>`);
       } else {
-        // V1 signing with Ed25519
-        signed = SignatureManager.signPage(content, keyPair.privateKey);
+        logger.error('V1 publishing is deprecated. Please register a V2 name using "frw register <name>".');
+        process.exit(1);
       }
       
       signedFiles.push({
         path: relativePath,
-        content: Buffer.from(signed, 'utf-8')
+        content: Buffer.from(signed!, 'utf-8')
       });
       signedCount++;
     } else {
@@ -258,46 +257,8 @@ export async function publishCommand(directory: string = '.', options: PublishOp
           }
         }
       } else {
-        // V1 publishing
-        const registeredNames = config.get('registeredNames') || {};
-        if (!registeredNames[options.name]) {
-          spinner.warn(`Name "${options.name}" not registered. Run: frw register ${options.name}`);
-        } else {
-        // Create updated record with new contentCID
-        const ipnsKey = `/ipns/${publicKeyEncoded}`;
-        const record = createDistributedNameRecord(
-          options.name,
-          publicKeyEncoded,
-          rootCID, // NEW contentCID
-          ipnsKey,
-          keyPair.privateKey,
-          { nonce: 0, hash: '', difficulty: 0, timestamp: Date.now() }, // Dummy PoW for update
-          365 * 24 * 60 * 60 * 1000
-        );
-        
-        // Submit to bootstrap nodes
-        const registry = new DistributedNameRegistry({
-          bootstrapNodes: BOOTSTRAP_NODES
-        });
-        
-        // Use direct submission (simpler than updateContent which needs resolution)
-        const nodes = BOOTSTRAP_NODES;
-        for (const node of nodes) {
-          try {
-            const response = await fetch(`${node}/api/submit`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(record)
-            });
-            if (response.ok) {
-              spinner.succeed('Name registry updated');
-              break;
-            }
-          } catch (err) {
-            // Continue to next node
-          }
-        }
-        }
+        logger.error('V1 publishing is deprecated. Please register a V2 name using "frw register <name>".');
+        process.exit(1);
       }
     } catch (error) {
       spinner.warn('Registry update failed');
