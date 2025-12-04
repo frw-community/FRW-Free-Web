@@ -11,11 +11,13 @@ import { fileURLToPath } from 'url';
 import { verifyProof, getRequiredDifficulty } from '@frw/name-registry';
 import { SignatureManager } from '@frw/crypto';
 import { V2RecordManager, createUnifiedResponse } from './v2-support.js';
+import { NodeDiscovery } from './node-discovery.js';
 import { fromJSON, toJSON } from '@frw/protocol-v2';
 class BootstrapIndexNode {
     ipfs;
     index;
     v2Manager;
+    discovery;
     app;
     nodeId;
     lastPublished = 0;
@@ -29,7 +31,7 @@ class BootstrapIndexNode {
     PUBSUB_TOPIC = 'frw/names/updates/v1';
     SYNC_TOPIC = 'frw/sync/requests/v1';
     // Bootstrap nodes - seed nodes for the network
-    BOOTSTRAP_NODES = [
+    INITIAL_NODES = [
         'http://83.228.214.189:3100',
         'http://83.228.213.45:3100',
         'http://83.228.213.240:3100',
@@ -46,6 +48,8 @@ class BootstrapIndexNode {
         this.v2Manager = new V2RecordManager();
         this.app = express();
         this.ipfs = createIPFSClient({ url: this.IPFS_URL });
+        // Initialize discovery with hardcoded seeds
+        this.discovery = new NodeDiscovery(this.ipfs, this.INITIAL_NODES);
         const __filename = fileURLToPath(import.meta.url);
         const __dirname = path.dirname(__filename);
         this.dataDir = process.env.FRWB_DATA_DIR || path.join(__dirname, 'data');
@@ -72,6 +76,9 @@ class BootstrapIndexNode {
         }
         // Subscribe to pubsub
         await this.subscribeToPubsub();
+        // Start discovery service
+        const myUrl = `http://${process.env.PUBLIC_IP || 'localhost'}:${this.HTTP_PORT}`;
+        await this.discovery.start(myUrl);
         // Sync with other nodes on startup
         await this.syncWithNetwork();
         // Start HTTP server
@@ -120,6 +127,12 @@ class BootstrapIndexNode {
         // Get all names
         this.app.get('/api/names', listHandler);
         this.app.get('/api/list', listHandler);
+        // Get active nodes (discovery)
+        this.app.get('/api/nodes', (req, res) => {
+            res.json({
+                nodes: this.discovery.getNodes()
+            });
+        });
         // Resolve single name (V1 or V2)
         this.app.get('/api/resolve/:name', (req, res) => {
             const { name } = req.params;
@@ -507,7 +520,8 @@ class BootstrapIndexNode {
                 timestamp: Date.now()
             })));
             // Also try HTTP sync with known bootstrap nodes
-            for (const nodeUrl of this.BOOTSTRAP_NODES) {
+            const nodes = this.discovery.getNodes();
+            for (const nodeUrl of nodes) {
                 if (nodeUrl.includes('localhost'))
                     continue; // Skip self
                 try {
