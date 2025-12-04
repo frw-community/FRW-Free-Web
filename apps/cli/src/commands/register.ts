@@ -1,17 +1,16 @@
 import { readFile } from 'fs/promises';
 import ora from 'ora';
-import { KeyManager, SignatureManager } from '@frw/crypto';
-import { FRWNamingSystem } from '@frw/protocol';
+import { KeyManagerV2 } from '@frw/crypto-pq';
+import { generatePOWV2, getRequiredDifficulty, estimateTime } from '@frw/pow-v2';
+import { RecordManagerV2 } from '@frw/protocol-v2';
+import { DistributedRegistryV2 } from '@frw/ipfs';
 import { config } from '../utils/config.js';
 import { logger } from '../utils/logger.js';
 import { BOOTSTRAP_NODES } from '../utils/constants.js';
 import inquirer from 'inquirer';
-import { DNSVerifier, requiresDNSVerification, ProofOfWorkGenerator, getRequiredDifficulty } from '@frw/name-registry';
-import { DistributedNameRegistry, createDistributedNameRecord } from '@frw/ipfs';
 
 interface RegisterOptions {
   key?: string;
-  verifyDns?: boolean;  // Optional: Verify DNS ownership for official status
 }
 
 export async function registerCommand(name: string, options: RegisterOptions): Promise<void> {
@@ -28,106 +27,14 @@ export async function registerCommand(name: string, options: RegisterOptions): P
     process.exit(1);
   }
 
-  // Get key path
-  const keyPath = options.key || config.get('defaultKeyPath');
+  // Get V2 key path
+  const keyPath = options.key || config.get('defaultKeyPathV2');
   if (!keyPath) {
-    logger.error('No key found. Run ' + logger.code('frw init') + ' first');
+    logger.error('No V2 key found. Run ' + logger.code('frw init') + ' first');
     process.exit(1);
   }
-  
-  // Optional DNS verification for domain-like names
-  const isDomainLike = requiresDNSVerification(name);
-  let dnsVerified = false;
-  
-  if (isDomainLike && options.verifyDns) {
-    logger.section('Optional DNS Verification');
-    logger.info('');
-    logger.info(`"${name}" appears to be a domain name or reserved brand.`);
-    logger.info('Verify ownership via DNS to get "Official" status.');
-    logger.info('');
-    
-    // Load public key for DNS instructions
-    const spinner = ora('Loading keypair...').start();
-    let publicKeyForDNS: string;
-    try {
-      const keyData = JSON.parse(await readFile(keyPath, 'utf-8'));
-      let password: string | undefined;
-      if (typeof keyData.privateKey === 'object') {
-        spinner.stop();
-        const { keyPassword } = await inquirer.prompt([
-          {
-            type: 'password',
-            name: 'keyPassword',
-            message: 'Enter key password:',
-            mask: '*'
-          }
-        ]);
-        password = keyPassword;
-        spinner.start('Loading keypair...');
-      }
-      const tempKeyPair = KeyManager.importKeyPair(keyData, password);
-      publicKeyForDNS = SignatureManager.encodePublicKey(tempKeyPair.publicKey);
-      spinner.succeed('Keypair loaded');
-    } catch (error) {
-      spinner.fail('Failed to load keypair');
-      logger.error(error instanceof Error ? error.message : String(error));
-      process.exit(1);
-    }
-    
-    // Show DNS instructions
-    logger.info(logger.code('DNS Configuration:'));
-    logger.info('');
-    logger.info('Add this TXT record to your DNS:');
-    logger.info('');
-    logger.info('  Record Type: TXT');
-    logger.info('  Name: _frw (or @)');
-    logger.info(`  Value: frw-key=${publicKeyForDNS}`);
-    logger.info('  TTL: 3600');
-    logger.info('');
-    logger.info('For example.com, add TXT record at:');
-    logger.info('  _frw.example.com  OR  example.com');
-    logger.info('');
-    
-    const { confirm } = await inquirer.prompt([
-      {
-        type: 'confirm',
-        name: 'confirm',
-        message: 'Ready to verify DNS?',
-        default: false
-      }
-    ]);
-    
-    if (confirm) {
-      // Verify DNS
-      logger.info('');
-      const verifySpinner = ora('Verifying DNS...').start();
-      const verifier = new DNSVerifier();
-      const result = await verifier.verifyDomainOwnership(name, publicKeyForDNS);
-      
-      if (result.verified) {
-        verifySpinner.succeed('DNS verification passed');
-        dnsVerified = true;
-        logger.info('');
-      } else {
-        verifySpinner.fail('DNS verification failed');
-        logger.warn('');
-        if (result.error) {
-          logger.warn(result.error);
-        }
-        logger.info('');
-        logger.info('Continuing without DNS verification.');
-        logger.info('You can verify later with: frw verify-dns ' + name);
-        logger.info('');
-      }
-    } else {
-      logger.info('');
-      logger.info('Skipping DNS verification.');
-      logger.info('You can verify later with: frw verify-dns ' + name);
-      logger.info('');
-    }
-  }
 
-  // Load key
+  // Load V2 keypair
   const spinner = ora('Loading keypair...').start();
   let keyPair;
   try {
@@ -135,7 +42,7 @@ export async function registerCommand(name: string, options: RegisterOptions): P
     
     // Check if encrypted
     let password: string | undefined;
-    if (typeof keyData.privateKey === 'object') {
+    if (keyData.encrypted) {
       spinner.stop();
       const { keyPassword } = await inquirer.prompt([
         {
@@ -149,7 +56,8 @@ export async function registerCommand(name: string, options: RegisterOptions): P
       spinner.start('Loading keypair...');
     }
 
-    keyPair = KeyManager.importKeyPair(keyData, password);
+    const keyManager = new KeyManagerV2();
+    keyPair = keyManager.importKeyPair(keyData, password);
     spinner.succeed('Keypair loaded');
   } catch (error) {
     spinner.fail('Failed to load keypair');
@@ -157,50 +65,78 @@ export async function registerCommand(name: string, options: RegisterOptions): P
     process.exit(1);
   }
 
-  const publicKeyEncoded = SignatureManager.encodePublicKey(keyPair.publicKey);
-  const ipnsName = `/ipns/${publicKeyEncoded}`;
-
-  // Generate Proof of Work (anti-spam)
   logger.info('');
-  logger.info('Generating Proof of Work (anti-spam protection)...');
+  logger.info('Your DID: ' + logger.code(keyPair.did));
+  logger.info('');
+
+  // Generate Proof of Work V2 (Argon2id-based)
+  logger.info('Generating Proof of Work (Argon2id memory-hard)...');
   const difficulty = getRequiredDifficulty(name);
-  logger.info(`Required difficulty: ${difficulty} leading zeros`);
-  logger.info('This may take 1-60 minutes depending on name length...');
+  const estimate = estimateTime(difficulty);
+  
+  logger.info(`Name length: ${name.length} characters`);
+  logger.info(`Required: ${difficulty.leading_zeros} leading zeros, ${difficulty.memory_mib} MiB memory`);
+  logger.info(`Estimated time: ${estimate.description}`);
+  
+  if (estimate.seconds > 300) {
+    logger.warn('⚠ This will take a long time! Consider a longer name for instant registration.');
+    const { proceed } = await inquirer.prompt([
+      {
+        type: 'confirm',
+        name: 'proceed',
+        message: 'Continue anyway?',
+        default: false
+      }
+    ]);
+    if (!proceed) {
+      logger.info('Registration cancelled');
+      process.exit(0);
+    }
+  }
+  
   logger.info('');
   
-  const powGenerator = new ProofOfWorkGenerator();
   const powSpinner = ora('Generating proof...').start();
   const startTime = Date.now();
   
-  const proof = await powGenerator.generate(name, publicKeyEncoded, difficulty);
-  const elapsed = Math.round((Date.now() - startTime) / 1000);
+  let lastUpdate = startTime;
+  const proof = await generatePOWV2(name, keyPair.publicKey_dilithium3, (attempts) => {
+    const now = Date.now();
+    if (now - lastUpdate > 5000) {  // Update every 5 seconds
+      powSpinner.text = `Generating proof... (${attempts.toLocaleString()} attempts)`;
+      lastUpdate = now;
+    }
+  });
   
+  const elapsed = Math.round((Date.now() - startTime) / 1000);
   powSpinner.succeed(`Proof of Work generated in ${elapsed} seconds`);
-  logger.info(`  Nonce: ${proof.nonce}`);
-  logger.info(`  Hash: ${proof.hash}`);
+  logger.info(`  Nonce: ${proof.nonce.toString()}`);
+  logger.info(`  Hash: ${Buffer.from(proof.hash).toString('hex').substring(0, 32)}...`);
   logger.info('');
 
-  // Create distributed name record
+  // Create V2 record
   spinner.start('Creating distributed name record...');
-  const record = createDistributedNameRecord(
+  const recordManager = new RecordManagerV2();
+  
+  const record = recordManager.createRecord(
     name,
-    publicKeyEncoded,
-    '', // Content CID (empty for now, will be set on first publish)
-    ipnsName,
-    keyPair.privateKey,
-    proof,
-    365 * 24 * 60 * 60 * 1000 // 1 year expiration
+    '', // Content CID (empty for now)
+    '', // IPNS key (empty for now)
+    keyPair,
+    proof
   );
+  
   spinner.succeed('Name record created');
 
-  // Publish to distributed network (DHT + Pubsub + IPNS)
-  spinner.start('Publishing to global distributed network...');
+  // Publish to distributed V2 network
+  spinner.start('Publishing to global network...');
   try {
-    const registry = new DistributedNameRegistry({
+    const registry = new DistributedRegistryV2({
       bootstrapNodes: BOOTSTRAP_NODES
     });
-    await registry.registerName(record);
-    spinner.succeed('✓ Published to global network!');
+    
+    await registry.registerV2(record);
+    spinner.succeed('✓ Published to network!');
     logger.info('');
     logger.success('Your name is now globally resolvable!');
     logger.info('Anyone in the world can now access frw://' + name);
@@ -209,54 +145,47 @@ export async function registerCommand(name: string, options: RegisterOptions): P
     spinner.fail('Failed to publish to network');
     logger.error(error instanceof Error ? error.message : String(error));
     logger.warn('');
-    logger.warn('Name saved locally but not published globally.');
-    logger.warn('Make sure IPFS daemon is running: ipfs daemon');
+    logger.warn('Name record created but not published globally.');
+    logger.warn('Make sure bootstrap nodes are running and accessible.');
     logger.info('');
+    logger.info('You can retry by running this command again.');
+    process.exit(1);
   }
 
-  // Save to config (legacy format for backwards compatibility)
-  const registeredNames = config.get('registeredNames') || {};
-  registeredNames[name] = publicKeyEncoded;
-  config.set('registeredNames', registeredNames);
+  // Save to config (Standardized V2 format)
+  const registeredV2Names: Record<string, string> = config.get('registeredV2Names') || {};
+  registeredV2Names[name] = keyPair.did;
+  config.set('registeredV2Names', registeredV2Names);
   
-  // Save to new registrations format with full metadata
-  const registrations = config.get('registrations') || {};
-  registrations[name] = {
-    publicKey: publicKeyEncoded,
+  const v2Registrations: Record<string, any> = config.get('v2Registrations') || {};
+  v2Registrations[name] = {
+    did: keyPair.did,
+    publicKey_dilithium3: Buffer.from(keyPair.publicKey_dilithium3).toString('base64'),
+    publicKey_ed25519: Buffer.from(keyPair.publicKey_ed25519).toString('base64'),
     registered: Date.now(),
-    dnsVerified: dnsVerified,
-    dnsVerifiedAt: dnsVerified ? Date.now() : undefined,
-    domain: isDomainLike ? name : undefined
+    version: 2,
+    pqSecure: true,
+    pow: {
+      leading_zeros: proof.difficulty,
+      memory_mib: proof.memory_cost_mib,
+      iterations: proof.time_cost,
+      nonce: Number(proof.nonce),
+      hash: Buffer.from(proof.hash).toString('hex'),
+      timestamp: proof.timestamp
+    }
   };
-  config.set('registrations', registrations);
+  config.set('v2Registrations', v2Registrations);
 
   logger.section('Registration Complete');
   logger.success(`Name "${name}" registered successfully!`);
-  
-  if (dnsVerified) {
-    logger.success('✓ DNS Verified - Official status granted');
-    logger.info('  Users will see this as the verified site');
-  } else if (isDomainLike) {
-    logger.warn('⚠ Not DNS verified');
-    logger.info('  Users will see an unverified warning');
-    logger.info('  To verify: frw verify-dns ' + name);
-  }
-  
   logger.info('');
   logger.info('Name: ' + logger.code(name));
-  logger.info('Public key: ' + logger.code(publicKeyEncoded));
-  logger.info('IPNS: ' + logger.code(ipnsName));
-  
-  if (dnsVerified) {
-    logger.info('Status: ' + logger.code('✓ DNS Verified'));
-  } else if (isDomainLike) {
-    logger.info('Status: ' + logger.code('⚠ Unverified'));
-  }
-  
+  logger.info('DID: ' + logger.code(keyPair.did));
+  logger.info('Security: ' + logger.code('✓ Quantum-Resistant (Dilithium3)'));
   logger.info('');
   logger.info('Your site will be accessible at:');
   logger.info('  ' + logger.url(`frw://${name}/`));
-  logger.info('  ' + logger.url(`frw://${publicKeyEncoded}/`));
+  logger.info('  ' + logger.url(`frw://${keyPair.did}/`));
   logger.info('');
   logger.info('Next: Create content and run ' + logger.code('frw publish'));
 }
