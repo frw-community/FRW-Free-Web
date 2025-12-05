@@ -36,6 +36,7 @@ class BootstrapIndexNode {
   private lastPublished: number = 0;
   private dataDir: string;
   private readonly V1_INDEX_FILE: string;
+  private readonly V2_INDEX_FILE: string;
   private persistTimer: NodeJS.Timeout | null = null;
   private loadPromise: Promise<void>;
 
@@ -72,6 +73,7 @@ class BootstrapIndexNode {
     const __dirname = path.dirname(__filename);
     this.dataDir = process.env.FRWB_DATA_DIR || path.join(__dirname, 'data');
     this.V1_INDEX_FILE = path.join(this.dataDir, 'v1-names.json');
+    this.V2_INDEX_FILE = path.join(this.dataDir, 'v2-names.json');
     this.loadPromise = this.loadIndexFromDisk();
 
     this.setupExpress();
@@ -339,16 +341,42 @@ class BootstrapIndexNode {
 
   private async loadIndexFromDisk(): Promise<void> {
     await this.ensureDataDir();
+    // Load V1
     try {
       const raw = await fs.readFile(this.V1_INDEX_FILE, 'utf8');
       const parsed = JSON.parse(raw) as Record<string, IndexEntry>;
       Object.entries(parsed).forEach(([key, entry]) => {
         this.index.set(key.toLowerCase(), entry);
       });
-      console.log(`[Bootstrap] ✓ Loaded ${this.index.size} names from disk`);
+      console.log(`[Bootstrap] ✓ Loaded ${this.index.size} V1 names from disk`);
     } catch (error: any) {
       if (error?.code !== 'ENOENT') {
-        console.warn('[Bootstrap] Failed to load index from disk:', error);
+        console.warn('[Bootstrap] Failed to load V1 index from disk:', error);
+      }
+    }
+
+    // Load V2
+    try {
+      const rawV2 = await fs.readFile(this.V2_INDEX_FILE, 'utf8');
+      const parsedV2 = JSON.parse(rawV2) as Record<string, any>;
+      let v2Count = 0;
+      
+      for (const entry of Object.values(parsedV2)) {
+        try {
+          if (entry.recordData) {
+            const recordData = Buffer.from(entry.recordData, 'base64');
+            const record = deserializeFull(new Uint8Array(recordData));
+            // Add directly to manager (skip verification on load for speed, or verify?)
+            // Better to verify to ensure integrity
+            const success = await this.v2Manager.addRecord(record);
+            if (success) v2Count++;
+          }
+        } catch (e) { /* ignore bad record */ }
+      }
+      console.log(`[Bootstrap] ✓ Loaded ${v2Count} V2 names from disk`);
+    } catch (error: any) {
+      if (error?.code !== 'ENOENT') {
+        console.warn('[Bootstrap] Failed to load V2 index from disk:', error);
       } else {
         console.log('[Bootstrap] No existing index found on disk (fresh start)');
       }
@@ -357,8 +385,20 @@ class BootstrapIndexNode {
 
   private async saveIndexToDisk(): Promise<void> {
     await this.ensureDataDir();
+    
+    // Save V1
     const snapshot = JSON.stringify(Object.fromEntries(this.index), null, 2);
     await fs.writeFile(this.V1_INDEX_FILE, snapshot, 'utf8');
+
+    // Save V2
+    const v2Records = this.v2Manager.getAllRecords();
+    // Create a map keyed by name for storage
+    const v2Map: Record<string, any> = {};
+    for (const record of v2Records) {
+      v2Map[record.name] = record;
+    }
+    const snapshotV2 = JSON.stringify(v2Map, null, 2);
+    await fs.writeFile(this.V2_INDEX_FILE, snapshotV2, 'utf8');
   }
 
   /**
