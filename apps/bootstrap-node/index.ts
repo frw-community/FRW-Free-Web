@@ -162,6 +162,15 @@ class BootstrapIndexNode {
     this.app.get('/api/names', listHandler);
     this.app.get('/api/list', listHandler);
 
+    // Get all V2 names (for sync)
+    this.app.get('/api/v2/names', (req, res) => {
+      const records = this.v2Manager.getAllRecords();
+      res.json({
+        count: records.length,
+        names: records
+      });
+    });
+
     // Get active nodes (discovery)
     this.app.get('/api/nodes', (req, res) => {
       res.json({
@@ -425,6 +434,30 @@ class BootstrapIndexNode {
         } catch (error) {
           // Node might be offline, continue
         }
+
+        // Sync V2 Records
+        try {
+          const v2Response = await fetch(`${nodeUrl}/api/v2/names`);
+          if (v2Response.ok) {
+            const v2Data = await v2Response.json() as { names: any[] };
+            if (v2Data.names && Array.isArray(v2Data.names)) {
+              let v2Count = 0;
+              for (const entry of v2Data.names) {
+                try {
+                  if (entry.recordData) {
+                    const recordData = Buffer.from(entry.recordData, 'base64');
+                    const record = deserializeFull(new Uint8Array(recordData));
+                    const success = await this.v2Manager.addRecord(record);
+                    if (success) v2Count++;
+                  }
+                } catch (e) { /* ignore bad record */ }
+              }
+              if (v2Count > 0) {
+                console.log(`[Bootstrap] 📥 Synced ${v2Count} V2 names from ${nodeUrl}`);
+              }
+            }
+          }
+        } catch (e) { /* V2 endpoint might not exist yet */ }
       }
 
     } catch (error) {
