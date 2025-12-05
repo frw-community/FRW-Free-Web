@@ -1,6 +1,7 @@
 import { readFile, readdir, stat, writeFile } from 'fs/promises';
 import { join, relative, basename } from 'path';
 import ora from 'ora';
+import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { KeyManager, SignatureManager } from '@frw/crypto';
 import { KeyManagerV2, SignatureManagerV2 } from '@frw/crypto-pq';
@@ -234,34 +235,57 @@ export async function publishCommand(directory: string = '.', options: PublishOp
           spinner.text = `Pushing to ${nodes.length} bootstrap nodes...`;
           
           const pushPromises = nodes.map(async (node) => {
+            // Skip localhost if not explicitly targeting it (to avoid noise in production)
+            // but keep it if it's in the list for testing
+            
             try {
+              const controller = new AbortController();
+              const timeout = setTimeout(() => controller.abort(), 8000); // Increased timeout
+              
               const response = await fetch(`${node}/api/submit/v2`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: recordJSON,
-                signal: AbortSignal.timeout(5000)
+                signal: controller.signal
               });
+              clearTimeout(timeout);
               
               if (response.ok) {
-                return true;
+                return { node, success: true };
               } else {
                 const errorText = await response.text();
-                logger.debug(`Bootstrap node ${node} rejected V2 record: ${errorText}`);
-                return false;
+                return { node, success: false, error: `Rejected: ${errorText}` };
               }
             } catch (err) {
-              logger.debug(`Bootstrap node ${node} unreachable: ${err}`);
-              return false;
+              return { node, success: false, error: err instanceof Error ? err.message : 'Unreachable' };
             }
           });
 
           const results = await Promise.all(pushPromises);
-          const successCount = results.filter(s => s).length;
+          const successCount = results.filter(r => r.success).length;
 
           if (successCount > 0) {
             spinner.succeed(`V2 registry updated on ${successCount}/${nodes.length} nodes`);
+            
+            // Show failure details if any (and if verbose or mixed results)
+            if (successCount < nodes.length) {
+              logger.info('');
+              logger.info(chalk.dim('Node Status:'));
+              results.forEach(r => {
+                if (r.success) {
+                  // logger.info(chalk.green(`  ✓ ${r.node}`)); // Too verbose?
+                } else {
+                  logger.info(chalk.red(`  ✗ ${r.node}: `) + chalk.dim(r.error));
+                }
+              });
+              logger.info('');
+            }
           } else {
-            spinner.warn('V2 registry update failed - content still published to IPFS');
+            spinner.warn('V2 registry update failed on all nodes');
+            // Show all errors
+            results.forEach(r => {
+               logger.info(chalk.red(`  ✗ ${r.node}: `) + chalk.dim(r.error));
+            });
           }
         }
       } else {

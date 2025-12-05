@@ -22,6 +22,7 @@ import { domainAddCommand, domainVerifyCommand, domainListCommand, domainRemoveC
 import { bootstrapRegistryCommand } from './commands/bootstrap-registry.js';
 import { lookupCommand, listNamesCommand, infoCommand } from './commands/lookup.js';
 import { regeneratePowCommand } from './commands/regenerate-pow.js';
+import { doctorCommand } from './commands/doctor.js';
 
 const program = new Command();
 
@@ -34,6 +35,7 @@ program
     'Publish and browse a censorship-resistant, cryptographically-verified web.\n\n' +
     chalk.dim('Examples:') + '\n' +
     '  $ frw init                         # Initialize FRW configuration\n' +
+    '  $ frw doctor                       # Check system health and network status\n' +
     '  $ frw init-v2                      # Initialize V2 quantum-resistant identity\n' +
     '  $ frw register myname              # Register a human-readable name\n' +
     '  $ frw register-v2 myname           # Register with V2 (quantum-resistant)\n' +
@@ -55,6 +57,11 @@ program
   .description('Initialize FRW configuration and generate keypair (Quantum-Resistant)')
   .option('-f, --force', 'Overwrite existing configuration')
   .action(initCommand);
+
+program
+  .command('doctor')
+  .description('Check system health and network status')
+  .action(doctorCommand);
 
 program
   .command('register <name>')

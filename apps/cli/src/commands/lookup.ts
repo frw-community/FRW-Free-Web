@@ -110,29 +110,47 @@ export async function listNamesCommand(): Promise<void> {
 
     try {
       spinner.text = `Querying ${node}...`;
-      const response = await fetch(`${node}/api/list`);
       
-      if (response.ok) {
-        const data = await response.json() as { count: number, names: any[] };
-        
-        spinner.succeed(`Retrieved ${data.count} names from network`);
+      // Fetch V1 names
+      const responseV1 = await fetch(`${node}/api/list`);
+      const v1Data = responseV1.ok ? await responseV1.json() as { names: any[] } : { names: [] };
+
+      // Fetch V2 names
+      const responseV2 = await fetch(`${node}/api/v2/names`);
+      const v2Data = responseV2.ok ? await responseV2.json() as { names: any[] } : { names: [] };
+
+      const allNames = [...(v1Data.names || []), ...(v2Data.names || [])];
+      
+      // Deduplicate by name
+      const uniqueNames = new Map();
+      allNames.forEach(record => {
+        uniqueNames.set(record.name, record);
+      });
+      
+      const sortedNames = Array.from(uniqueNames.values()).sort((a, b) => b.timestamp - a.timestamp);
+      
+      if (sortedNames.length >= 0) { // Allow empty list if successful
+        spinner.succeed(`Retrieved ${sortedNames.length} names from network`);
         logger.info('');
         
-        if (data.names.length === 0) {
+        if (sortedNames.length === 0) {
           logger.info(chalk.yellow('No names found in the registry yet.'));
           return;
         }
 
-        logger.info(`${chalk.bold('Registered Names')} (${data.count})`);
+        logger.info(`${chalk.bold('Registered Names')} (${sortedNames.length})`);
         logger.info('────────────────────────────────');
         
         // Basic table display
-        data.names.forEach((record: any) => {
+        sortedNames.forEach((record: any) => {
             const date = new Date(record.timestamp).toLocaleDateString();
             const hasContent = record.contentCID ? chalk.green('✓') : chalk.dim('○');
+            const isV2 = record.version === 2 || record.publicKey_dilithium3;
+            const versionBadge = isV2 ? chalk.magenta('V2') : chalk.dim('V1');
+            
             // Pad name for alignment
-            const paddedName = record.name.padEnd(20);
-            logger.info(`${hasContent} ${chalk.cyan(paddedName)} ${chalk.dim(date)}`);
+            const paddedName = record.name.padEnd(25);
+            logger.info(`${hasContent} ${chalk.cyan(paddedName)} ${versionBadge} ${chalk.dim(date)}`);
         });
         logger.info('');
         return;
