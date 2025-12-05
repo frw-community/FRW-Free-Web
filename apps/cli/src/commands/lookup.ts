@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import ora from 'ora';
-import { DistributedNameRegistry } from '@frw/ipfs';
+import { DistributedRegistryV2 } from '@frw/ipfs';
 import { logger } from '../utils/logger.js';
 import { BOOTSTRAP_NODES } from '../utils/constants.js';
 
@@ -8,9 +8,9 @@ export async function lookupCommand(name: string): Promise<void> {
   const spinner = ora(`Resolving "${name}"...`).start();
 
   try {
-    const registry = new DistributedNameRegistry({
+    const registry = new DistributedRegistryV2({
       bootstrapNodes: BOOTSTRAP_NODES
-    } as any);
+    });
 
     const result = await registry.resolveName(name);
 
@@ -26,8 +26,15 @@ export async function lookupCommand(name: string): Promise<void> {
         logger.info(`Content CID: ${chalk.yellow('(empty)')} ${chalk.dim('- Name registered but no content published yet')}`);
       }
 
-      logger.info(`Public Key: ${chalk.dim(result.record.publicKey)}`);
+      // Handle V1 vs V2 owner key display
+      const ownerKey = (result.record as any).owner || (result.record as any).publicKey;
+      logger.info(`Owner Key: ${chalk.dim(ownerKey || 'Unknown')}`);
       logger.info(`Source: ${chalk.dim(result.source)}`);
+      
+      if ((result as any).version === 2) {
+        logger.info(`Security: ${chalk.magenta('Quantum-Resistant (Dilithium3)')}`);
+      }
+      
       logger.info('');
     } else {
       spinner.fail('Name not found');
@@ -45,9 +52,9 @@ export async function infoCommand(name: string): Promise<void> {
   const spinner = ora(`Getting detailed info for "${name}"...`).start();
 
   try {
-    const registry = new DistributedNameRegistry({
+    const registry = new DistributedRegistryV2({
       bootstrapNodes: BOOTSTRAP_NODES
-    } as any);
+    });
 
     const result = await registry.resolveName(name);
 
@@ -56,15 +63,28 @@ export async function infoCommand(name: string): Promise<void> {
       logger.info('');
       logger.section('Distributed Name Record');
       logger.info(`Name:        ${chalk.bold(result.record.name)}`);
-      logger.info(`Version:     v${result.record.version}`);
-      logger.info(`Registered:  ${new Date(result.record.registered).toLocaleString()}`);
-      logger.info(`Expires:     ${new Date(result.record.expires).toLocaleString()}`);
+      
+      const version = (result as any).version || result.record.version || 1;
+      logger.info(`Version:     v${version}`);
+      
+      // Handle timestamp (V1 uses 'registered', V2 might use 'timestamp' or 'created')
+      const registered = (result.record as any).registered || (result.record as any).timestamp;
+      if (registered) {
+          logger.info(`Registered:  ${new Date(registered).toLocaleString()}`);
+      }
+      
+      if ((result.record as any).expires) {
+          logger.info(`Expires:     ${new Date((result.record as any).expires).toLocaleString()}`);
+      }
       logger.info('');
       
       logger.section('Content');
       if (result.record.contentCID) {
         logger.info(`CID:         ${chalk.green(result.record.contentCID)}`);
-        logger.info(`IPNS:        ${chalk.dim(result.record.ipnsKey)}`);
+        // IPNS key might be different in V2 or optional
+        if ((result.record as any).ipnsKey) {
+            logger.info(`IPNS:        ${chalk.dim((result.record as any).ipnsKey)}`);
+        }
         logger.info(`Frw URL:     frw://${name}`);
       } else {
         logger.info(`CID:         ${chalk.yellow('Not Set')}`);
@@ -73,9 +93,19 @@ export async function infoCommand(name: string): Promise<void> {
       logger.info('');
 
       logger.section('Identity');
-      logger.info(`Owner Key:   ${chalk.dim(result.record.publicKey)}`);
-      logger.info(`DID:         ${chalk.dim(result.record.did)}`);
-      logger.info(`Signature:   ${chalk.dim(result.record.signature.substring(0, 32))}...`);
+      const ownerKey = (result.record as any).owner || (result.record as any).publicKey;
+      logger.info(`Owner Key:   ${chalk.dim(ownerKey || 'Unknown')}`);
+      
+      if ((result.record as any).did) {
+        logger.info(`DID:         ${chalk.dim((result.record as any).did)}`);
+      }
+      
+      // Handle signature display safely
+      const sig = (result.record as any).signature;
+      if (sig) {
+          const sigStr = typeof sig === 'string' ? sig : Buffer.from(sig).toString('hex');
+          logger.info(`Signature:   ${chalk.dim(sigStr.substring(0, 32))}...`);
+      }
       logger.info('');
 
       logger.section('Resolution Metadata');
@@ -83,8 +113,8 @@ export async function infoCommand(name: string): Promise<void> {
       logger.info(`Latency:     ${result.latencyMs}ms`);
       logger.info(`Verified:    ${result.verified ? chalk.green('YES') : chalk.red('NO')}`);
       
-      if (result.record.proof) {
-        logger.info(`POW Nonce:   ${result.record.proof.nonce}`);
+      if ((result.record as any).proof) {
+        logger.info(`POW Nonce:   ${(result.record as any).proof.nonce}`);
       }
       logger.info('');
 

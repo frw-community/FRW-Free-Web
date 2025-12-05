@@ -26,6 +26,7 @@
   "author": "FRW Community",
   "license": "MIT",
   "dependencies": {
+    "@frw/protocol-v2": "^2.0.0",
     "ipfs-http-client": "^60.0.1"
   },
   "devDependencies": {

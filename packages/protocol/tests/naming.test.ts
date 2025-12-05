@@ -1,10 +1,38 @@
-import { describe, test, expect, beforeEach } from '@jest/globals';
+import { describe, test, expect, beforeEach, afterAll, jest } from '@jest/globals';
 import { FRWNamingSystem, NameRecord } from '../src/naming';
 import { SignatureManager } from '@frw/crypto';
+
+type MockResponse = {
+  ok: boolean;
+  json: () => Promise<any>;
+  text: () => Promise<string>;
+};
+
+const createResponse = (data: any, ok = true): MockResponse => ({
+  ok,
+  json: async () => data,
+  text: async () => JSON.stringify(data ?? {})
+});
+
+const resignRecord = (record: NameRecord, privateKey: Uint8Array) => {
+  const message = JSON.stringify({
+    name: record.name,
+    publicKey: record.publicKey,
+    ipnsName: record.ipnsName,
+    timestamp: record.timestamp,
+    expires: record.expires,
+    metadata: record.metadata
+  });
+  record.signature = SignatureManager.sign(message, privateKey);
+};
 
 describe('FRWNamingSystem', () => {
   let naming: FRWNamingSystem;
   let testKeys: { publicKey: string; privateKey: Uint8Array };
+  const publishedRecords = new Map<string, NameRecord>();
+  const originalFetch = global.fetch;
+  const globalAny = global as unknown as { fetch: any };
+  const fetchMock = jest.fn(async (input: any, init?: any): Promise<MockResponse> => createResponse({}));
 
   beforeEach(() => {
     naming = new FRWNamingSystem();
@@ -13,6 +41,35 @@ describe('FRWNamingSystem', () => {
       publicKey: SignatureManager.encodePublicKey(keyPair.publicKey),
       privateKey: keyPair.privateKey
     };
+
+    publishedRecords.clear();
+    fetchMock.mockImplementation(async (input: any, init?: any) => {
+      const method = init?.method ?? 'GET';
+      const url = typeof input === 'string' ? input : input.toString();
+
+      if (method === 'POST' && init?.body) {
+        const record = JSON.parse(init.body as string) as NameRecord;
+        publishedRecords.set(record.name, record);
+        return createResponse({ success: true });
+      }
+
+      if (method === 'GET' && url.includes('/api/resolve/')) {
+        const name = decodeURIComponent(url.split('/api/resolve/')[1] ?? '');
+        const record = publishedRecords.get(name);
+        if (!record) {
+          return createResponse({}, false);
+        }
+        return createResponse(record);
+      }
+
+      return createResponse({});
+    });
+
+    globalAny.fetch = fetchMock;
+  });
+
+  afterAll(() => {
+    globalAny.fetch = originalFetch;
   });
 
   describe('createNameRecord', () => {
@@ -153,9 +210,11 @@ describe('FRWNamingSystem', () => {
         testKeys.privateKey
       );
 
-      // Set expiry in the past
+      // Set expiry in the past and update signature
       record.expires = Date.now() - 1000;
+      resignRecord(record, testKeys.privateKey);
       await naming.publishNameRecord(record);
+      publishedRecords.delete('alice');
 
       // Should fail because cached record is expired and DHT returns null
       await expect(naming.resolveName('alice')).rejects.toThrow();
@@ -212,6 +271,7 @@ describe('FRWNamingSystem', () => {
 
       await naming.publishNameRecord(record);
       naming.clearCache();
+      publishedRecords.clear();
 
       await expect(naming.resolveName('alice')).rejects.toThrow();
     });
