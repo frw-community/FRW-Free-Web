@@ -146,21 +146,36 @@ class BootstrapIndexNode {
       });
     });
 
-    const listHandler = (req: express.Request, res: express.Response) => {
-      const names = Array.from(this.index.entries()).map(([name, entry]) => ({
-        name,
-        publicKey: entry.publicKey,
+    const listHandler = (req: any, res: any) => {
+      // V1
+      const v1Names = Array.from(this.index.values()).map(entry => ({
+        name: entry.name,
+        version: 1,
         contentCID: entry.contentCID,
-        timestamp: entry.timestamp
+        timestamp: entry.timestamp,
+        publicKey: entry.publicKey
       }));
 
+      // V2
+      const v2Names = this.v2Manager.getAllRecords().map(entry => ({
+        name: entry.name,
+        version: 2,
+        contentCID: entry.contentCID,
+        timestamp: entry.timestamp,
+        publicKey: entry.publicKey_dilithium3 || entry.did // Adapt for display
+      }));
+
+      const allNames = [...v1Names, ...v2Names];
+      // Sort by timestamp (newest first)
+      allNames.sort((a, b) => b.timestamp - a.timestamp);
+
       res.json({
-        count: names.length,
-        names
+        count: allNames.length,
+        names: allNames
       });
     };
 
-    // Get all names
+    // Get all names (merged V1 + V2)
     this.app.get('/api/names', listHandler);
     this.app.get('/api/list', listHandler);
 
