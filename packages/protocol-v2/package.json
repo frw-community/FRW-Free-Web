@@ -1,0 +1,17 @@
+{
+  "name": "@frw/protocol-v2",
+  "version": "1.0.0",
+  "description": "FRW Protocol V2 Definitions",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@frw/crypto-pq": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}

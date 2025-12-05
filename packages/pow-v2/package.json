@@ -1,0 +1,17 @@
+{
+  "name": "@frw/pow-v2",
+  "version": "1.0.0",
+  "description": "Proof of Work V2 (Argon2id)",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "argon2-browser": "^1.18.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}

@@ -6,8 +6,11 @@
   "workspaces": [
     "packages/common",
     "packages/crypto",
+    "packages/crypto-pq",
     "packages/ipfs",
     "packages/protocol",
+    "packages/protocol-v2",
+    "packages/pow-v2",
     "packages/sandbox",
     "packages/storage",
     "packages/name-registry",

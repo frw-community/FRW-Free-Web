@@ -13,3 +13,8 @@ orbitdb-data/
 .keys/
 coverage/
 .nyc_output/
+
+# Release binaries
+apps/browser/release-v2/
+
+apps/browser/release-v2-alpha/

@@ -1,0 +1,19 @@
+{
+  "name": "@frw/crypto-pq",
+  "version": "1.0.0",
+  "description": "Post-Quantum Cryptography for FRW (Dilithium3 + Ed25519)",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@noble/ed25519": "^2.0.0",
+    "bs58": "^5.0.0",
+    "tweetnacl": "^1.0.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}
