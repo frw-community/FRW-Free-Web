@@ -69,47 +69,75 @@ export async function registerCommand(name: string, options: RegisterOptions): P
   logger.info('Your DID: ' + logger.code(keyPair.did));
   logger.info('');
 
-  // Generate Proof of Work V2 (Argon2id-based)
-  logger.info('Generating Proof of Work (Argon2id memory-hard)...');
-  const difficulty = getRequiredDifficulty(name);
-  const estimate = estimateTime(difficulty);
-  
-  logger.info(`Name length: ${name.length} characters`);
-  logger.info(`Required: ${difficulty.leading_zeros} leading zeros, ${difficulty.memory_mib} MiB memory`);
-  logger.info(`Estimated time: ${estimate.description}`);
-  
-  if (estimate.seconds > 300) {
-    logger.warn('⚠ This will take a long time! Consider a longer name for instant registration.');
-    const { proceed } = await inquirer.prompt([
-      {
-        type: 'confirm',
-        name: 'proceed',
-        message: 'Continue anyway?',
-        default: false
-      }
-    ]);
-    if (!proceed) {
-      logger.info('Registration cancelled');
-      process.exit(0);
+  // Check for existing PoW in config
+  const v2Registrations: Record<string, any> = config.get('v2Registrations') || {};
+  const existingReg = v2Registrations[name];
+  let proof;
+
+  if (existingReg && existingReg.pow) {
+    // Verify if difficulty is still sufficient
+    const required = getRequiredDifficulty(name);
+    const stored = existingReg.pow;
+    
+    if (stored.leading_zeros >= required.leading_zeros && stored.memory_mib >= required.memory_mib) {
+      logger.success('✓ Found existing valid Proof of Work (reusing)');
+      proof = {
+        version: 2,
+        nonce: BigInt(stored.nonce),
+        timestamp: stored.timestamp,
+        hash: Buffer.from(stored.hash, 'hex'),
+        difficulty: stored.leading_zeros,
+        memory_cost_mib: stored.memory_mib,
+        time_cost: stored.iterations,
+        parallelism: 4
+      };
     }
   }
-  
-  logger.info('');
-  
-  const powSpinner = ora('Generating proof...').start();
-  const startTime = Date.now();
-  
-  let lastUpdate = startTime;
-  const proof = await generatePOWV2(name, keyPair.publicKey_dilithium3, (attempts) => {
-    const now = Date.now();
-    if (now - lastUpdate > 5000) {  // Update every 5 seconds
-      powSpinner.text = `Generating proof... (${attempts.toLocaleString()} attempts)`;
-      lastUpdate = now;
+
+  if (!proof) {
+    // Generate Proof of Work V2 (Argon2id-based)
+    logger.info('Generating Proof of Work (Argon2id memory-hard)...');
+    const difficulty = getRequiredDifficulty(name);
+    const estimate = estimateTime(difficulty);
+    
+    logger.info(`Name length: ${name.length} characters`);
+    logger.info(`Required: ${difficulty.leading_zeros} leading zeros, ${difficulty.memory_mib} MiB memory`);
+    logger.info(`Estimated time: ${estimate.description}`);
+    
+    if (estimate.seconds > 300) {
+      logger.warn('⚠ This will take a long time! Consider a longer name for instant registration.');
+      const { proceed } = await inquirer.prompt([
+        {
+          type: 'confirm',
+          name: 'proceed',
+          message: 'Continue anyway?',
+          default: false
+        }
+      ]);
+      if (!proceed) {
+        logger.info('Registration cancelled');
+        process.exit(0);
+      }
     }
-  });
-  
-  const elapsed = Math.round((Date.now() - startTime) / 1000);
-  powSpinner.succeed(`Proof of Work generated in ${elapsed} seconds`);
+    
+    logger.info('');
+    
+    const powSpinner = ora('Generating proof...').start();
+    const startTime = Date.now();
+    
+    let lastUpdate = startTime;
+    proof = await generatePOWV2(name, keyPair.publicKey_dilithium3, (attempts) => {
+      const now = Date.now();
+      if (now - lastUpdate > 5000) {  // Update every 5 seconds
+        powSpinner.text = `Generating proof... (${attempts.toLocaleString()} attempts)`;
+        lastUpdate = now;
+      }
+    });
+    
+    const elapsed = Math.round((Date.now() - startTime) / 1000);
+    powSpinner.succeed(`Proof of Work generated in ${elapsed} seconds`);
+  }
+
   logger.info(`  Nonce: ${proof.nonce.toString()}`);
   logger.info(`  Hash: ${Buffer.from(proof.hash).toString('hex').substring(0, 32)}...`);
   logger.info('');
@@ -123,7 +151,7 @@ export async function registerCommand(name: string, options: RegisterOptions): P
     '', // Content CID (empty for now)
     '', // IPNS key (empty for now)
     keyPair,
-    proof
+    proof as any // Cast to avoid strict literal type issues for now
   );
   
   spinner.succeed('Name record created');
@@ -157,8 +185,9 @@ export async function registerCommand(name: string, options: RegisterOptions): P
   registeredV2Names[name] = keyPair.did;
   config.set('registeredV2Names', registeredV2Names);
   
-  const v2Registrations: Record<string, any> = config.get('v2Registrations') || {};
-  v2Registrations[name] = {
+  // Update registrations map (already loaded above)
+  const updatedRegistrations: Record<string, any> = config.get('v2Registrations') || {};
+  updatedRegistrations[name] = {
     did: keyPair.did,
     publicKey_dilithium3: Buffer.from(keyPair.publicKey_dilithium3).toString('base64'),
     publicKey_ed25519: Buffer.from(keyPair.publicKey_ed25519).toString('base64'),
@@ -174,7 +203,7 @@ export async function registerCommand(name: string, options: RegisterOptions): P
       timestamp: proof.timestamp
     }
   };
-  config.set('v2Registrations', v2Registrations);
+  config.set('v2Registrations', updatedRegistrations);
 
   logger.section('Registration Complete');
   logger.success(`Name "${name}" registered successfully!`);
