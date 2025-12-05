@@ -2,7 +2,6 @@ import chalk from 'chalk';
 import ora from 'ora';
 import { DistributedNameRegistry } from '@frw/ipfs';
 import { logger } from '../utils/logger.js';
-import { fetch } from 'undici';
 import { BOOTSTRAP_NODES } from '../utils/constants.js';
 
 export async function lookupCommand(name: string): Promise<void> {
@@ -11,7 +10,7 @@ export async function lookupCommand(name: string): Promise<void> {
   try {
     const registry = new DistributedNameRegistry({
       bootstrapNodes: BOOTSTRAP_NODES
-    });
+    } as any);
 
     const result = await registry.resolveName(name);
 
@@ -48,7 +47,7 @@ export async function infoCommand(name: string): Promise<void> {
   try {
     const registry = new DistributedNameRegistry({
       bootstrapNodes: BOOTSTRAP_NODES
-    });
+    } as any);
 
     const result = await registry.resolveName(name);
 

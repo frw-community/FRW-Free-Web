@@ -1,4 +1,4 @@
-import type { ProofOfWorkV2, POWProgress } from './types';
+import type { ProofOfWorkV2, POWProgress } from './types.js';
 export declare class ProofOfWorkGeneratorV2 {
     /**
      * Generate quantum-resistant proof of work

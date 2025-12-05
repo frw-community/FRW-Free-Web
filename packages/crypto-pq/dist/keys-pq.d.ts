@@ -1,4 +1,4 @@
-import type { FRWKeyPairV2, CryptoConfigV2 } from './types';
+import type { FRWKeyPairV2, CryptoConfigV2 } from './types.js';
 export declare class KeyManagerV2 {
     private config;
     constructor(config?: CryptoConfigV2);

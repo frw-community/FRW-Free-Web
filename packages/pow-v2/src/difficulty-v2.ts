@@ -1,7 +1,7 @@
 // Quantum-Resistant Difficulty Calculation
 // Memory-hard parameters to resist Grover's algorithm
 
-import type { DifficultyParams } from './types';
+import type { DifficultyParams } from './types.js';
 
 /**
  * Get required difficulty parameters based on name length

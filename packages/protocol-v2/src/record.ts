@@ -4,9 +4,9 @@ import type { FRWKeyPairV2, HybridSignature } from '@frw/crypto-pq';
 import { SignatureManagerV2, KeyManagerV2 } from '@frw/crypto-pq';
 import type { ProofOfWorkV2 } from '@frw/pow-v2';
 import { hashPQ } from '@frw/crypto-pq';
-import type { DistributedNameRecordV2 } from './types';
-import { ProtocolV2Error } from './types';
-import { serializeCanonical } from './serialization';
+import type { DistributedNameRecordV2 } from './types.js';
+import { ProtocolV2Error } from './types.js';
+import { serializeCanonical } from './serialization.js';
 
 export class RecordManagerV2 {
   private signatureManager: SignatureManagerV2;

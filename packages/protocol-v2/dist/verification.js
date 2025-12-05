@@ -1,14 +1,10 @@
-"use strict";
 // Record Verification (Zero Trust)
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.RecordVerifierV2 = void 0;
-exports.verifyRecordV2 = verifyRecordV2;
-const crypto_pq_1 = require("@frw/crypto-pq");
-const pow_v2_1 = require("@frw/pow-v2");
-const serialization_1 = require("./serialization");
-class RecordVerifierV2 {
+import { SignatureManagerV2, hashPQ } from '@frw/crypto-pq';
+import { verifyPOWV2 } from '@frw/pow-v2';
+import { serializeCanonical } from './serialization.js';
+export class RecordVerifierV2 {
     constructor() {
-        this.signatureManager = new crypto_pq_1.SignatureManagerV2();
+        this.signatureManager = new SignatureManagerV2();
     }
     /**
      * Verify record completely (zero trust)
@@ -45,7 +41,7 @@ class RecordVerifierV2 {
         }
         // 4. Verify PoW
         try {
-            result.checks.pow = await (0, pow_v2_1.verifyPOWV2)(record.name, record.publicKey_dilithium3, record.proof_v2);
+            result.checks.pow = await verifyPOWV2(record.name, record.publicKey_dilithium3, record.proof_v2);
             if (!result.checks.pow) {
                 result.errors.push('Invalid proof of work');
             }
@@ -54,7 +50,7 @@ class RecordVerifierV2 {
             result.errors.push('PoW verification failed');
         }
         // 5. Verify signatures
-        const canonical = (0, serialization_1.serializeCanonical)(record);
+        const canonical = serializeCanonical(record);
         // Create temporary keypair for verification
         const tempKeyPair = {
             publicKey_ed25519: record.publicKey_ed25519,
@@ -95,7 +91,7 @@ class RecordVerifierV2 {
             result.checks.hash_chain = true; // Genesis record
         }
         // 7. Verify hash integrity
-        const computedHash = (0, crypto_pq_1.hashPQ)(canonical);
+        const computedHash = hashPQ(canonical);
         const hashValid = this.compareHashes(computedHash, record.hash_sha3);
         if (!hashValid) {
             result.errors.push('Hash mismatch');
@@ -127,8 +123,8 @@ class RecordVerifierV2 {
     verifyHashChain(current, previous) {
         if (!current.previousHash_sha3)
             return false;
-        const previousCanonical = (0, serialization_1.serializeCanonical)(previous);
-        const previousHash = (0, crypto_pq_1.hashPQ)(previousCanonical);
+        const previousCanonical = serializeCanonical(previous);
+        const previousHash = hashPQ(previousCanonical);
         return this.compareHashes(previousHash, current.previousHash_sha3);
     }
     /**
@@ -144,11 +140,10 @@ class RecordVerifierV2 {
         return result === 0;
     }
 }
-exports.RecordVerifierV2 = RecordVerifierV2;
 /**
  * Convenience function
  */
-async function verifyRecordV2(record, previousRecord) {
+export async function verifyRecordV2(record, previousRecord) {
     const verifier = new RecordVerifierV2();
     return verifier.verify(record, previousRecord);
 }

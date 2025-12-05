@@ -1,4 +1,4 @@
-import type { FRWKeyPairV2, HybridSignature, CryptoConfigV2 } from './types';
+import type { FRWKeyPairV2, HybridSignature, CryptoConfigV2 } from './types.js';
 export declare class SignatureManagerV2 {
     private config;
     constructor(config?: CryptoConfigV2);

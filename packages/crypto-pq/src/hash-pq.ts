@@ -4,9 +4,9 @@
 import { sha256 } from '@noble/hashes/sha256';
 import { sha3_256 } from '@noble/hashes/sha3';
 import { blake3 } from '@noble/hashes/blake3';
-import type { HybridHash, CryptoConfigV2 } from './types';
-import { DEFAULT_CONFIG_V2 } from './types';
-import { QuantumCryptoError } from './types';
+import type { HybridHash, CryptoConfigV2 } from './types.js';
+import { DEFAULT_CONFIG_V2 } from './types.js';
+import { QuantumCryptoError } from './types.js';
 
 export class HashManagerV2 {
   private config: CryptoConfigV2;

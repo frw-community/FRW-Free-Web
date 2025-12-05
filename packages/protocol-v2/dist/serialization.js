@@ -1,18 +1,11 @@
-"use strict";
 // CBOR Canonical Serialization
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.serializeCanonical = serializeCanonical;
-exports.serializeFull = serializeFull;
-exports.deserializeFull = deserializeFull;
-exports.toJSON = toJSON;
-exports.fromJSON = fromJSON;
-const cbor_x_1 = require("cbor-x");
-const types_1 = require("./types");
+import { encode as cborEncode, decode as cborDecode } from 'cbor-x';
+import { ProtocolV2Error } from './types.js';
 /**
  * Serialize record to canonical CBOR format
  * Used for signatures and hashing
  */
-function serializeCanonical(record) {
+export function serializeCanonical(record) {
     try {
         // Create deterministic object (exclude signatures and hashes)
         const canonical = {
@@ -28,17 +21,17 @@ function serializeCanonical(record) {
                 : null
         };
         // CBOR encode (deterministic by default)
-        const encoded = (0, cbor_x_1.encode)(canonical);
+        const encoded = cborEncode(canonical);
         return new Uint8Array(encoded);
     }
     catch (error) {
-        throw new types_1.ProtocolV2Error('Serialization failed', 'SERIALIZATION_ERROR');
+        throw new ProtocolV2Error('Serialization failed', 'SERIALIZATION_ERROR');
     }
 }
 /**
  * Serialize full record for storage/transmission
  */
-function serializeFull(record) {
+export function serializeFull(record) {
     try {
         const data = {
             version: record.version,
@@ -71,18 +64,18 @@ function serializeFull(record) {
             providers: record.providers,
             dnslink: record.dnslink
         };
-        return new Uint8Array((0, cbor_x_1.encode)(data));
+        return new Uint8Array(cborEncode(data));
     }
     catch (error) {
-        throw new types_1.ProtocolV2Error('Full serialization failed', 'SERIALIZATION_ERROR');
+        throw new ProtocolV2Error('Full serialization failed', 'SERIALIZATION_ERROR');
     }
 }
 /**
  * Deserialize full record
  */
-function deserializeFull(data) {
+export function deserializeFull(data) {
     try {
-        const decoded = (0, cbor_x_1.decode)(data);
+        const decoded = cborDecode(data);
         return {
             version: decoded.version,
             name: decoded.name,
@@ -116,13 +109,13 @@ function deserializeFull(data) {
         };
     }
     catch (error) {
-        throw new types_1.ProtocolV2Error('Deserialization failed', 'DESERIALIZATION_ERROR');
+        throw new ProtocolV2Error('Deserialization failed', 'DESERIALIZATION_ERROR');
     }
 }
 /**
  * Serialize to JSON (for HTTP API)
  */
-function toJSON(record) {
+export function toJSON(record) {
     const data = {
         version: record.version,
         name: record.name,
@@ -159,7 +152,7 @@ function toJSON(record) {
 /**
  * Deserialize from JSON (for HTTP API)
  */
-function fromJSON(json) {
+export function fromJSON(json) {
     try {
         const data = JSON.parse(json);
         return {
@@ -195,6 +188,6 @@ function fromJSON(json) {
         };
     }
     catch (error) {
-        throw new types_1.ProtocolV2Error('JSON deserialization failed', 'JSON_ERROR');
+        throw new ProtocolV2Error('JSON deserialization failed', 'JSON_ERROR');
     }
 }
