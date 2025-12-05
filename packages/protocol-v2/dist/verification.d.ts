@@ -1,4 +1,4 @@
-import type { DistributedNameRecordV2, VerificationResultV2 } from './types';
+import type { DistributedNameRecordV2, VerificationResultV2 } from './types.js';
 export declare class RecordVerifierV2 {
     private signatureManager;
     constructor();

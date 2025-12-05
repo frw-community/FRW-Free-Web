@@ -1,23 +1,15 @@
-"use strict";
 // Post-Quantum Key Management
 // Hybrid Ed25519 + Dilithium3 keypair generation
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.KeyManagerV2 = void 0;
-exports.generateKeyPairV2 = generateKeyPairV2;
-exports.validateKeyPairV2 = validateKeyPairV2;
-const tweetnacl_1 = __importDefault(require("tweetnacl"));
-const ml_dsa_1 = require("@noble/post-quantum/ml-dsa");
-const sha3_1 = require("@noble/hashes/sha3");
-const scrypt_1 = require("@noble/hashes/scrypt");
-const crypto_1 = require("crypto");
-const bs58_1 = __importDefault(require("bs58"));
-const types_1 = require("./types");
-const types_2 = require("./types");
-class KeyManagerV2 {
-    constructor(config = types_1.DEFAULT_CONFIG_V2) {
+import nacl from 'tweetnacl';
+import { ml_dsa65 } from '@noble/post-quantum/ml-dsa';
+import { sha3_256 } from '@noble/hashes/sha3';
+import { scrypt } from '@noble/hashes/scrypt';
+import { createCipheriv, createDecipheriv, randomBytes as cryptoRandomBytes } from 'crypto';
+import bs58 from 'bs58';
+import { DEFAULT_CONFIG_V2 } from './types.js';
+import { QuantumCryptoError } from './types.js';
+export class KeyManagerV2 {
+    constructor(config = DEFAULT_CONFIG_V2) {
         this.config = config;
     }
     /**
@@ -28,17 +20,17 @@ class KeyManagerV2 {
         try {
             // Generate Ed25519 keypair (legacy support)
             const ed25519Pair = seed
-                ? tweetnacl_1.default.sign.keyPair.fromSeed(seed)
-                : tweetnacl_1.default.sign.keyPair();
+                ? nacl.sign.keyPair.fromSeed(seed)
+                : nacl.sign.keyPair();
             // Generate Dilithium3 keypair (primary PQ)
             // ml_dsa65 = ML-DSA-65 = Dilithium3 (NIST Level 3)
             const dilithiumSeed = seed
                 ? this.expandSeed(seed, 32)
                 : crypto.getRandomValues(new Uint8Array(32));
-            const dilithiumPair = ml_dsa_1.ml_dsa65.keygen(dilithiumSeed);
+            const dilithiumPair = ml_dsa65.keygen(dilithiumSeed);
             // Create DID from Dilithium public key hash
-            const pkHash = (0, sha3_1.sha3_256)(dilithiumPair.publicKey);
-            const did = `did:frw:v2:${bs58_1.default.encode(pkHash)}`;
+            const pkHash = sha3_256(dilithiumPair.publicKey);
+            const did = `did:frw:v2:${bs58.encode(pkHash)}`;
             return {
                 publicKey_ed25519: ed25519Pair.publicKey,
                 privateKey_ed25519: ed25519Pair.secretKey,
@@ -48,7 +40,7 @@ class KeyManagerV2 {
             };
         }
         catch (error) {
-            throw new types_2.QuantumCryptoError('Keypair generation failed', 'KEYGEN_ERROR');
+            throw new QuantumCryptoError('Keypair generation failed', 'KEYGEN_ERROR');
         }
     }
     /**
@@ -62,7 +54,7 @@ class KeyManagerV2 {
             const input = new Uint8Array(seed.length + 4);
             input.set(seed);
             input.set(this.u32ToBytes(counter), seed.length);
-            const hash = (0, sha3_1.sha3_256)(input);
+            const hash = sha3_256(input);
             const chunk = Math.min(32, length - offset);
             expanded.set(hash.slice(0, chunk), offset);
             offset += chunk;
@@ -88,7 +80,7 @@ class KeyManagerV2 {
         const exported = {
             version: 2,
             did: keyPair.did,
-            publicKey_ed25519: bs58_1.default.encode(keyPair.publicKey_ed25519),
+            publicKey_ed25519: bs58.encode(keyPair.publicKey_ed25519),
             privateKey_ed25519: Buffer.from(keyPair.privateKey_ed25519).toString('base64'),
             publicKey_dilithium3: Buffer.from(keyPair.publicKey_dilithium3).toString('base64'),
             privateKey_dilithium3: Buffer.from(keyPair.privateKey_dilithium3).toString('base64'),
@@ -96,11 +88,11 @@ class KeyManagerV2 {
         };
         if (password) {
             // Encrypt private keys
-            const salt = (0, crypto_1.randomBytes)(32);
-            const key = (0, scrypt_1.scrypt)(new TextEncoder().encode(password), salt, { N: 2 ** 16, r: 8, p: 1, dkLen: 32 });
+            const salt = cryptoRandomBytes(32);
+            const key = scrypt(new TextEncoder().encode(password), salt, { N: 2 ** 16, r: 8, p: 1, dkLen: 32 });
             // Encrypt Ed25519 private key
-            const iv1 = (0, crypto_1.randomBytes)(16);
-            const cipher1 = (0, crypto_1.createCipheriv)('aes-256-gcm', key, iv1);
+            const iv1 = cryptoRandomBytes(16);
+            const cipher1 = createCipheriv('aes-256-gcm', key, iv1);
             const encrypted1 = Buffer.concat([cipher1.update(keyPair.privateKey_ed25519), cipher1.final()]);
             const authTag1 = cipher1.getAuthTag();
             exported.privateKey_ed25519 = {
@@ -109,8 +101,8 @@ class KeyManagerV2 {
                 iv: iv1.toString('base64')
             };
             // Encrypt Dilithium3 private key
-            const iv2 = (0, crypto_1.randomBytes)(16);
-            const cipher2 = (0, crypto_1.createCipheriv)('aes-256-gcm', key, iv2);
+            const iv2 = cryptoRandomBytes(16);
+            const cipher2 = createCipheriv('aes-256-gcm', key, iv2);
             const encrypted2 = Buffer.concat([cipher2.update(keyPair.privateKey_dilithium3), cipher2.final()]);
             const authTag2 = cipher2.getAuthTag();
             exported.privateKey_dilithium3 = {
@@ -126,26 +118,26 @@ class KeyManagerV2 {
      */
     importKeyPair(data, password) {
         if (data.version !== 2) {
-            throw new types_2.QuantumCryptoError('Invalid keypair version', 'INVALID_VERSION');
+            throw new QuantumCryptoError('Invalid keypair version', 'INVALID_VERSION');
         }
         // Check if encrypted
         const isEncrypted = typeof data.privateKey_ed25519 === 'object';
         if (isEncrypted && !password) {
-            throw new types_2.QuantumCryptoError('Password required for encrypted keypair', 'PASSWORD_REQUIRED');
+            throw new QuantumCryptoError('Password required for encrypted keypair', 'PASSWORD_REQUIRED');
         }
         if (isEncrypted && password) {
             // Decrypt private keys
             const privData1 = data.privateKey_ed25519;
             const privData2 = data.privateKey_dilithium3;
             const salt = Buffer.from(privData1.salt, 'base64');
-            const key = (0, scrypt_1.scrypt)(new TextEncoder().encode(password), salt, { N: 2 ** 16, r: 8, p: 1, dkLen: 32 });
+            const key = scrypt(new TextEncoder().encode(password), salt, { N: 2 ** 16, r: 8, p: 1, dkLen: 32 });
             try {
                 // Decrypt Ed25519 private key
                 const iv1 = Buffer.from(privData1.iv, 'base64');
                 const encryptedWithTag1 = Buffer.from(privData1.encrypted, 'base64');
                 const encrypted1 = encryptedWithTag1.slice(0, -16);
                 const authTag1 = encryptedWithTag1.slice(-16);
-                const decipher1 = (0, crypto_1.createDecipheriv)('aes-256-gcm', key, iv1);
+                const decipher1 = createDecipheriv('aes-256-gcm', key, iv1);
                 decipher1.setAuthTag(authTag1);
                 const privateKey_ed25519 = Buffer.concat([decipher1.update(encrypted1), decipher1.final()]);
                 // Decrypt Dilithium3 private key
@@ -153,25 +145,25 @@ class KeyManagerV2 {
                 const encryptedWithTag2 = Buffer.from(privData2.encrypted, 'base64');
                 const encrypted2 = encryptedWithTag2.slice(0, -16);
                 const authTag2 = encryptedWithTag2.slice(-16);
-                const decipher2 = (0, crypto_1.createDecipheriv)('aes-256-gcm', key, iv2);
+                const decipher2 = createDecipheriv('aes-256-gcm', key, iv2);
                 decipher2.setAuthTag(authTag2);
                 const privateKey_dilithium3 = Buffer.concat([decipher2.update(encrypted2), decipher2.final()]);
                 return {
                     did: data.did,
-                    publicKey_ed25519: new Uint8Array(bs58_1.default.decode(data.publicKey_ed25519)),
+                    publicKey_ed25519: new Uint8Array(bs58.decode(data.publicKey_ed25519)),
                     privateKey_ed25519: new Uint8Array(privateKey_ed25519),
                     publicKey_dilithium3: new Uint8Array(Buffer.from(data.publicKey_dilithium3, 'base64')),
                     privateKey_dilithium3: new Uint8Array(privateKey_dilithium3)
                 };
             }
             catch (error) {
-                throw new types_2.QuantumCryptoError('Failed to decrypt keypair - invalid password', 'DECRYPTION_FAILED');
+                throw new QuantumCryptoError('Failed to decrypt keypair - invalid password', 'DECRYPTION_FAILED');
             }
         }
         // Unencrypted import
         return {
             did: data.did,
-            publicKey_ed25519: new Uint8Array(bs58_1.default.decode(data.publicKey_ed25519)),
+            publicKey_ed25519: new Uint8Array(bs58.decode(data.publicKey_ed25519)),
             privateKey_ed25519: new Uint8Array(Buffer.from(data.privateKey_ed25519, 'base64')),
             publicKey_dilithium3: new Uint8Array(Buffer.from(data.publicKey_dilithium3, 'base64')),
             privateKey_dilithium3: new Uint8Array(Buffer.from(data.privateKey_dilithium3, 'base64'))
@@ -191,19 +183,18 @@ class KeyManagerV2 {
      * Derive public key DID (for verification)
      */
     deriveDID(publicKey_dilithium3) {
-        const pkHash = (0, sha3_1.sha3_256)(publicKey_dilithium3);
-        return `did:frw:v2:${bs58_1.default.encode(pkHash)}`;
+        const pkHash = sha3_256(publicKey_dilithium3);
+        return `did:frw:v2:${bs58.encode(pkHash)}`;
     }
 }
-exports.KeyManagerV2 = KeyManagerV2;
 /**
  * Convenience functions
  */
-function generateKeyPairV2(seed) {
+export function generateKeyPairV2(seed) {
     const manager = new KeyManagerV2();
     return manager.generateKeyPair(seed);
 }
-function validateKeyPairV2(keyPair) {
+export function validateKeyPairV2(keyPair) {
     const manager = new KeyManagerV2();
     return manager.validateKeyPair(keyPair);
 }

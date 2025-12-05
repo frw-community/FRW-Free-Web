@@ -1,6 +1,6 @@
 import type { FRWKeyPairV2 } from '@frw/crypto-pq';
 import type { ProofOfWorkV2 } from '@frw/pow-v2';
-import type { DistributedNameRecordV2 } from './types';
+import type { DistributedNameRecordV2 } from './types.js';
 export declare class RecordManagerV2 {
     private signatureManager;
     private keyManager;

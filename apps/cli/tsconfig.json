@@ -12,7 +12,10 @@
   "references": [
     { "path": "../../packages/common" },
     { "path": "../../packages/crypto" },
+    { "path": "../../packages/crypto-pq" },
     { "path": "../../packages/ipfs" },
-    { "path": "../../packages/protocol" }
+    { "path": "../../packages/protocol" },
+    { "path": "../../packages/protocol-v2" },
+    { "path": "../../packages/pow-v2" }
   ]
 }

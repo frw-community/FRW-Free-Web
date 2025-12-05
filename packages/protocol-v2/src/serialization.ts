@@ -1,8 +1,8 @@
 // CBOR Canonical Serialization
 
 import { encode as cborEncode, decode as cborDecode } from 'cbor-x';
-import type { DistributedNameRecordV2 } from './types';
-import { ProtocolV2Error } from './types';
+import type { DistributedNameRecordV2 } from './types.js';
+import { ProtocolV2Error } from './types.js';
 
 /**
  * Serialize record to canonical CBOR format

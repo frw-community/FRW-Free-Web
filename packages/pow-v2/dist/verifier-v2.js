@@ -1,15 +1,8 @@
-"use strict";
 // Quantum-Resistant PoW Verifier
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ProofOfWorkVerifierV2 = void 0;
-exports.verifyPOWV2 = verifyPOWV2;
-const argon2_1 = __importDefault(require("argon2"));
-const sha3_1 = require("@noble/hashes/sha3");
-const difficulty_v2_1 = require("./difficulty-v2");
-class ProofOfWorkVerifierV2 {
+import argon2 from 'argon2';
+import { sha3_256 } from '@noble/hashes/sha3';
+import { getRequiredDifficulty } from './difficulty-v2.js';
+export class ProofOfWorkVerifierV2 {
     /**
      * Verify a proof of work
      */
@@ -21,7 +14,7 @@ class ProofOfWorkVerifierV2 {
                 return false;
             }
             // 2. Get required difficulty
-            const required = (0, difficulty_v2_1.getRequiredDifficulty)(name);
+            const required = getRequiredDifficulty(name);
             // 3. Verify proof meets minimum requirements
             if (proof.difficulty < required.leading_zeros ||
                 proof.memory_cost_mib < required.memory_mib ||
@@ -81,24 +74,24 @@ class ProofOfWorkVerifierV2 {
         const nameBytes = new TextEncoder().encode(name);
         saltInput.set(nameBytes, 0);
         saltInput.set(publicKey_pq, nameBytes.length);
-        const salt = (0, sha3_1.sha3_256)(saltInput);
+        const salt = sha3_256(saltInput);
         // Password: nonce || timestamp
         const password = new Uint8Array(16);
         const view = new DataView(password.buffer);
         view.setBigUint64(0, nonce, false);
         view.setBigUint64(8, BigInt(timestamp), false);
         // Compute Argon2id
-        const argonHash = await argon2_1.default.hash(Buffer.from(password), {
+        const argonHash = await argon2.hash(Buffer.from(password), {
             salt: Buffer.from(salt),
             hashLength: 32,
             memoryCost: params.memory_mib * 1024,
             timeCost: params.iterations,
             parallelism: 4,
-            type: argon2_1.default.argon2id,
+            type: argon2.argon2id,
             raw: true
         });
         // Final hash: SHA3-256(argon_output)
-        return (0, sha3_1.sha3_256)(Uint8Array.from(argonHash));
+        return sha3_256(Uint8Array.from(argonHash));
     }
     /**
      * Check leading zeros
@@ -130,11 +123,10 @@ class ProofOfWorkVerifierV2 {
         return result === 0;
     }
 }
-exports.ProofOfWorkVerifierV2 = ProofOfWorkVerifierV2;
 /**
  * Convenience function
  */
-async function verifyPOWV2(name, publicKey_pq, proof) {
+export async function verifyPOWV2(name, publicKey_pq, proof) {
     const verifier = new ProofOfWorkVerifierV2();
     return verifier.verify(name, publicKey_pq, proof);
 }

@@ -2,6 +2,7 @@
   "name": "@frw/crypto-pq",
   "version": "2.0.0",
   "description": "Post-quantum cryptography layer for FRW protocol",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {

@@ -1,4 +1,4 @@
-import type { DifficultyParams } from './types';
+import type { DifficultyParams } from './types.js';
 /**
  * Get required difficulty parameters based on name length
  * Designed to prevent quantum speedup via memory hardness

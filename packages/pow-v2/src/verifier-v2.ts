@@ -2,9 +2,9 @@
 
 import argon2 from 'argon2';
 import { sha3_256 } from '@noble/hashes/sha3';
-import type { ProofOfWorkV2, DifficultyParams } from './types';
-import { POWError } from './types';
-import { getRequiredDifficulty } from './difficulty-v2';
+import type { ProofOfWorkV2, DifficultyParams } from './types.js';
+import { POWError } from './types.js';
+import { getRequiredDifficulty } from './difficulty-v2.js';
 
 export class ProofOfWorkVerifierV2 {
   /**

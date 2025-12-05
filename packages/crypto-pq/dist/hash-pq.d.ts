@@ -1,4 +1,4 @@
-import type { HybridHash, CryptoConfigV2 } from './types';
+import type { HybridHash, CryptoConfigV2 } from './types.js';
 export declare class HashManagerV2 {
     private config;
     constructor(config?: CryptoConfigV2);

@@ -1,4 +1,4 @@
-import type { ProofOfWorkV2 } from './types';
+import type { ProofOfWorkV2 } from './types.js';
 export declare class ProofOfWorkVerifierV2 {
     /**
      * Verify a proof of work

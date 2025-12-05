@@ -5,7 +5,6 @@ import { IPFSClient } from '@frw/ipfs';
 import { config } from '../utils/config.js';
 import { logger } from '../utils/logger.js';
 import { BOOTSTRAP_NODES } from '../utils/constants.js';
-import { fetch } from 'undici';
 
 export async function doctorCommand(): Promise<void> {
   logger.section('FRW Diagnostic Tool (The Doctor)');

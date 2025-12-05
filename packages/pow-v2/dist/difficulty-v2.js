@@ -1,11 +1,5 @@
-"use strict";
 // Quantum-Resistant Difficulty Calculation
 // Memory-hard parameters to resist Grover's algorithm
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRequiredDifficulty = getRequiredDifficulty;
-exports.estimateTime = estimateTime;
-exports.validateDifficulty = validateDifficulty;
-exports.compareDifficulty = compareDifficulty;
 /**
  * Get required difficulty parameters based on name length
  * Designed to prevent quantum speedup via memory hardness
@@ -15,7 +9,7 @@ exports.compareDifficulty = compareDifficulty;
  *
  * Memory requirement prevents full √speedup from Grover
  */
-function getRequiredDifficulty(name) {
+export function getRequiredDifficulty(name) {
     const length = name.length;
     // 1-char names: Effectively impossible (~1000 years)
     if (length === 1) {
@@ -108,7 +102,7 @@ function getRequiredDifficulty(name) {
  * Estimate time required for PoW completion
  * Based on typical CPU performance (~10 Argon2id hashes/sec at 128 MiB, 3 iterations)
  */
-function estimateTime(params) {
+export function estimateTime(params) {
     // Average attempts needed for N leading zeros: 16^N
     const avg_attempts = Math.pow(16, params.leading_zeros);
     // Argon2id hashing speed (realistic estimate)
@@ -150,7 +144,7 @@ function estimateTime(params) {
 /**
  * Validate difficulty parameters
  */
-function validateDifficulty(params) {
+export function validateDifficulty(params) {
     return (params.leading_zeros >= 0 &&
         params.leading_zeros <= 20 &&
         params.memory_mib >= 16 &&
@@ -162,7 +156,7 @@ function validateDifficulty(params) {
  * Compare two difficulty settings
  * Returns: -1 if a < b, 0 if a == b, 1 if a > b
  */
-function compareDifficulty(a, b) {
+export function compareDifficulty(a, b) {
     // Primary comparison: leading zeros
     if (a.leading_zeros !== b.leading_zeros) {
         return a.leading_zeros - b.leading_zeros;

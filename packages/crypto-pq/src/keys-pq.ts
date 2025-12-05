@@ -7,9 +7,9 @@ import { sha3_256 } from '@noble/hashes/sha3';
 import { scrypt } from '@noble/hashes/scrypt';
 import { createCipheriv, createDecipheriv, randomBytes as cryptoRandomBytes } from 'crypto';
 import bs58 from 'bs58';
-import type { FRWKeyPairV2, CryptoConfigV2 } from './types';
-import { DEFAULT_CONFIG_V2 } from './types';
-import { QuantumCryptoError } from './types';
+import type { FRWKeyPairV2, CryptoConfigV2 } from './types.js';
+import { DEFAULT_CONFIG_V2 } from './types.js';
+import { QuantumCryptoError } from './types.js';
 
 export class KeyManagerV2 {
   private config: CryptoConfigV2;

@@ -1,4 +1,4 @@
-import type { DistributedNameRecordV2 } from './types';
+import type { DistributedNameRecordV2 } from './types.js';
 /**
  * Serialize record to canonical CBOR format
  * Used for signatures and hashing

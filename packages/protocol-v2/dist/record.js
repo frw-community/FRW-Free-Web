@@ -1,16 +1,12 @@
-"use strict";
 // Record Creation and Management
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.RecordManagerV2 = void 0;
-exports.createRecordV2 = createRecordV2;
-const crypto_pq_1 = require("@frw/crypto-pq");
-const crypto_pq_2 = require("@frw/crypto-pq");
-const types_1 = require("./types");
-const serialization_1 = require("./serialization");
-class RecordManagerV2 {
+import { SignatureManagerV2, KeyManagerV2 } from '@frw/crypto-pq';
+import { hashPQ } from '@frw/crypto-pq';
+import { ProtocolV2Error } from './types.js';
+import { serializeCanonical } from './serialization.js';
+export class RecordManagerV2 {
     constructor() {
-        this.signatureManager = new crypto_pq_1.SignatureManagerV2();
-        this.keyManager = new crypto_pq_1.KeyManagerV2();
+        this.signatureManager = new SignatureManagerV2();
+        this.keyManager = new KeyManagerV2();
     }
     /**
      * Create a new V2 record
@@ -18,7 +14,7 @@ class RecordManagerV2 {
     createRecord(name, contentCID, ipnsKey, keyPair, proof, previousRecord) {
         // Validate name format
         if (!this.validateNameFormat(name)) {
-            throw new types_1.ProtocolV2Error('Invalid name format', 'INVALID_NAME');
+            throw new ProtocolV2Error('Invalid name format', 'INVALID_NAME');
         }
         const now = Date.now();
         const expires = now + (365 * 24 * 60 * 60 * 1000); // 1 year
@@ -55,14 +51,14 @@ class RecordManagerV2 {
      */
     signRecord(record, keyPair) {
         // Serialize canonical form
-        const canonical = (0, serialization_1.serializeCanonical)(record);
+        const canonical = serializeCanonical(record);
         // Sign with hybrid manager (use record.registered as timestamp)
         const signature = this.signatureManager.sign(canonical, keyPair, record.registered);
         // Update record
         record.signature_ed25519 = signature.signature_ed25519;
         record.signature_dilithium3 = signature.signature_dilithium3;
         // Compute hashes
-        const hash_sha3 = (0, crypto_pq_2.hashPQ)(canonical);
+        const hash_sha3 = hashPQ(canonical);
         record.hash_sha3 = hash_sha3;
         // Legacy hash (SHA-256) - computed by hybrid hash if in hybrid mode
         // For now, just use SHA3 for both
@@ -72,8 +68,8 @@ class RecordManagerV2 {
      * Compute record hash for chain linking
      */
     computeRecordHash(record) {
-        const canonical = (0, serialization_1.serializeCanonical)(record);
-        return (0, crypto_pq_2.hashPQ)(canonical);
+        const canonical = serializeCanonical(record);
+        return hashPQ(canonical);
     }
     /**
      * Validate name format
@@ -99,16 +95,15 @@ class RecordManagerV2 {
     updateRecord(existingRecord, newContentCID, keyPair, proof) {
         // Verify ownership
         if (keyPair.did !== existingRecord.did) {
-            throw new types_1.ProtocolV2Error('Not authorized', 'UNAUTHORIZED');
+            throw new ProtocolV2Error('Not authorized', 'UNAUTHORIZED');
         }
         return this.createRecord(existingRecord.name, newContentCID, existingRecord.ipnsKey, keyPair, proof, existingRecord);
     }
 }
-exports.RecordManagerV2 = RecordManagerV2;
 /**
  * Convenience functions
  */
-function createRecordV2(name, contentCID, ipnsKey, keyPair, proof) {
+export function createRecordV2(name, contentCID, ipnsKey, keyPair, proof) {
     const manager = new RecordManagerV2();
     return manager.createRecord(name, contentCID, ipnsKey, keyPair, proof);
 }

@@ -5,9 +5,9 @@ import nacl from 'tweetnacl';
 import { ml_dsa65 } from '@noble/post-quantum/ml-dsa';
 import { sha256 } from '@noble/hashes/sha256';
 import { sha3_256 } from '@noble/hashes/sha3';
-import type { FRWKeyPairV2, HybridSignature, CryptoConfigV2 } from './types';
-import { DEFAULT_CONFIG_V2 } from './types';
-import { QuantumCryptoError } from './types';
+import type { FRWKeyPairV2, HybridSignature, CryptoConfigV2 } from './types.js';
+import { DEFAULT_CONFIG_V2 } from './types.js';
+import { QuantumCryptoError } from './types.js';
 
 export class SignatureManagerV2 {
   private config: CryptoConfigV2;

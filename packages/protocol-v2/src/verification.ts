@@ -3,8 +3,8 @@
 import type { FRWKeyPairV2 } from '@frw/crypto-pq';
 import { SignatureManagerV2, hashPQ } from '@frw/crypto-pq';
 import { verifyPOWV2 } from '@frw/pow-v2';
-import type { DistributedNameRecordV2, VerificationResultV2 } from './types';
-import { serializeCanonical } from './serialization';
+import type { DistributedNameRecordV2, VerificationResultV2 } from './types.js';
+import { serializeCanonical } from './serialization.js';
 
 export class RecordVerifierV2 {
   private signatureManager: SignatureManagerV2;

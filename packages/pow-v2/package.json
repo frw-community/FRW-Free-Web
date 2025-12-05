@@ -2,6 +2,7 @@
   "name": "@frw/pow-v2",
   "version": "2.0.0",
   "description": "Quantum-resistant proof of work using Argon2id",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
