@@ -2,3 +2,4 @@ export * from './types.js';
 export * from './errors.js';
 export * from './constants.js';
 export * from './utils.js';
+export * from './config/bootstrap-config.js';
