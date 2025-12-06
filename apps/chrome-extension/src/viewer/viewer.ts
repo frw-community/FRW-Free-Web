@@ -196,20 +196,39 @@ async function displayContent(content: ArrayBuffer | string, mimeType: string, c
 
     // Security: Sanitize HTML to prevent XSS attacks
     const sanitizedHtml = DOMPurify.sanitize(htmlContent, {
-      ALLOWED_TAGS: ['html', 'head', 'body', 'meta', 'title', 'link', 'style',
+      ALLOWED_TAGS: ['html', 'head', 'body', 'meta', 'title', 'link', 'style', 'script',
                      'div', 'span', 'p', 'a', 'img', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-                     'ul', 'ol', 'li', 'table', 'tr', 'td', 'th', 'thead', 'tbody',
+                     'ul', 'ol', 'li', 'table', 'tr', 'td', 'th', 'thead', 'tbody', 'tfoot',
                      'br', 'hr', 'strong', 'em', 'b', 'i', 'u', 'code', 'pre', 'blockquote',
-                     'form', 'input', 'button', 'label', 'select', 'option', 'textarea'],
+                     'form', 'input', 'button', 'label', 'select', 'option', 'textarea',
+                     'nav', 'header', 'footer', 'section', 'article', 'aside', 'main',
+                     'small', 'time', 'figure', 'figcaption', 'canvas', 'svg'],
       ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'id', 'style', 'type',
-                     'name', 'value', 'placeholder', 'target', 'rel'],
+                     'name', 'value', 'placeholder', 'target', 'rel', 'charset', 'content',
+                     'data-*', 'async', 'defer', 'crossorigin', 'integrity', 'nonce'],
       KEEP_CONTENT: true,
-      ALLOW_DATA_ATTR: false,
-      // Allow CSS in style tags (safe in sandboxed iframe)
+      ALLOW_DATA_ATTR: true,
+      // Allow CSS in style tags and JavaScript in script tags (safe in sandboxed iframe)
       FORCE_BODY: false,
-      WHOLE_DOCUMENT: true
+      WHOLE_DOCUMENT: true,
+      ALLOW_UNKNOWN_PROTOCOLS: false,
+      RETURN_DOM: false,
+      RETURN_DOM_FRAGMENT: false
     });
 
+    // Special handling for monitoring pages - they need network access
+    if (name === 'frw-community-monitor' || name === 'frw-community-monitor-extension') {
+      // For monitoring pages, try multiple approaches for different browsers
+      try {
+        // Use the correct full monitoring page CID
+        window.open(`https://ipfs.io/ipfs/QmXE2bi2zZoUbrexrQE4wzyye736YQqaFZyz2Hbs57MxCq/`, '_blank');
+        return;
+      } catch (error) {
+        // Fallback: try redirect
+        window.location.href = `https://ipfs.io/ipfs/QmXE2bi2zZoUbrexrQE4wzyye736YQqaFZyz2Hbs57MxCq/`;
+      }
+    }
+    
     // Display in iframe with secure sandbox
     const iframe = document.createElement('iframe');
     iframe.style.width = '100%';
