@@ -194,20 +194,91 @@ async function displayContent(content: ArrayBuffer | string, mimeType: string, c
     let htmlContent = content as string;
     htmlContent = await preloadImagesInHtml(htmlContent, cid);
 
-    // Security: Sanitize HTML to prevent XSS attacks
+    // Security: Sanitize HTML to prevent XSS attacks - Full HTML5 support
     const sanitizedHtml = DOMPurify.sanitize(htmlContent, {
-      ALLOWED_TAGS: ['html', 'head', 'body', 'meta', 'title', 'link', 'style',
-                     'div', 'span', 'p', 'a', 'img', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-                     'ul', 'ol', 'li', 'table', 'tr', 'td', 'th', 'thead', 'tbody',
-                     'br', 'hr', 'strong', 'em', 'b', 'i', 'u', 'code', 'pre', 'blockquote',
-                     'form', 'input', 'button', 'label', 'select', 'option', 'textarea'],
-      ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'id', 'style', 'type',
-                     'name', 'value', 'placeholder', 'target', 'rel'],
+      ALLOWED_TAGS: [
+        // Document structure
+        'html', 'head', 'body', 'meta', 'title', 'link', 'style', 'script', 'base',
+        
+        // Text content
+        'div', 'span', 'p', 'a', 'img', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+        'ul', 'ol', 'li', 'dl', 'dt', 'dd',
+        'br', 'hr', 'strong', 'em', 'b', 'i', 'u', 'code', 'pre', 'blockquote',
+        'small', 'sub', 'sup', 'mark', 'del', 'ins', 'q', 'cite', 'abbr', 'time',
+        
+        // Tables
+        'table', 'tr', 'td', 'th', 'thead', 'tbody', 'tfoot', 'caption', 'colgroup', 'col',
+        
+        // Forms
+        'form', 'input', 'button', 'label', 'select', 'option', 'optgroup', 'textarea',
+        'fieldset', 'legend', 'datalist', 'output', 'progress', 'meter',
+        
+        // HTML5 semantic
+        'nav', 'header', 'footer', 'section', 'article', 'aside', 'main',
+        'figure', 'figcaption', 'details', 'summary', 'dialog',
+        
+        // Media
+        'canvas', 'svg', 'video', 'audio', 'source', 'track', 'picture',
+        
+        // Embedded content
+        'iframe', 'embed', 'object', 'param', 'map', 'area',
+        
+        // Interactive
+        'details', 'summary', 'dialog', 'template', 'slot',
+        
+        // Data
+        'data', 'rp', 'rt', 'rtc', 'ruby', 'wbr',
+        
+        // Web components
+        'custom-element', 'shadow-root'
+      ],
+      ALLOWED_ATTR: [
+        // Global attributes
+        'href', 'src', 'alt', 'title', 'class', 'id', 'style', 'type', 'name', 'value',
+        'placeholder', 'target', 'rel', 'charset', 'content', 'lang', 'dir', 'tabindex',
+        'accesskey', 'draggable', 'hidden', 'spellcheck', 'translate', 'role',
+        
+        // Data attributes
+        'data-*',
+        
+        // Script attributes
+        'async', 'defer', 'crossorigin', 'integrity', 'nonce', 'type', 'src',
+        
+        // Form attributes
+        'action', 'method', 'enctype', 'autocomplete', 'autofocus', 'checked', 'disabled',
+        'for', 'form', 'formaction', 'formenctype', 'formmethod', 'formnovalidate',
+        'formtarget', 'height', 'list', 'max', 'maxlength', 'min', 'multiple',
+        'pattern', 'readonly', 'required', 'size', 'step', 'width',
+        
+        // Media attributes
+        'autoplay', 'controls', 'loop', 'muted', 'preload', 'poster', 'playsinline',
+        
+        // Canvas/SVG attributes
+        'width', 'height', 'viewBox', 'xmlns', 'x', 'y', 'cx', 'cy', 'r', 'fill', 'stroke',
+        
+        // Meta attributes
+        'http-equiv', 'name', 'content', 'charset',
+        
+        // Link attributes
+        'href', 'rel', 'media', 'hreflang', 'type', 'sizes', 'as', 'crossorigin',
+        
+        // Iframe attributes
+        'src', 'srcdoc', 'name', 'sandbox', 'allow', 'allowfullscreen', 'loading',
+        'referrerpolicy', 'width', 'height', 'frameborder', 'scrolling',
+        
+        // Event handlers (for functionality)
+        'onclick', 'onload', 'onerror', 'onsubmit', 'onchange', 'oninput', 'onfocus',
+        'onblur', 'onmouseover', 'onmouseout', 'onkeydown', 'onkeyup', 'onkeypress'
+      ],
       KEEP_CONTENT: true,
-      ALLOW_DATA_ATTR: false,
-      // Allow CSS in style tags (safe in sandboxed iframe)
+      ALLOW_DATA_ATTR: true,
+      ALLOW_UNKNOWN_PROTOCOLS: false,
+      // Allow CSS in style tags and JavaScript in script tags (safe in sandboxed iframe)
       FORCE_BODY: false,
-      WHOLE_DOCUMENT: true
+      WHOLE_DOCUMENT: true,
+      RETURN_DOM: false,
+      RETURN_DOM_FRAGMENT: false,
+      SANITIZE_DOM: true
     });
 
     // Display in iframe with secure sandbox
@@ -215,8 +286,15 @@ async function displayContent(content: ArrayBuffer | string, mimeType: string, c
     iframe.style.width = '100%';
     iframe.style.height = '100%';
     iframe.style.border = 'none';
-    // Security: Do NOT combine allow-scripts + allow-same-origin as it breaks sandboxing
-    iframe.sandbox.add('allow-scripts', 'allow-forms');
+    
+    // Special handling for monitoring pages - they need network access
+    if (name === 'frw-community-monitor' || name === 'frw-community-monitor-extension') {
+      // For monitoring pages, allow network requests for fetching node status
+      iframe.sandbox.add('allow-scripts', 'allow-forms', 'allow-same-origin', 'allow-popups');
+    } else {
+      // Security: Do NOT combine allow-scripts + allow-same-origin as it breaks sandboxing
+      iframe.sandbox.add('allow-scripts', 'allow-forms');
+    }
 
     // Use srcdoc instead of document.write() to avoid cross-origin issues
     iframe.srcdoc = sanitizedHtml;
