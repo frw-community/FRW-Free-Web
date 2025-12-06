@@ -1,49 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FRW V2 Verified</title>
-    <style>
-        body {
-            font-family: system-ui, -apple-system, sans-serif;
-            background: #0f172a;
-            color: #f8fafc;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            text-align: center;
-            padding: 2rem;
-            border: 1px solid #334155;
-            border-radius: 1rem;
-            background: #1e293b;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-        h1 { color: #38bdf8; margin-bottom: 0.5rem; }
-        p { color: #94a3b8; font-size: 1.1rem; }
-        .badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            background: #059669;
-            color: white;
-            font-weight: bold;
-            font-size: 0.875rem;
-            margin-top: 1rem;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Simple Chat</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #chat-container {
+        width: 380px;
+        height: 600px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    #messages {
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+        background: #fafafa;
+    }
+
+    .msg {
+        margin-bottom: 12px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        max-width: 80%;
+        line-height: 1.4em;
+        word-wrap: break-word;
+    }
+
+    .me {
+        background: #007bff;
+        color: white;
+        margin-left: auto;
+    }
+
+    .ai {
+        background: #e6e6e6;
+        color: #333;
+        margin-right: auto;
+    }
+
+    #input-area {
+        display: flex;
+        padding: 10px;
+        border-top: 1px solid #ddd;
+        background: white;
+    }
+
+    #input {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #bbb;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    #send {
+        margin-left: 10px;
+        padding: 10px 18px;
+        border: none;
+        background: #007bff;
+        color: white;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    #send:hover {
+        background: #0066d6;
+    }
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>FRW Protocol V2- Heyyyy I'm there - e2eeeeee testing</h1>
-        <p>This site is hosted on the distributed web.</p>
-        <p>Secured by Dilithium3 Quantum-Resistant Keys.</p>
-        <div class="badge">✓ VERIFIED LIVE</div>
+
+<div id="chat-container">
+    <div id="messages"></div>
+    <div id="input-area">
+        <input id="input" type="text" placeholder="Type a message…">
+        <button id="send">Send</button>
     </div>
+</div>
+
+<script>
+    const messages = document.getElementById("messages");
+    const input = document.getElementById("input");
+    const send = document.getElementById("send");
+
+    function addMessage(text, sender="me") {
+        const div = document.createElement("div");
+        div.className = "msg " + sender;
+        div.textContent = text;
+        messages.appendChild(div);
+        messages.scrollTop = messages.scrollHeight;
+    }
+
+    function aiReply(userMsg) {
+        // Simple fake AI logic
+        return "You said: " + userMsg;
+    }
+
+    function sendMessage() {
+        const text = input.value.trim();
+        if (!text) return;
+
+        addMessage(text, "me");
+        input.value = "";
+
+        setTimeout(() => {
+            const reply = aiReply(text);
+            addMessage(reply, "ai");
+        }, 500);
+    }
+
+    send.onclick = sendMessage;
+
+    input.addEventListener("keydown", e => {
+        if (e.key === "Enter") sendMessage();
+    });
+</script>
+
 </body>
 </html>
