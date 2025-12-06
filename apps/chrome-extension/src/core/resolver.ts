@@ -37,7 +37,6 @@ export class FRWResolver {
   
   // Default bootstrap nodes
   private static readonly DEFAULT_BOOTSTRAP_NODES = [
-    'http://[2001:1600:18:102::165]:3100',
     'http://localhost:3100',
     'http://83.228.214.189:3100',
     'http://83.228.213.45:3100',

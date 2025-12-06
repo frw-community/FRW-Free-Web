@@ -616,22 +616,68 @@
     async function fetchNodeStats(node) {
       const started = performance.now();
       try {
-        const [health, stats, discovery] = await Promise.all([
-          fetchJson(`${node.url}/health`),
-          fetchJson(`${node.url}/api/stats`),
-          fetchJson(`${node.url}/api/nodes`).catch(() => null)
-        ]);
-
+        // Try direct fetch first (works locally)
+        const response = await fetch(`${node.url}/health`, { 
+          mode: 'cors',
+          signal: AbortSignal.timeout(5000)
+        });
+        
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        
+        const health = await response.json();
+        
+        // Try stats endpoint
+        let stats = null;
+        let peers = 0;
+        try {
+          stats = await fetch(`${node.url}/api/stats`, {
+            mode: 'cors',
+            signal: AbortSignal.timeout(3000)
+          }).then(r => r.ok ? r.json() : null);
+          
+          // Try discovery endpoint for peers
+          try {
+            const discovery = await fetch(`${node.url}/api/nodes`, {
+              mode: 'cors',
+              signal: AbortSignal.timeout(3000)
+            });
+            if (discovery.ok) {
+              const data = await discovery.json();
+              peers = data?.nodes?.length ?? 0;
+            }
+          } catch (_) {}
+        } catch (_) {}
+        
         return {
           node,
           online: true,
           latency: performance.now() - started,
           health,
-          stats,
-          peers: discovery?.nodes?.length ?? 0,
+          stats: stats || { totalNames: health?.v2IndexSize || 0 },
+          peers: peers,
           fetchedAt: new Date()
         };
       } catch (error) {
+        // Fallback: Use FRW distributed registry to check node status
+        try {
+          const registryUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(`${node.url}/health`)}`;
+          const fallbackResponse = await fetch(registryUrl, { signal: AbortSignal.timeout(8000) });
+          
+          if (fallbackResponse.ok) {
+            const health = await fallbackResponse.json();
+            return {
+              node,
+              online: true,
+              latency: performance.now() - started,
+              health,
+              stats: { totalNames: health?.v2IndexSize || 0 },
+              peers: 0,
+              fetchedAt: new Date(),
+              viaFallback: true
+            };
+          }
+        } catch (_) {}
+        
         return {
           node,
           online: false,
