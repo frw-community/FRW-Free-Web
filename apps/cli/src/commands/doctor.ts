@@ -6,7 +6,19 @@ import { config } from '../utils/config.js';
 import { logger } from '../utils/logger.js';
 import { BOOTSTRAP_NODES } from '../utils/constants.js';
 
-export async function doctorCommand(): Promise<void> {
+type NodeStatus = {
+  url: string;
+  status: string;
+  responseTime?: number;
+  nodeInfo?: {
+    id?: string;
+    v1Records?: number;
+    v2Records?: number;
+    uptime?: number;
+  };
+};
+
+export async function doctorCommand(verbose: boolean = false): Promise<void> {
   logger.section('FRW Diagnostic Tool (The Doctor)');
 
   const results = {
@@ -26,6 +38,7 @@ export async function doctorCommand(): Promise<void> {
     } else {
       spinnerConfig.warn('Configuration found but no identity initialized');
     }
+
   } catch (e) {
     spinnerConfig.fail('Configuration corrupted or missing');
   }
@@ -51,22 +64,48 @@ export async function doctorCommand(): Promise<void> {
   // 3. Check Network (Bootstrap Nodes)
   const spinnerNet = ora(`Checking ${BOOTSTRAP_NODES.length} bootstrap nodes...`).start();
   let healthy = 0;
+  const nodeStatus: NodeStatus[] = [];
   
   const checks = BOOTSTRAP_NODES.map(async (node) => {
-    if (node.includes('localhost')) return false; 
+    if (node.includes('localhost')) return { url: node, status: 'skipped (localhost)' }; 
     try {
+      const startTime = Date.now();
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 3000);
       const res = await fetch(`${node}/health`, { signal: controller.signal });
       clearTimeout(timeout);
-      return res.ok;
-    } catch {
-      return false;
+      const responseTime = Date.now() - startTime;
+      
+      if (res.ok) {
+        const data = await res.json() as any;
+        return { 
+          url: node, 
+          status: 'healthy', 
+          responseTime,
+          nodeInfo: {
+            id: data.nodeId,
+            v1Records: data.v1IndexSize,
+            v2Records: data.v2IndexSize,
+            uptime: data.uptime
+          }
+        };
+      }
+      return { url: node, status: `HTTP ${res.status}` };
+    } catch (error) {
+      return { url: node, status: 'timeout/connection failed' };
     }
   });
 
   const nodeResults = await Promise.all(checks);
-  healthy = nodeResults.filter(Boolean).length;
+  
+  // Count healthy nodes and collect status
+  nodeResults.forEach(result => {
+    if (result.status === 'healthy') {
+      healthy++;
+    }
+    nodeStatus.push(result);
+  });
+  
   results.network = healthy;
 
   if (healthy === 0) {
@@ -75,6 +114,35 @@ export async function doctorCommand(): Promise<void> {
     spinnerNet.warn(`Network degraded: ${healthy}/${BOOTSTRAP_NODES.length} nodes reachable`);
   } else {
     spinnerNet.succeed(`Network healthy: ${healthy}/${BOOTSTRAP_NODES.length} nodes reachable`);
+  }
+
+  if (verbose) {
+    logger.info('');
+    logger.section('Bootstrap Node Details');
+    nodeStatus.forEach((node) => {
+      const statusColor =
+        node.status === 'healthy'
+          ? chalk.green(node.status)
+          : node.status.startsWith('HTTP')
+            ? chalk.yellow(node.status)
+            : chalk.red(node.status);
+
+      logger.info(
+        `${chalk.cyan(node.url)} -> ${statusColor}${
+          node.responseTime !== undefined ? chalk.dim(` (${node.responseTime} ms)`) : ''
+        }`
+      );
+
+      if (node.nodeInfo) {
+        logger.info(
+          chalk.dim(
+            `  id=${node.nodeInfo.id} v1=${node.nodeInfo.v1Records} v2=${node.nodeInfo.v2Records} uptime=${Math.round(
+              node.nodeInfo.uptime ?? 0
+            )}s`
+          )
+        );
+      }
+    });
   }
 
   // Summary
