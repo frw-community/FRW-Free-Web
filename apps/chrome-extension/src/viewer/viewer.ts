@@ -281,6 +281,19 @@ async function displayContent(content: ArrayBuffer | string, mimeType: string, c
       SANITIZE_DOM: true
     });
 
+    // Special handling for monitoring pages - they need network access
+    if (name === 'frw-community-monitor' || name === 'frw-community-monitor-extension') {
+      // For monitoring pages, try multiple approaches for different browsers
+      try {
+        // Use the correct full monitoring page CID
+        window.open(`https://ipfs.io/ipfs/QmXE2bi2zZoUbrexrQE4wzyye736YQqaFZyz2Hbs57MxCq/`, '_blank');
+        return;
+      } catch (error) {
+        // Fallback: try redirect
+        window.location.href = `https://ipfs.io/ipfs/QmXE2bi2zZoUbrexrQE4wzyye736YQqaFZyz2Hbs57MxCq/`;
+      }
+    }
+    
     // Display in iframe with secure sandbox
     const iframe = document.createElement('iframe');
     iframe.style.width = '100%';
