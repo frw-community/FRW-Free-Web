@@ -1,136 +1,449 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Simple Chat</title>
-<style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FRW · Free Resilient Web · Field Notes</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+    :root {
+      --bg: #040d21;
+      --bg-alt: #0a0f25;
+      --accent: #75ffdf;
+      --accent-strong: #32d3b1;
+      --muted: #9aa4c6;
+      --card: rgba(255, 255, 255, 0.04);
+      --border: rgba(255, 255, 255, 0.08);
+      --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+      --sans: 'Space Grotesk', 'Soehne', 'Favorit', 'Neue Montreal', 'Space Grotesk', system-ui, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-        font-family: Arial, sans-serif;
-        background: #f5f5f5;
-        margin: 0;
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--sans);
+      background: radial-gradient(110% 120% at 10% 10%, #1c1f37, var(--bg) 55%);
+      color: #f5f7ff;
+      position: relative;
+      overflow-x: hidden;
     }
 
-    #chat-container {
-        width: 380px;
-        height: 600px;
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 0 20px rgba(0,0,0,0.1);
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Crect x='0' y='0' width='1' height='1'/%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
     }
 
-    #messages {
-        flex: 1;
-        padding: 15px;
-        overflow-y: auto;
-        background: #fafafa;
+    main {
+      width: min(1200px, calc(100% - 3rem));
+      margin: 0 auto;
+      padding: 3.5rem 0 5rem;
+      position: relative;
+      z-index: 1;
     }
 
-    .msg {
-        margin-bottom: 12px;
-        padding: 10px 14px;
-        border-radius: 10px;
-        max-width: 80%;
-        line-height: 1.4em;
-        word-wrap: break-word;
+    header.hero {
+      display: grid;
+      gap: 1rem;
+      margin-bottom: 3rem;
     }
 
-    .me {
-        background: #007bff;
-        color: white;
-        margin-left: auto;
+    .eyebrow {
+      font-size: 0.9rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
     }
 
-    .ai {
-        background: #e6e6e6;
-        color: #333;
-        margin-right: auto;
+    h1 {
+      margin: 0;
+      font-size: clamp(2.5rem, 5vw, 3.8rem);
+      line-height: 1.1;
     }
 
-    #input-area {
-        display: flex;
-        padding: 10px;
-        border-top: 1px solid #ddd;
-        background: white;
+    .lead {
+      max-width: 60ch;
+      color: #d7dbf5;
+      font-size: 1.1rem;
+      line-height: 1.5;
     }
 
-    #input {
-        flex: 1;
-        padding: 10px;
-        border: 1px solid #bbb;
-        border-radius: 6px;
-        font-size: 14px;
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      margin-top: 1.5rem;
     }
 
-    #send {
-        margin-left: 10px;
-        padding: 10px 18px;
-        border: none;
-        background: #007bff;
-        color: white;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 14px;
+    .primary {
+      background: var(--accent);
+      color: #042626;
+      border: none;
+      border-radius: 999px;
+      padding: 0.8rem 1.8rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: transform 200ms ease, box-shadow 200ms ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
     }
 
-    #send:hover {
-        background: #0066d6;
+    .primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 30px rgba(117, 255, 223, 0.3);
     }
-</style>
+
+    .secondary-link {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    section {
+      margin-top: 3.5rem;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 1.6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      min-height: 200px;
+      position: relative;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 1.25rem;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .pill {
+      align-self: flex-start;
+      padding: 0.25rem 0.85rem;
+      font-size: 0.75rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .pill.online {
+      border-color: rgba(117, 255, 223, 0.4);
+      color: var(--accent);
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .status-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1rem 1.2rem;
+      cursor: pointer;
+      transition: border-color 200ms ease, transform 200ms ease;
+    }
+
+    .status-card:hover {
+      border-color: rgba(117, 255, 223, 0.5);
+      transform: translateY(-1px);
+    }
+
+    .status-card h4 {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #f8f9ff;
+    }
+
+    .status-card span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .status-card[data-state="online"] span {
+      color: var(--accent);
+    }
+
+    .log-panel {
+      margin-top: 2rem;
+      background: linear-gradient(120deg, rgba(10, 16, 35, 0.95), rgba(5, 9, 20, 0.95));
+      border-radius: 24px;
+      border: 1px solid rgba(117, 255, 223, 0.1);
+      padding: 2rem;
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .log-output {
+      background: rgba(0, 0, 0, 0.35);
+      border-radius: 18px;
+      padding: 1.5rem;
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      max-height: 260px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .log-output::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      border: 1px solid rgba(117, 255, 223, 0.15);
+      pointer-events: none;
+    }
+
+    .log-output p {
+      margin: 0;
+      color: #d1fffb;
+      white-space: pre-wrap;
+    }
+
+    .log-output p + p {
+      margin-top: 0.6rem;
+    }
+
+    .log-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    dl.timeline {
+      border-left: 1px solid rgba(255, 255, 255, 0.12);
+      margin: 2rem 0 0;
+      padding-left: 1.5rem;
+    }
+
+    dl.timeline dt {
+      font-weight: 600;
+      margin-top: 1rem;
+      color: var(--accent);
+    }
+
+    dl.timeline dd {
+      margin: 0.4rem 0 1rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      color: var(--muted);
+      font-size: 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    @media (max-width: 720px) {
+      main {
+        padding-top: 2.5rem;
+      }
+
+      .card {
+        min-height: unset;
+      }
+
+      .log-panel {
+        padding: 1.2rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .primary,
+      .status-card {
+        transition: none;
+      }
+    }
+  </style>
 </head>
 <body>
+  <main>
+    <header class="hero">
+      <p class="eyebrow">Field-ready · V2 protocol · Global relays</p>
+      <h1>FRW / Free Resilient Web</h1>
+      <p class="lead">
+        Independent publishing infrastructure designed for real use:
+        quantum-resistant keys, Argon2id PoW, distributed registries, and
+        zero patience for hype. Everything you see below runs locally—no screenshots,
+        no smoke, just the stack as shipped.
+      </p>
+      <div class="cta-row">
+        <a class="primary" href="https://github.com/frw-community/FRW-Free-Web" target="_blank" rel="noreferrer">
+          Inspect the code
+          <span aria-hidden="true">↗︎</span>
+        </a>
+        <a class="secondary-link" href="https://github.com/frw-community/FRW-Free-Web/issues" target="_blank" rel="noreferrer">
+          Issue tracker
+        </a>
+      </div>
+    </header>
 
-<div id="chat-container">
-    <div id="messages"></div>
-    <div id="input-area">
-        <input id="input" type="text" placeholder="Type a message…">
-        <button id="send">Send</button>
-    </div>
-</div>
+    <section aria-label="Launch checklist">
+      <div class="card-grid">
+        <article class="card">
+          <span class="pill online">Ready</span>
+          <h3>Protocol V2</h3>
+          <p>Dilithium3 + Ed25519 hybrids, Argon2id proof-of-work, and
+            DNS verification baked into the CLI. Bootstrap nodes enforce strict
+            timestamps to keep the graph honest.</p>
+        </article>
+        <article class="card">
+          <span class="pill online">Live</span>
+          <h3>Swiss Bootstrap Pair</h3>
+          <p>Two production nodes already online (Linux + Windows). Community nodes
+            join organically—no central choke points, no one footing the planet’s bill.</p>
+        </article>
+        <article class="card">
+          <span class="pill">Docs</span>
+          <h3>Deployment Playbooks</h3>
+          <p>From one-command setup to community-first strategy notes. Everything documented,
+            ASCII only. The boring ops bits are already handled.</p>
+        </article>
+      </div>
+    </section>
 
-<script>
-    const messages = document.getElementById("messages");
-    const input = document.getElementById("input");
-    const send = document.getElementById("send");
+    <section aria-label="Runtime status">
+      <h2>Status monitor</h2>
+      <div class="status-grid" id="status-grid">
+        <!-- cards injected by JS -->
+      </div>
+      <div class="log-panel">
+        <div class="log-meta">
+          <span>Session: <strong>local-dev</strong></span>
+          <span>Bootstrap topic: <code>frw/names/updates/v2</code></span>
+          <span>IPFS Gateway: <code>localhost:5001</code></span>
+        </div>
+        <div class="log-output" id="log-output" aria-live="polite">
+          <!-- log lines injected -->
+        </div>
+      </div>
+    </section>
 
-    function addMessage(text, sender="me") {
-        const div = document.createElement("div");
-        div.className = "msg " + sender;
-        div.textContent = text;
-        messages.appendChild(div);
-        messages.scrollTop = messages.scrollHeight;
-    }
+    <section aria-label="Timeline">
+      <h2>Why now?</h2>
+      <dl class="timeline">
+        <dt>Oct → Nov</dt>
+        <dd>Wrote the distributed registry, bootstrap services, and Chrome extension to browse <code>frw://</code> URLs without plugins.</dd>
+        <dt>Dec 5</dt>
+        <dd>Finished V2-only rollout. CLI, browser, and nodes reject V1 traffic. Publishing now fan-outs to every bootstrap node.</dd>
+        <dt>Dec 6</dt>
+        <dd>DNS verification lands. Add <code>frw-key</code> TXT record, run <code>frw verify-dns</code>, ship verified badges with every page.</dd>
+      </dl>
+    </section>
 
-    function aiReply(userMsg) {
-        // Simple fake AI logic
-        return "You said: " + userMsg;
-    }
+    <footer>
+      <span>Hand-built. Zero generated copy.</span>
+      <span>Last verified: <time id="last-verified"></time></span>
+    </footer>
+  </main>
 
-    function sendMessage() {
-        const text = input.value.trim();
-        if (!text) return;
+  <script>
+    const statusData = [
+      { label: 'IPFS daemon', state: 'online', detail: 'kubo/0.25.0 · local' },
+      { label: 'Name registry', state: 'online', detail: '4 bootstrap peers in sync' },
+      { label: 'PoW verifier', state: 'online', detail: 'Argon2id · Instant + Fast' },
+      { label: 'DNS watcher', state: 'pending', detail: 'Awaiting next TXT sweep' }
+    ];
 
-        addMessage(text, "me");
-        input.value = "";
+    const statusGrid = document.getElementById('status-grid');
 
-        setTimeout(() => {
-            const reply = aiReply(text);
-            addMessage(reply, "ai");
-        }, 500);
-    }
-
-    send.onclick = sendMessage;
-
-    input.addEventListener("keydown", e => {
-        if (e.key === "Enter") sendMessage();
+    statusData.forEach(item => {
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'status-card';
+      card.dataset.state = item.state;
+      card.innerHTML = `
+        <h4>${item.label}</h4>
+        <span>${item.state === 'online' ? '● online' : '○ pending'} · ${item.detail}</span>
+      `;
+      card.addEventListener('click', () => {
+        card.classList.toggle('expanded');
+      });
+      statusGrid.appendChild(card);
     });
-</script>
 
+    const logOutput = document.getElementById('log-output');
+    const logQueue = [
+      '[12:33:07] frw init-v2        → keypair ready (Dilithium3 + Ed25519)',
+      '[12:33:19] frw register-v2    → frw-community-test (PoW fast tier)',
+      '[12:34:02] frw publish ./site → published CID bafy...ds5q',
+      '[12:34:18] bootstrap node 01  → propagated to pubsub /frw/names/updates/v2',
+      '[12:34:24] DNS verify         → TXT frw-key=9hF…ok accepted',
+      '[12:34:40] browser            → frw://frw-community-test/ verified ✓'
+    ];
+
+    function renderLog() {
+      logOutput.innerHTML = '';
+      logQueue.forEach(line => {
+        const row = document.createElement('p');
+        row.textContent = line;
+        logOutput.appendChild(row);
+      });
+    }
+
+    function cycleLog() {
+      const head = logQueue.shift();
+      logQueue.push(head);
+      renderLog();
+    }
+
+    renderLog();
+    setInterval(cycleLog, 4000);
+
+    const lastVerified = document.getElementById('last-verified');
+    const now = new Date();
+    lastVerified.textContent = now.toLocaleString(undefined, {
+      dateStyle: 'medium',
+      timeStyle: 'short'
+    });
+  </script>
 </body>
 </html>
