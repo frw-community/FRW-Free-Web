@@ -61,7 +61,8 @@ program
 program
   .command('doctor')
   .description('Check system health and network status')
-  .action(doctorCommand);
+  .option('-v, --verbose', 'Show detailed node status and response times')
+  .action((options) => doctorCommand(options.verbose));
 
 program
   .command('register <name>')
