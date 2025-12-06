@@ -3,7 +3,6 @@
  * Displays content loaded from IPFS
  */
 
-import DOMPurify from 'dompurify';
 import { FRWResolver, type NameRecord } from '../core/resolver';
 import { IPFSFetcher } from '../core/ipfs-fetcher';
 import { verifyContent, type VerificationResult } from '../core/verification';
@@ -84,7 +83,7 @@ async function init() {
     }
     
     // Step 4: Display content
-    await displayContent(result.content, result.mimeType, record.contentCID);
+    await displayContent(result.content, result.mimeType, record.contentCID, result.gateway, path);
     
     // Show verification badge with V2 indicator
     if (verificationResult?.quantumSafe) {
@@ -185,41 +184,31 @@ async function preloadImagesInHtml(html: string, cid: string): Promise<string> {
 /**
  * Display content based on MIME type
  */
-async function displayContent(content: ArrayBuffer | string, mimeType: string, cid: string) {
+async function displayContent(
+  content: ArrayBuffer | string,
+  mimeType: string,
+  cid: string,
+  gateway: string,
+  path: string
+) {
   loadingEl.style.display = 'none';
   contentEl.style.display = 'block';
   
   if (mimeType.includes('html')) {
-    // HTML content - preload images first
-    let htmlContent = content as string;
-    htmlContent = await preloadImagesInHtml(htmlContent, cid);
-
-    // Security: Sanitize HTML to prevent XSS attacks
-    const sanitizedHtml = DOMPurify.sanitize(htmlContent, {
-      ALLOWED_TAGS: ['html', 'head', 'body', 'meta', 'title', 'link', 'style',
-                     'div', 'span', 'p', 'a', 'img', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-                     'ul', 'ol', 'li', 'table', 'tr', 'td', 'th', 'thead', 'tbody',
-                     'br', 'hr', 'strong', 'em', 'b', 'i', 'u', 'code', 'pre', 'blockquote',
-                     'form', 'input', 'button', 'label', 'select', 'option', 'textarea'],
-      ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'id', 'style', 'type',
-                     'name', 'value', 'placeholder', 'target', 'rel'],
-      KEEP_CONTENT: true,
-      ALLOW_DATA_ATTR: false,
-      // Allow CSS in style tags (safe in sandboxed iframe)
-      FORCE_BODY: false,
-      WHOLE_DOCUMENT: true
-    });
+    // HTML content - render via gateway to preserve original behavior
+    const normalizedPath = path.startsWith('/') ? path : `/${path}`;
 
     // Display in iframe with secure sandbox
     const iframe = document.createElement('iframe');
     iframe.style.width = '100%';
     iframe.style.height = '100%';
     iframe.style.border = 'none';
-    // Security: Do NOT combine allow-scripts + allow-same-origin as it breaks sandboxing
-    iframe.sandbox.add('allow-scripts', 'allow-forms');
+    // Security: allow modern web APIs while keeping isolation barriers
+    iframe.sandbox.add('allow-forms', 'allow-modals', 'allow-pointer-lock');
+    iframe.sandbox.add('allow-popups', 'allow-popups-to-escape-sandbox');
+    iframe.sandbox.add('allow-same-origin', 'allow-scripts');
 
-    // Use srcdoc instead of document.write() to avoid cross-origin issues
-    iframe.srcdoc = sanitizedHtml;
+    iframe.src = `${gateway}/ipfs/${cid}${normalizedPath}`;
     contentEl.appendChild(iframe);
   } else if (mimeType.startsWith('text/')) {
     // Text content

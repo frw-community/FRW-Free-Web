@@ -164,9 +164,39 @@
       color: var(--accent);
     }
 
+    .network-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .summary-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 1.3rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .summary-card span {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .summary-card strong {
+      font-size: 1.8rem;
+      font-family: var(--mono);
+      color: var(--accent);
+    }
+
     .status-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 1rem;
     }
 
@@ -190,6 +220,18 @@
       color: #f8f9ff;
     }
 
+    .status-card header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.6rem;
+    }
+
+    .status-card h4 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
     .status-card span {
       display: inline-flex;
       align-items: center;
@@ -201,6 +243,137 @@
 
     .status-card[data-state="online"] span {
       color: var(--accent);
+    }
+
+    .status-card.offline {
+      border-color: rgba(255, 87, 87, 0.4);
+    }
+
+    .status-card dl {
+      margin: 0;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .status-card dt {
+      font-weight: 600;
+      color: #f0f3ff;
+    }
+
+    .sparkline-wrapper {
+      margin-top: 0.75rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 0.4rem;
+    }
+
+    .sparkline-wrapper svg {
+      width: 100%;
+      height: 42px;
+    }
+
+    .sparkline-label {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .sparkline-empty {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .node-detail {
+      margin-top: 2rem;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(117, 255, 223, 0.15);
+      border-radius: 20px;
+      padding: 1.6rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .detail-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .detail-header h3 {
+      margin: 0;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      border-radius: 999px;
+      padding: 0.2rem 0.9rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .chip.success {
+      color: var(--accent);
+      border-color: rgba(117, 255, 223, 0.5);
+    }
+
+    .chip.error {
+      color: #ff8f9f;
+      border-color: rgba(255, 143, 159, 0.5);
+    }
+
+    .chip.muted {
+      color: var(--muted);
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .detail-grid div {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 12px;
+      padding: 1rem;
+    }
+
+    .detail-grid span {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .detail-grid strong {
+      display: block;
+      margin-top: 0.5rem;
+      font-family: var(--mono);
+      font-size: 1rem;
+      color: #fff;
+      word-break: break-word;
+    }
+
+    .detail-meta {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .detail-meta code {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 0.1rem 0.35rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
     }
 
     .log-panel {
@@ -352,6 +525,9 @@
 
     <section aria-label="Runtime status">
       <h2>Status monitor</h2>
+      <div class="network-summary" id="network-summary">
+        <!-- summary cards inserted here -->
+      </div>
       <div class="status-grid" id="status-grid">
         <!-- cards injected by JS -->
       </div>
@@ -364,6 +540,15 @@
         <div class="log-output" id="log-output" aria-live="polite">
           <!-- log lines injected -->
         </div>
+      </div>
+      <div class="node-detail" id="node-detail">
+        <div class="detail-header">
+          <h3>Node detail</h3>
+          <span class="chip muted" id="detail-status">Select a node</span>
+        </div>
+        <p id="detail-body" class="detail-meta">
+          Choose any of the nodes above to inspect uptime, PQ-secure counts, discovery peers, and live HTTP latency.
+        </p>
       </div>
     </section>
 
@@ -386,64 +571,305 @@
   </main>
 
   <script>
-    const statusData = [
-      { label: 'IPFS daemon', state: 'online', detail: 'kubo/0.25.0 · local' },
-      { label: 'Name registry', state: 'online', detail: '4 bootstrap peers in sync' },
-      { label: 'PoW verifier', state: 'online', detail: 'Argon2id · Instant + Fast' },
-      { label: 'DNS watcher', state: 'pending', detail: 'Awaiting next TXT sweep' }
-    ];
-
     const statusGrid = document.getElementById('status-grid');
-
-    statusData.forEach(item => {
-      const card = document.createElement('button');
-      card.type = 'button';
-      card.className = 'status-card';
-      card.dataset.state = item.state;
-      card.innerHTML = `
-        <h4>${item.label}</h4>
-        <span>${item.state === 'online' ? '● online' : '○ pending'} · ${item.detail}</span>
-      `;
-      card.addEventListener('click', () => {
-        card.classList.toggle('expanded');
-      });
-      statusGrid.appendChild(card);
-    });
-
+    const summaryGrid = document.getElementById('network-summary');
     const logOutput = document.getElementById('log-output');
-    const logQueue = [
-      '[12:33:07] frw init-v2        → keypair ready (Dilithium3 + Ed25519)',
-      '[12:33:19] frw register-v2    → frw-community-test (PoW fast tier)',
-      '[12:34:02] frw publish ./site → published CID bafy...ds5q',
-      '[12:34:18] bootstrap node 01  → propagated to pubsub /frw/names/updates/v2',
-      '[12:34:24] DNS verify         → TXT frw-key=9hF…ok accepted',
-      '[12:34:40] browser            → frw://frw-community-test/ verified ✓'
+    const lastVerified = document.getElementById('last-verified');
+    const detailPanel = document.getElementById('node-detail');
+    const detailStatus = document.getElementById('detail-status');
+    const detailBody = document.getElementById('detail-body');
+
+    const bootstrapNodes = [
+      { id: 'ch-alpha', label: 'Swiss Node · Alpha', url: 'http://83.228.214.189:3100' },
+      { id: 'ch-beta', label: 'Swiss Node · Beta', url: 'http://83.228.213.45:3100' },
+      { id: 'ch-gamma', label: 'Swiss Node · Gamma', url: 'http://83.228.213.240:3100' },
+      { id: 'ch-delta', label: 'Swiss Node · Delta', url: 'http://83.228.214.72:3100' },
+      { id: 'ipv6-core', label: 'Swiss Node · IPv6 Core', url: 'http://[2001:1600:18:102::165]:3100' },
+      { id: 'us-alpha', label: 'US Node · Alpha', url: 'http://155.117.46.244:3100' },
+      { id: 'us-beta', label: 'US Node · Beta', url: 'http://165.73.244.107:3100' },
+      { id: 'us-gamma', label: 'US Node · Gamma', url: 'http://165.73.244.74:3100' },
+      { id: 'es-alpha', label: 'Iberia Node · Alpha', url: 'http://217.216.32.99:3100' },
+      { id: 'local', label: 'Local Dev', url: 'http://localhost:3100' }
     ];
 
-    function renderLog() {
+    const nodeHistory = new Map();
+    let activeNodeId = null;
+
+    function formatNumber(value) {
+      return new Intl.NumberFormat('en-US', { notation: value > 9999 ? 'compact' : 'standard' }).format(value);
+    }
+
+    async function fetchJson(url, timeout = 6000) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeout);
+      try {
+        const response = await fetch(url, { signal: controller.signal });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        return await response.json();
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    async function fetchNodeStats(node) {
+      const started = performance.now();
+      try {
+        const [health, stats, discovery] = await Promise.all([
+          fetchJson(`${node.url}/health`),
+          fetchJson(`${node.url}/api/stats`),
+          fetchJson(`${node.url}/api/nodes`).catch(() => null)
+        ]);
+
+        return {
+          node,
+          online: true,
+          latency: performance.now() - started,
+          health,
+          stats,
+          peers: discovery?.nodes?.length ?? 0,
+          fetchedAt: new Date()
+        };
+      } catch (error) {
+        return {
+          node,
+          online: false,
+          error: error instanceof Error ? error.message : String(error),
+          fetchedAt: new Date()
+        };
+      }
+    }
+
+    function renderSummary(results) {
+      const onlineNodes = results.filter(r => r.online);
+      const offlineNodes = results.filter(r => !r.online);
+      const totalNames = onlineNodes.reduce((acc, result) => acc + (result.stats?.totalNames ?? result.health?.v2IndexSize ?? 0), 0);
+      const pqRecords = onlineNodes.reduce((acc, result) => acc + (result.health?.pqSecureRecords ?? 0), 0);
+      const avgLatency = onlineNodes.length
+        ? Math.round(onlineNodes.reduce((acc, r) => acc + r.latency, 0) / onlineNodes.length)
+        : 0;
+
+      summaryGrid.innerHTML = `
+        <article class="summary-card">
+          <span>Nodes online</span>
+          <strong>${onlineNodes.length}/${bootstrapNodes.length}</strong>
+          <small>${offlineNodes.length} offline (${offlineNodes.map(n => n.node.label).join(', ')})</small>
+        </article>
+        <article class="summary-card">
+          <span>Records indexed</span>
+          <strong>${formatNumber(totalNames)}</strong>
+          <small>V2 + migrated V1</small>
+        </article>
+        <article class="summary-card">
+          <span>Quantum-safe</span>
+          <strong>${formatNumber(pqRecords)}</strong>
+          <small>Dilithium3 + Argon2id</small>
+        </article>
+        <article class="summary-card">
+          <span>Median latency</span>
+          <strong>${avgLatency || '—'} ms</strong>
+          <small>HTTP roundtrip</small>
+        </article>
+      `;
+    }
+
+    function updateHistory(result) {
+      if (!result.online || !Number.isFinite(result.latency)) return;
+      const history = nodeHistory.get(result.node.id) || [];
+      history.push({ latency: result.latency, timestamp: Date.now() });
+      if (history.length > 30) history.shift();
+      nodeHistory.set(result.node.id, history);
+    }
+
+    function renderSparkline(nodeId) {
+      const history = nodeHistory.get(nodeId) || [];
+      if (history.length < 2) return '<div class="sparkline-empty">No telemetry yet</div>';
+
+      const width = 140;
+      const height = 38;
+      const maxLatency = Math.max(...history.map(h => h.latency));
+      const minLatency = Math.min(...history.map(h => h.latency));
+      const spread = Math.max(maxLatency - minLatency, 1);
+
+      const points = history.map((entry, index) => {
+        const x = (index / (history.length - 1)) * width;
+        const normalized = (entry.latency - minLatency) / spread;
+        const y = height - normalized * height;
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+      }).join(' ');
+
+      const latest = history[history.length - 1].latency.toFixed(0);
+
+      return `
+        <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+          <polyline
+            fill="none"
+            stroke="rgba(117, 255, 223, 0.8)"
+            stroke-width="2"
+            stroke-linecap="round"
+            points="${points}"
+          />
+        </svg>
+        <div class="sparkline-label">last: ${latest} ms</div>
+      `;
+    }
+
+    function renderNodes(results) {
+      statusGrid.innerHTML = '';
+
+      results.forEach(result => {
+        if (result.online) updateHistory(result);
+        const card = document.createElement('article');
+        card.className = `status-card ${result.online ? 'online' : 'offline'}`;
+        card.dataset.state = result.online ? 'online' : 'offline';
+        card.dataset.nodeId = result.node.id;
+
+        if (result.online) {
+          card.innerHTML = `
+            <header>
+              <h4>${result.node.label}</h4>
+              <span>● online · ${result.latency.toFixed(0)}ms</span>
+            </header>
+            <dl>
+              <dt>Names</dt>
+              <dd>${formatNumber(result.stats?.totalNames ?? result.health?.v2IndexSize ?? 0)}</dd>
+              <dt>PQ secure</dt>
+              <dd>${formatNumber(result.health?.pqSecureRecords ?? 0)}</dd>
+              <dt>Peers</dt>
+              <dd>${result.peers}</dd>
+              <dt>Uptime</dt>
+              <dd>${formatUptime(result.health?.uptime)}</dd>
+            </dl>
+            <div class="sparkline-wrapper">
+              ${renderSparkline(result.node.id)}
+            </div>
+          `;
+        } else {
+          card.innerHTML = `
+            <header>
+              <h4>${result.node.label}</h4>
+              <span>○ offline</span>
+            </header>
+            <p style="color: var(--muted); font-size: 0.9rem;">
+              ${result.error?.includes('fetch failed') 
+                ? 'Network unreachable' 
+                : result.error?.includes('timeout')
+                ? 'Connection timeout'
+                : result.error || 'No heartbeat'}
+            </p>
+          `;
+        }
+
+        card.addEventListener('click', () => showNodeDetail(result));
+        statusGrid.appendChild(card);
+      });
+    }
+
+    function renderLog(results) {
       logOutput.innerHTML = '';
-      logQueue.forEach(line => {
+      const now = new Date();
+      const lines = results.map(result => {
+        const timestamp = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        if (result.online) {
+          return `[${timestamp}] ${result.node.label} → ${formatNumber(result.stats?.totalNames ?? 0)} names, ${result.latency.toFixed(0)}ms`;
+        }
+        return `[${timestamp}] ${result.node.label} → offline (${result.error || 'no response'})`;
+      });
+
+      lines.forEach(line => {
         const row = document.createElement('p');
         row.textContent = line;
         logOutput.appendChild(row);
       });
     }
 
-    function cycleLog() {
-      const head = logQueue.shift();
-      logQueue.push(head);
-      renderLog();
+    function formatUptime(seconds) {
+      if (!Number.isFinite(seconds)) return '—';
+      const hours = seconds / 3600;
+      if (hours < 24) return `${hours.toFixed(1)} h`;
+      return `${(hours / 24).toFixed(1)} d`;
     }
 
-    renderLog();
-    setInterval(cycleLog, 4000);
+    function formatTimestamp(ts) {
+      if (!ts) return '—';
+      return new Date(ts).toLocaleString();
+    }
 
-    const lastVerified = document.getElementById('last-verified');
-    const now = new Date();
-    lastVerified.textContent = now.toLocaleString(undefined, {
-      dateStyle: 'medium',
-      timeStyle: 'short'
-    });
+    function showNodeDetail(result) {
+      activeNodeId = result.node.id;
+      if (!result.online) {
+        detailStatus.className = 'chip error';
+        detailStatus.textContent = 'offline';
+        detailBody.innerHTML = `
+          <p class="detail-meta">
+            ${result.node.label} is currently offline. Last attempt: ${result.fetchedAt.toLocaleTimeString()}.
+            ${result.error ? `Error: ${result.error}` : ''}
+          </p>
+        `;
+        return;
+      }
+
+      detailStatus.className = 'chip success';
+      detailStatus.textContent = `online · ${result.latency.toFixed(0)} ms`;
+
+      detailBody.innerHTML = `
+        <div class="detail-grid">
+          <div>
+            <span>Identity</span>
+            <strong>${result.health?.nodeId || 'Unknown'}</strong>
+          </div>
+          <div>
+            <span>Total names</span>
+            <strong>${formatNumber(result.stats?.totalNames ?? result.health?.v2IndexSize ?? 0)}</strong>
+          </div>
+          <div>
+            <span>PQ secure</span>
+            <strong>${formatNumber(result.health?.pqSecureRecords ?? 0)}</strong>
+          </div>
+          <div>
+            <span>Peers discovered</span>
+            <strong>${result.peers}</strong>
+          </div>
+          <div>
+            <span>HTTP endpoint</span>
+            <strong>${result.node.url}</strong>
+          </div>
+          <div>
+            <span>IPFS upstream</span>
+            <strong>${result.stats?.ipfsUrl || result.health?.ipfsUrl || 'n/a'}</strong>
+          </div>
+        </div>
+        <p class="detail-meta">
+          Uptime: <code>${formatUptime(result.health?.uptime)}</code> · Last publish: <code>${formatTimestamp(result.health?.lastPublished || result.stats?.lastPublished)}</code> · Sample captured ${result.fetchedAt.toLocaleTimeString()}.
+        </p>
+      `;
+    }
+
+    async function refreshNetwork() {
+      const results = await Promise.all(bootstrapNodes.map(fetchNodeStats));
+      renderSummary(results);
+      renderNodes(results);
+      renderLog(results);
+
+      lastVerified.textContent = new Date().toLocaleString(undefined, {
+        dateStyle: 'medium',
+        timeStyle: 'short'
+      });
+
+      const selected = results.find(r => r.node.id === activeNodeId);
+      if (selected) {
+        showNodeDetail(selected);
+      } else {
+        const fallback = results.find(r => r.online);
+        if (!activeNodeId && fallback) {
+          showNodeDetail(fallback);
+        }
+      }
+    }
+
+    refreshNetwork();
+    setInterval(refreshNetwork, 20000);
   </script>
 </body>
 </html>
